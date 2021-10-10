@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+
+# Qt
+.ipch
+.tlog
+.log
+.ilk
+.pdb
+.ipch
+.idx
+.cbt
+.props
+.filters
+.user
