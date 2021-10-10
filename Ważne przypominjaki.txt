@@ -1,0 +1,2 @@
+użyte biblioteki
+bitmap z http://www.partow.net/programming/bitmap/index.html
