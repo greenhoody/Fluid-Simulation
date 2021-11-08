@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-
+#include "../Simulation/Simulator.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])

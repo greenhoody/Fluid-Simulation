@@ -21,9 +21,9 @@ private:
 	
 	void bnd();
 	void source(float dt);
-	void diffuse(int height, int widht, int b, float* x, float* x0, float diff, float dt);
-	void advect(int height, int widht, int b, float* d, float* d0, float* u, float* v, float dt);
-	void dens_step(int height, int widht, float* x, float* x0, float* u, float* v, float diff, float dt);
+	void diffuse(float diff, float dt);
+	void advect(float dt);
+	void dens_step(float diff, float dt);
 	void vel_step(float visc, float dt);
 	void project(int height, int widht, float* u, float* v, float* p, float* div);
 };

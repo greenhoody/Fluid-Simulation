@@ -1,39 +1,57 @@
-#include <stdlib.h>
-
+#include "pch.h"
 #include "Simulator.h"
 
-#define IX(i,j) ((i)+(width2+2)*(j))
+#include <stdlib.h>
 
+#define IX(i,j) ((i)+(width2+2)*(j))
+#define SWAP(x0,x) {float *tmp=x0;x0=x;x=tmp;}
+
+// TODO what is diff and implement advect
+void Simulator::dens_step( float diff, float dt) {
+	source(dt);
+	SWAP(dens_prev, dens);
+	diffuse(diff, dt);
+	SWAP(dens_prev, dens);
+	advect(dt);
+
+}
+// TODO magic with forces
 void Simulator::vel_step(float visc, float dt) {
 	source(dt);
-
+	SWAP(v_pref, v);
+	SWAP(u_prev, u);
+	diffuse(visc, dt);
 }
 
-// TODO
+// velocity = 0 if density go into wall, works with walls inside simulation, but not exactly like in paper but it can work
 void Simulator::bnd() {
-	// for the ones
-	for (int i = 0; i < width2; i++) {
-		boundaries[i] = true;
-		boundaries[size - i - 1] = true;
-	}
-
-	for (int i = 0; i < height2; i++) {
-		boundaries[i * width2] = true;
-		boundaries[(i + 1) * width2 - 1] = true;
-	}
+	for (int i = 1; i <= height; i++)
+		for (int j = 1; j <= width; j++) {
+			//vertical
+			if (boundaries[IX(i - 1, j)] && v[IX(i, j)] < 0)
+				v[IX(i, j)] = 0;
+			else if (boundaries[IX(i + 1, j)] && v[IX(i, j)] > 0)
+				v[IX(i, j)] = 0;
+			//horizontal
+			if (boundaries[IX(i - 1, j)] && u[IX(i, j)] < 0)
+				u[IX(i, j)] = 0;
+			else if (boundaries[IX(i + 1, j)] && u[IX(i, j)] > 0)
+				u[IX(i, j)] = 0;
+		}
 }
-// TODO:: potrzebne bnd
-void Simulator::diffuse(int heigth, int width, int b, float* x, float* x0, float diff, float dt) {
-	float a = dt * diff * heigth * width;
+
+
+void Simulator::diffuse(float diff, float dt) {
+	float a = dt * diff * height * width;
 
 	for (int k = 0; k < 20; k++) {
-		for (int i = 1; i <= heigth; i++) {
+		for (int i = 1; i <= height; i++) {
 			for (int j = 1; j <= width; j++) {
-				x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] +
-					x[IX(i, j - 1)] + x[IX(i, j + 1)])) / (1 + 4 * a);
+				dens[IX(i, j)] = (dens_prev[IX(i, j)] + a * (dens[IX(i - 1, j)] + dens[IX(i + 1, j)] +
+					dens[IX(i, j - 1)] + dens[IX(i, j + 1)])) / (1 + 4 * a);
 			}
 		}
-//		bnd(N, b, x);
+		bnd();
 	}
 }
 
