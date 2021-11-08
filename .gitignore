@@ -32,15 +32,19 @@
 *.app
 
 # Qt
-.ipch
-.tlog
-.log
-.ilk
-.pdb
-.ipch
-.idx
-.cbt
-.props
-.filters
-.user
-.stash
+*.ipch
+*.tlog
+*.log
+*.ilk
+*.pdb
+*.ipch
+*.idx
+*.cbt
+*.props
+*.filters
+*.user
+*.stash
+
+GUI/Simulation/x64
+GUI/FluidGUI/x64
+GUI/FluidGUI/debug
