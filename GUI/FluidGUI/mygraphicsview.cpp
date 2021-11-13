@@ -5,7 +5,7 @@
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 {
-
+    timer = new QTimer(this);
 }
 
 void MyGraphicsView::mousePressEvent(QMouseEvent * e){
