@@ -6,6 +6,7 @@
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 {
     timer = new QTimer(this);
+    QObject::connect(timer, &QTimer::timeout, this, &MyGraphicsView::refresh);
 }
 
 void MyGraphicsView::mousePressEvent(QMouseEvent * e){
@@ -19,5 +20,9 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
 
     qDebug() << mousePosition.x();
     qDebug() << mousePosition.y();
+}
+
+void MyGraphicsView::refresh(){
+
 }
 
