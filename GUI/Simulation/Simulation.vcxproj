@@ -154,6 +154,7 @@
     <ClInclude Include="Copy.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Simulation.h" />
     <ClInclude Include="Simulator.h" />
   </ItemGroup>
   <ItemGroup>
