@@ -49,3 +49,5 @@ GUI/Simulation/x64
 GUI/FluidGUI/x64
 GUI/FluidGUI/debug
 GUI/FluidGUI/v16
+GUI/.vs
+GUI/Simulation/.vs
