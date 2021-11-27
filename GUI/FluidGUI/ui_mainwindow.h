@@ -110,6 +110,7 @@ public:
         MainWindow->setMenuBar(menubar);
 
         retranslateUi(MainWindow);
+        QObject::connect(pushButton, &QPushButton::clicked, graphicsView, qOverload<>(&MyGraphicsView::start));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi

@@ -30,3 +30,7 @@ void Simulation::GetNextFrame(float* density,  float dt) {
 	return;
 }
 
+void Simulation::AddSource(int x, int y, float s) {
+	simulator->Add_Source(x, y, s);
+}
+

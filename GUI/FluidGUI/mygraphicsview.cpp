@@ -24,8 +24,12 @@ void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit
 
 void MyGraphicsView::mousePressEvent(QMouseEvent * e){
     QPoint mousePosition = e->pos();
-    qDebug() <<  mousePosition.x();
-    qDebug() << mousePosition.y();
+    int x = mousePosition.x();
+    int y = mousePosition.y();
+    qDebug() << x;
+    qDebug() << y;
+    // test czy dodawanie gestosci zadziala
+    simulation->AddSource(x, y, 0.2f);
 }
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
@@ -37,16 +41,18 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
 
 
 void MyGraphicsView::start() {
+    qDebug() << "Przycisk Dziala";
     timer->setInterval(this->interval);
     timer->start();
     simulation = new Simulation(this->height(), this->width(), (float)this->v->value(), (float)this->d->value());
 }
 
 void MyGraphicsView::refresh(){
+    qDebug() << "dziala timer";
     float* pixels = (float*)malloc((this->height() + 4) * sizeof(float) * (this->width() + 4));
     simulation->GetNextFrame(pixels,interval);
 
-    image = new QImage();
+    image = new QImage(this->height(), this->width(),QImage::Format_RGB888);
     for (int i = 0; i < this->width(); i++) {
         for (int j = 0; j < this->height(); j++) {
             image->setPixelColor(i, j, getColor(pixels[i + 2, j + 2]));

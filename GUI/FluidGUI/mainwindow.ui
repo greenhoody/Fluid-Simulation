@@ -137,8 +137,28 @@
    <class>MyGraphicsView</class>
    <extends>QGraphicsView</extends>
    <header location="global">mygraphicsview.h</header>
+   <slots>
+    <slot>start()</slot>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>graphicsView</receiver>
+   <slot>start()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>678</x>
+     <y>55</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>743</x>
+     <y>111</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

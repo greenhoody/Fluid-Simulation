@@ -200,3 +200,7 @@ Simulator::Simulator(int height, int widht, float viscosity, float diffusion) {
 		boundaries[IX(i, height2 - 1)] = true;
 	}
 }
+
+void Simulator::Add_Source(int x, int y, float counatity) {
+	dens[IX(x + 2, y + 2)] += counatity;
+}
