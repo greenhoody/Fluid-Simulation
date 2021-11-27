@@ -17,10 +17,11 @@ public:
 
 
     QTimer *timer;
-    Simulation *simulation;
+    Simulation *simulation = nullptr;
     QSlider *v, *d;
     QPlainTextEdit* ts;
     QImage* image;
+    
     
 
 public slots:
@@ -36,6 +37,7 @@ protected:
 private:
     QColor getColor(float x);
     int interval;
+    float* pixels;
     QGraphicsScene* scene;
 };
 

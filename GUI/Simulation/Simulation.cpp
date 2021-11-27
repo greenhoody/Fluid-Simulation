@@ -1,6 +1,6 @@
-﻿#include <stdlib.h>
-#include <algorithm>
+﻿#include <algorithm>
 #include <iterator>
+#include <cstring>
 #include "pch.h"
 #include "Simulation.h"
 #include "Simulator.h"
@@ -25,7 +25,8 @@ void Simulation::GetNextFrame(float* density,  float dt) {
 		}
 	}
 	
-	std::copy(tmp, tmp + (simulator->width2 * simulator->height2 * sizeof(float)), density);
+	//std::copy(tmp, tmp + (simulator->width2 * simulator->height2 * sizeof(float)), density);
+	memcpy(density, tmp, sizeof(tmp));
 	free(tmp);
 	return;
 }

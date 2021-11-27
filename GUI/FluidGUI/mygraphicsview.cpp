@@ -5,6 +5,7 @@
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 {
+    pixels = (float*)malloc((this->height() + 4) * sizeof(float) * (this->width() + 4));
     timer = new QTimer(this);
     QObject::connect(timer, &QTimer::timeout, this, &MyGraphicsView::refresh);
     scene = new QGraphicsScene(this);
@@ -29,7 +30,10 @@ void MyGraphicsView::mousePressEvent(QMouseEvent * e){
     qDebug() << x;
     qDebug() << y;
     // test czy dodawanie gestosci zadziala
-    simulation->AddSource(x, y, 0.2f);
+    if (simulation != nullptr) {
+        simulation->AddSource(x, y, 0.2f);
+    }
+ 
 }
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
@@ -49,13 +53,13 @@ void MyGraphicsView::start() {
 
 void MyGraphicsView::refresh(){
     qDebug() << "dziala timer";
-    float* pixels = (float*)malloc((this->height() + 4) * sizeof(float) * (this->width() + 4));
     simulation->GetNextFrame(pixels,interval);
 
     image = new QImage(this->height(), this->width(),QImage::Format_RGB888);
     for (int i = 0; i < this->width(); i++) {
         for (int j = 0; j < this->height(); j++) {
-            image->setPixelColor(i, j, getColor(pixels[i + 2, j + 2]));
+            image->setPixelColor(j, i, getColor(pixels[j + 2, i + 2]));
+            //image->setPixelColor(i, j, getColor(pixels[i + 2, j + 2]));
         }
     }
     scene->addPixmap(QPixmap::fromImage(*image));
