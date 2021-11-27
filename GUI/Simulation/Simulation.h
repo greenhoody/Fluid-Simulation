@@ -1,5 +1,10 @@
 #pragma once
 #include "Simulator.h"
+#include <vector>
+#include <iostream>
+#include <cstdlib>
+
+using namespace std;
 
 
 class Simulation 
@@ -8,7 +13,7 @@ private:
 	Simulator *simulator;
 
 public:
-	float* GetNextFrame(float dt);
+	void GetNextFrame(float* density, float dt);
 	void AddForce(int x, int y, float dx, float dy);
 	void AddBoundaries(int x1, int y1, int x2, int y2);
 	void DeleteBoundaries(int x1, int y1, int x2, int y2);

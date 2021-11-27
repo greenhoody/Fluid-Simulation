@@ -5,8 +5,6 @@ class Simulator {
 public:
 	float * hVelocity, * vVelocity, * vPrev, * hPrev, * dens, * densPrev, * densSources;
 	bool* boundaries;
-
-private:
 	int size;
 	int height, width;
 	// height and widht of simulation with added boundaries

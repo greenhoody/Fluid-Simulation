@@ -27,7 +27,7 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>570</x>
+      <x>610</x>
       <y>20</y>
       <width>80</width>
       <height>25</height>
@@ -42,8 +42,8 @@
      <rect>
       <x>20</x>
       <y>10</y>
-      <width>261</width>
-      <height>95</height>
+      <width>541</width>
+      <height>51</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -87,20 +87,34 @@
        </property>
       </widget>
      </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Time step</string>
+       </property>
+      </widget>
+     </item>
      <item row="1" column="2">
       <widget class="QPlainTextEdit" name="plainTextEdit">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
        <property name="plainText">
         <string/>
        </property>
        <property name="placeholderText">
         <string>ms</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Time step</string>
        </property>
       </widget>
      </item>

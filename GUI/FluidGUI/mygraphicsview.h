@@ -20,6 +20,7 @@ public:
     Simulation *simulation;
     QSlider *v, *d;
     QPlainTextEdit* ts;
+    QImage* image;
     
 
 public slots:
@@ -33,7 +34,9 @@ protected:
     void mouseReleaseEvent(QMouseEvent *e) override;
 
 private:
+    QColor getColor(float x);
     int interval;
+    QGraphicsScene* scene;
 };
 
 #endif // MYGRAPHICSVIEW_H

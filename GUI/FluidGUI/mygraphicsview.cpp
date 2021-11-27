@@ -7,6 +7,8 @@ MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 {
     timer = new QTimer(this);
     QObject::connect(timer, &QTimer::timeout, this, &MyGraphicsView::refresh);
+    scene = new QGraphicsScene(this);
+    this->setScene(scene);
 }
 
 void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit *ts) 
@@ -41,12 +43,25 @@ void MyGraphicsView::start() {
 }
 
 void MyGraphicsView::refresh(){
+    float* pixels = (float*)malloc((this->height() + 4) * sizeof(float) * (this->width() + 4));
+    simulation->GetNextFrame(pixels,interval);
 
-    float* pixels = simulation->GetNextFrame(interval);
-    QColor** colors = (QColor **) malloc(this->height() * sizeof(QColor *));
-    for (int i = 0; i < this->height(); i++) {
-        colors[i] = (QColor*)malloc(this->width() * sizeof(QColor));
+    image = new QImage();
+    for (int i = 0; i < this->width(); i++) {
+        for (int j = 0; j < this->height(); j++) {
+            image->setPixelColor(i, j, getColor(pixels[i + 2, j + 2]));
+        }
     }
+    scene->addPixmap(QPixmap::fromImage(*image));
+    this->show();
+}
 
+QColor MyGraphicsView::getColor(float x) {
+    if (x < 0)
+        return QColor(0, 255, 0, 255);
+    else {
+        int y = (int)(x * 255);
+        return QColor(y, y, y, 255);
+    }
 }
 

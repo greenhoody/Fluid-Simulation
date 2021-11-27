@@ -80,8 +80,8 @@ void Simulator::advect(int b, float* grid, float* grid2, float* h, float* v, flo
 	float dtX = dt * width;
 	float dtY = dt * height;
 
-	for (int i = 2; i <= width; i++) {
-		for (int j = 2; j <= height; j++) {
+	for (int i = 2; i < width + 2; i++) {
+		for (int j = 2; j < height + 2; j++) {
 			float x = i - dtX * h[IX(i, j)];
 			float y = i - dtY * v[IX(i, j)];
 			//i tutaj mo¿e siê wiele rzeczy popsuc, nawet bardzo duzo
@@ -120,8 +120,8 @@ void Simulator::diffuse(int b, float* grid, float* grid2, float diff, float dt) 
 	float a = dt * diff * height * width;
 
 	for (int k = 0; k < 20; k++) {
-		for (int i = 2; i <= height; i++) {
-			for (int j = 2; j <= width; j++) {
+		for (int i = 2; i < (height + 2); i++) {
+			for (int j = 2; j < (width + 2); j++) {
 				grid[IX(i, j)] = (grid2[IX(i, j)] + a * (grid[IX(i - 1, j)] + grid[IX(i + 1, j)] +
 					grid[IX(i, j - 1)] + grid[IX(i, j + 1)])) / (1 + 4 * a);
 			}
@@ -159,9 +159,9 @@ void Simulator::bnd(int b, float* x)
 //x[IX(N + 1, N + 1)] = 0.5 * (x[IX(N, N + 1)] + x[IX(N + 1, N)]);
 
 	x[IX(1, 1)] = 0.5 * (x[IX(2, 1)] + x[IX(1, 2)]); //lewygorny
-	x[IX(1, height + 1)] = 0.5 * (x[IX(1, height)] + x[IX(2, height + 1)]); //lewydolny
-	x[IX(width + 1, 1)] = 0.5 * (x[IX(width , 1)] + x[IX(width + 1, 2)]); //prawygorny
-	x[IX(width + 1, height + 1)] = 0.5 * (x[IX(width, height + 1)] + x[IX(width + 1, height)]); //prawydolny
+	x[IX(1, height + 2)] = 0.5 * (x[IX(1, height+1)] + x[IX(2, height + 2)]); //lewydolny
+	x[IX(width + 2, 1)] = 0.5 * (x[IX(width +1, 1)] + x[IX(width + 2, 2)]); //prawygorny
+	x[IX(width + 2, height + 2)] = 0.5 * (x[IX(width+1, height + 2)] + x[IX(width + 2, height + 1)]); //prawydolny
 }
 
 void Simulator::source(float* grid, float* sources, float dt) {
@@ -191,12 +191,12 @@ Simulator::Simulator(int height, int widht, float viscosity, float diffusion) {
 		boundaries[IX(0,i)] = true;
 		boundaries[IX(1, i)] = true;
 		boundaries[IX(width2 - 1,i)] = true;
-		boundaries[IX(width2,i)] = true;
+		boundaries[IX(width2 - 2,i)] = true;
 	}
 	for (int i = 0; i < width2; i++) {
 		boundaries[IX(i, 0)] = true;
 		boundaries[IX(i, 1)] = true;
+		boundaries[IX(i, height2 - 2)] = true;
 		boundaries[IX(i, height2 - 1)] = true;
-		boundaries[IX(i, height2)] = true;
 	}
 }

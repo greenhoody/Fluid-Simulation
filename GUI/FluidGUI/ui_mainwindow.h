@@ -35,8 +35,8 @@ public:
     QLabel *label_2;
     QSlider *DiffusionSlider;
     QLabel *label;
-    QPlainTextEdit *plainTextEdit;
     QLabel *label_3;
+    QPlainTextEdit *plainTextEdit;
     QMenuBar *menubar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -51,10 +51,10 @@ public:
         graphicsView->setGeometry(QRect(10, 70, 1041, 611));
         pushButton = new QPushButton(centralwidget);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
-        pushButton->setGeometry(QRect(570, 20, 80, 25));
+        pushButton->setGeometry(QRect(610, 20, 80, 25));
         layoutWidget = new QWidget(centralwidget);
         layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        layoutWidget->setGeometry(QRect(20, 10, 261, 95));
+        layoutWidget->setGeometry(QRect(20, 10, 541, 51));
         gridLayout = new QGridLayout(layoutWidget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
@@ -84,15 +84,24 @@ public:
 
         gridLayout->addWidget(label, 0, 1, 1, 1);
 
-        plainTextEdit = new QPlainTextEdit(layoutWidget);
-        plainTextEdit->setObjectName(QString::fromUtf8("plainTextEdit"));
-
-        gridLayout->addWidget(plainTextEdit, 1, 2, 1, 1);
-
         label_3 = new QLabel(layoutWidget);
         label_3->setObjectName(QString::fromUtf8("label_3"));
 
         gridLayout->addWidget(label_3, 0, 2, 1, 1);
+
+        plainTextEdit = new QPlainTextEdit(layoutWidget);
+        plainTextEdit->setObjectName(QString::fromUtf8("plainTextEdit"));
+        plainTextEdit->setEnabled(true);
+        QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(plainTextEdit->sizePolicy().hasHeightForWidth());
+        plainTextEdit->setSizePolicy(sizePolicy);
+        QFont font;
+        font.setPointSize(9);
+        plainTextEdit->setFont(font);
+
+        gridLayout->addWidget(plainTextEdit, 1, 2, 1, 1);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
@@ -111,9 +120,9 @@ public:
         pushButton->setText(QCoreApplication::translate("MainWindow", "Start", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "Viscosity", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "Diffusion", nullptr));
+        label_3->setText(QCoreApplication::translate("MainWindow", "Time step", nullptr));
         plainTextEdit->setPlainText(QString());
         plainTextEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "ms", nullptr));
-        label_3->setText(QCoreApplication::translate("MainWindow", "Time step", nullptr));
     } // retranslateUi
 
 };
