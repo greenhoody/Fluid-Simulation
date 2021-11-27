@@ -8,7 +8,7 @@ private:
 	Simulator *simulator;
 
 public:
-	int** GetNextFrame(float dt);
+	float* GetNextFrame(float dt);
 	void AddForce(int x, int y, float dx, float dy);
 	void AddBoundaries(int x1, int y1, int x2, int y2);
 	void DeleteBoundaries(int x1, int y1, int x2, int y2);
@@ -16,5 +16,5 @@ public:
 
 
 	// constructor 
-	Simulation(int height, int width);
+	Simulation(int height, int width, float viscosity,float diffusion);
 };

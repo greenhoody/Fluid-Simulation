@@ -3,7 +3,7 @@
 class Simulator {
 // 
 public:
-	float * u, * v, * u_prev, * v_pref, * dens, * dens_prev, * sources;
+	float * hVelocity, * vVelocity, * vPrev, * hPrev, * dens, * densPrev, * densSources;
 	bool* boundaries;
 
 private:
@@ -11,19 +11,21 @@ private:
 	int height, width;
 	// height and widht of simulation with added boundaries
 	int height2, width2;
+	double viscosity, diffusion;
 
 // methods
 public:
-	Simulator(int height, int widht);
+	Simulator(int height, int widht, float viscosity, float diffusion);
 	void Add_Source(int x, int y, float quantity);
+	float* NextFrame(float dt);
 
 private:
 	
-	void bnd();
-	void source(float dt);
-	void diffuse(float diff, float dt);
-	void advect(float dt);
-	void dens_step(float diff, float dt);
-	void vel_step(float visc, float dt);
-	void project(int height, int widht, float* u, float* v, float* p, float* div);
+	void bnd(int b, float* x);
+	void source(float* grid, float* sources, float dt);
+	void diffuse(int b, float* grid, float* grid2, float diff, float dt);
+	void advect(int b, float* grid, float* grid2, float* h, float* v, float dt);
+	void dens_step(float* x, float* x0, float* h, float* v, float diff, float dt);
+	void vel_step(float* h, float* v, float* h0, float* v0, float visc, float dt);
+	void project(float* h, float* v, float* h0, float* v0);
 };

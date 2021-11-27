@@ -11,9 +11,13 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QPlainTextEdit>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSlider>
 #include <QtWidgets/QWidget>
 #include <mygraphicsview.h>
 
@@ -25,25 +29,75 @@ public:
     QWidget *centralwidget;
     MyGraphicsView *graphicsView;
     QPushButton *pushButton;
+    QWidget *layoutWidget;
+    QGridLayout *gridLayout;
+    QSlider *ViscositySlider;
+    QLabel *label_2;
+    QSlider *DiffusionSlider;
+    QLabel *label;
+    QPlainTextEdit *plainTextEdit;
+    QLabel *label_3;
     QMenuBar *menubar;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1080, 720);
+        MainWindow->resize(1111, 720);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         graphicsView = new MyGraphicsView(centralwidget);
         graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
-        graphicsView->setGeometry(QRect(10, 50, 1061, 631));
+        graphicsView->setGeometry(QRect(10, 70, 1041, 611));
         pushButton = new QPushButton(centralwidget);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
-        pushButton->setGeometry(QRect(20, 10, 80, 25));
+        pushButton->setGeometry(QRect(570, 20, 80, 25));
+        layoutWidget = new QWidget(centralwidget);
+        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
+        layoutWidget->setGeometry(QRect(20, 10, 261, 95));
+        gridLayout = new QGridLayout(layoutWidget);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        gridLayout->setContentsMargins(0, 0, 0, 0);
+        ViscositySlider = new QSlider(layoutWidget);
+        ViscositySlider->setObjectName(QString::fromUtf8("ViscositySlider"));
+        ViscositySlider->setMinimum(2);
+        ViscositySlider->setMaximum(101);
+        ViscositySlider->setSingleStep(25);
+        ViscositySlider->setOrientation(Qt::Horizontal);
+
+        gridLayout->addWidget(ViscositySlider, 1, 0, 1, 1);
+
+        label_2 = new QLabel(layoutWidget);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        gridLayout->addWidget(label_2, 0, 0, 1, 1);
+
+        DiffusionSlider = new QSlider(layoutWidget);
+        DiffusionSlider->setObjectName(QString::fromUtf8("DiffusionSlider"));
+        DiffusionSlider->setMinimum(2);
+        DiffusionSlider->setOrientation(Qt::Horizontal);
+
+        gridLayout->addWidget(DiffusionSlider, 1, 1, 1, 1);
+
+        label = new QLabel(layoutWidget);
+        label->setObjectName(QString::fromUtf8("label"));
+
+        gridLayout->addWidget(label, 0, 1, 1, 1);
+
+        plainTextEdit = new QPlainTextEdit(layoutWidget);
+        plainTextEdit->setObjectName(QString::fromUtf8("plainTextEdit"));
+
+        gridLayout->addWidget(plainTextEdit, 1, 2, 1, 1);
+
+        label_3 = new QLabel(layoutWidget);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        gridLayout->addWidget(label_3, 0, 2, 1, 1);
+
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 1080, 25));
+        menubar->setGeometry(QRect(0, 0, 1111, 22));
         MainWindow->setMenuBar(menubar);
 
         retranslateUi(MainWindow);
@@ -54,7 +108,12 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        pushButton->setText(QCoreApplication::translate("MainWindow", "PushButton", nullptr));
+        pushButton->setText(QCoreApplication::translate("MainWindow", "Start", nullptr));
+        label_2->setText(QCoreApplication::translate("MainWindow", "Viscosity", nullptr));
+        label->setText(QCoreApplication::translate("MainWindow", "Diffusion", nullptr));
+        plainTextEdit->setPlainText(QString());
+        plainTextEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "ms", nullptr));
+        label_3->setText(QCoreApplication::translate("MainWindow", "Time step", nullptr));
     } // retranslateUi
 
 };
