@@ -10,7 +10,7 @@ using namespace std;
 class Simulation 
 {
 private:
-	Simulator *simulator;
+	//Simulator *simulator;
 
 public:
 	void GetNextFrame(float* density, float dt);
@@ -22,4 +22,7 @@ public:
 
 	// constructor 
 	Simulation(int height, int width, float viscosity,float diffusion);
+
+	//po tescie zabrac zabraæ
+	Simulator* simulator;
 };

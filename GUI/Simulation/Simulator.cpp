@@ -170,7 +170,7 @@ void Simulator::source(float* grid, float* sources, float dt) {
 	}
 }
 
-Simulator::Simulator(int height, int widht, float viscosity, float diffusion) {
+Simulator::Simulator(int height, int width, float viscosity, float diffusion) {
 	this->viscosity = viscosity;
 	this->diffusion = diffusion;
 	this->height = height;

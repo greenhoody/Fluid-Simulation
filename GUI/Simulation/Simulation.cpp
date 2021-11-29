@@ -7,13 +7,13 @@
 
 #define IX(i,j) ((i)+(simulator->width2)*(j))
 
-Simulation::Simulation(int height, int widht, float viscosity, float diffusion) {
-	simulator = new Simulator(height, widht, viscosity, diffusion);
+Simulation::Simulation(int height, int width, float viscosity, float diffusion) {
+	simulator = new Simulator(height, width, viscosity, diffusion);
 }
 
 void Simulation::GetNextFrame(float* density,  float dt) {
 	simulator->NextFrame(dt);
-	float* tmp = (float*)malloc(simulator->width2 * simulator->height2 * sizeof(float));
+	float* tmp = (float*)malloc((unsigned long long)simulator->width2 * (unsigned long long)simulator->height2 * sizeof(float));
 	for (int i = 0; i < simulator->width2; i++) {
 		for (int j = 0; j < simulator->height2; j++) {
 			if (simulator->boundaries[IX(i, j)]) {

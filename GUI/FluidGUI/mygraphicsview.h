@@ -21,6 +21,7 @@ public:
     QSlider *v, *d;
     QPlainTextEdit* ts;
     QImage* image;
+    QPixmap* pixmap;
     
     
 
