@@ -3,6 +3,7 @@
 
 #include <QGraphicsView>
 #include <QTimer>
+#include <QGraphicsPixmapItem>
 #include "qslider.h"
 #include "../Simulation/Simulation.h"
 #include "qplaintextedit.h"
@@ -21,7 +22,8 @@ public:
     QSlider *v, *d;
     QPlainTextEdit* ts;
     QImage* image;
-    QPixmap* pixmap;
+    QPixmap pixmap;
+    QGraphicsPixmapItem* pixMapItem;
     
     
 

@@ -3,19 +3,22 @@
 #include <QDebug>
 
 
+
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 {
     pixels = (float*)malloc(((unsigned long long)this->height() + 4) * sizeof(float) * ((unsigned long long)this->width() + 4));
     timer = new QTimer(this);
     QObject::connect(timer, &QTimer::timeout, this, &MyGraphicsView::refresh);
-    image = new QImage(this->width(), this->height(), QImage::Format_RGB888);
-    pixmap = new QPixmap(this->width(), this->height());
-    scene = new QGraphicsScene(this);
-    this->setScene(scene);
+    //for some resone inside contructor size is diffrenet than intendet
+    //qDebug() << this->height();
+    //qDebug() << this->width();
+
+
 }
 
 void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit *ts) 
 {
+    // i'ts must be here because for now its best thing to get values from thes widgets in code 
     this->v = v;
     this->d = d;
     this->ts = ts;
@@ -47,8 +50,24 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
 
 
 void MyGraphicsView::start() {
-    //qDebug() << "Przycisk Dziala";
+    //Its must be here and not in constructor because this->width() and this->height() in constractor return wrong size
+    image = new QImage(this->width(), this->height(), QImage::Format_RGB888);
+    pixmap = QPixmap(this->width(), this->height());
+    scene = new QGraphicsScene(this);
+    pixMapItem = scene->addPixmap(pixmap);
+    this->setScene(scene);
+    this->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
+
     simulation = new Simulation(this->height(), this->width(), (float)this->v->value(), (float)this->d->value());
+    //qDebug() << this->height();
+    //qDebug() << simulation->simulator->height;
+    //qDebug() << simulation->simulator->height2;
+    //qDebug() << image->height();
+    //qDebug() << this->width();
+    //qDebug() << simulation->simulator->width;
+    //qDebug() << simulation->simulator->width2;
+    //qDebug() << image->width();
+
     timer->setInterval(this->interval);
     timer->start();
 }
@@ -56,6 +75,8 @@ void MyGraphicsView::start() {
 void MyGraphicsView::refresh(){
     //tutaj wycieka mi pamiêæ bo zawsze nowy obraz daje
     //qDebug() << "dziala timer";
+
+
     simulation->GetNextFrame(pixels, this->interval);
 
     for (int i = 0; i < this->width(); i++) {
@@ -64,7 +85,7 @@ void MyGraphicsView::refresh(){
             image->setPixelColor(i, j, getColor(pixels[i + 2, j + 2]));
         }
     }
-    scene->addPixmap(QPixmap::fromImage(*image));
+    pixMapItem->setPixmap(QPixmap::fromImage(*image));
     this->show();
 }
 
