@@ -122,8 +122,8 @@ void Simulator::diffuse(int b, float* grid, float* grid2, float diff, float dt) 
 	for (int k = 0; k < 20; k++) {
 		for (int i = 2; i < (height + 2); i++) {
 			for (int j = 2; j < (width + 2); j++) {
-				grid[IX(i, j)] = (grid2[IX(i, j)] + a * (grid[IX(i - 1, j)] + grid[IX(i + 1, j)] +
-					grid[IX(i, j - 1)] + grid[IX(i, j + 1)])) / (1 + 4 * a);
+				grid[IX(j, i)] = (grid2[IX(j, i)] + a * (grid[IX(j - 1, i)] + grid[IX(j + 1, i)] +
+					grid[IX(j, i - 1)] + grid[IX(j, i + 1)])) / (1 + 4 * a);
 			}
 		}
 		bnd(b, grid);
