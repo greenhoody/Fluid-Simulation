@@ -4,7 +4,11 @@
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     <QtLastBackgroundBuild>2021-11-29T19:21:25.1759661Z</QtLastBackgroundBuild>
+=======
+    <QtLastBackgroundBuild>2021-11-29T20:46:32.3559203Z</QtLastBackgroundBuild>
+>>>>>>> parent of e159d2a (Update FluidGUI.vcxproj.user)
 =======
     <QtLastBackgroundBuild>2021-11-29T20:46:32.3559203Z</QtLastBackgroundBuild>
 >>>>>>> parent of e159d2a (Update FluidGUI.vcxproj.user)
