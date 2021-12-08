@@ -4,8 +4,12 @@
 #include "pch.h"
 #include "Simulation.h"
 #include "Simulator.h"
+#include "windows.h"
+#include "debugapi.h"
 
 #define IX(i,j) ((i)+(simulator->width2)*(j))
+
+
 
 Simulation::Simulation(int height, int width, float viscosity, float diffusion) {
 	simulator = new Simulator(height, width, viscosity, diffusion);
@@ -21,10 +25,15 @@ void Simulation::GetNextFrame(float* density,  float dt) {
 			}
 			else {
 				tmp[IX(i, j)] = simulator->dens[IX(i, j)];
+
+				//TCHAR s[256];
+				//swprintf(s,256, __TEXT("Density at %i , %i is %i \n"), i, j, simulator->dens[IX(i, j)]);
+				//OutputDebugString(s);
+
 			}
 		}
 	}
-	
+
 	//std::copy(tmp, tmp + (simulator->width2 * simulator->height2 * sizeof(float)), density);
 	memcpy(density, tmp, sizeof(tmp));
 	free(tmp);

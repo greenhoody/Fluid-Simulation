@@ -1,3 +1,6 @@
+#include "windows.h"
+#include "debugapi.h"
+
 #include "mygraphicsview.h"
 #include <QMouseEvent>
 #include <QDebug>
@@ -90,6 +93,10 @@ void MyGraphicsView::refresh(){
 }
 
 QColor MyGraphicsView::getColor(float x) {
+    //bardzo niskie x kilka tysiêcy poni¿ej 0
+    TCHAR s[32];
+    swprintf(s,32, __TEXT("Density is %f \n"), x);
+    OutputDebugString(s);
     if (x < 0)
         return QColor(0, 255, 0, 255);
     else {
