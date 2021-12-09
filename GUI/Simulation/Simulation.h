@@ -11,6 +11,7 @@ class Simulation
 {
 private:
 	//Simulator *simulator;
+	float* tmp;
 
 public:
 	void GetNextFrame(float* density, float dt);

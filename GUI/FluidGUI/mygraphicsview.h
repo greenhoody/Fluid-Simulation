@@ -24,6 +24,7 @@ public:
     QImage* image;
     QPixmap pixmap;
     QGraphicsPixmapItem* pixMapItem;
+    float* pixels;
     
     
 
@@ -40,7 +41,7 @@ protected:
 private:
     QColor getColor(float x);
     int interval;
-    float* pixels;
+
     QGraphicsScene* scene;
 };
 
