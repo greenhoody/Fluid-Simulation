@@ -187,13 +187,25 @@ Simulator::Simulator(int height, int width, float viscosity, float diffusion) {
 	densSources = (float*) calloc(size, sizeof(float));
 	boundaries = (bool*) calloc(size, sizeof(bool));
 	
+	//for (int i = 0; i < height2; i++) {
+	//	boundaries[IX(0,i)] = true;
+	//	boundaries[IX(1, i)] = true;
+	//	boundaries[IX(width2 - 1,i)] = true;
+	//	boundaries[IX(width2 - 2,i)] = true;
+	//}
+	//for (int i = 0; i < width2; i++) {
+	//	boundaries[IX(i, 0)] = true;
+	//	boundaries[IX(i, 1)] = true;
+	//	boundaries[IX(i, height2 - 2)] = true;
+	//	boundaries[IX(i, height2 - 1)] = true;
+	//}
 	for (int i = 0; i < height2; i++) {
 		boundaries[IX(0,i)] = true;
 		boundaries[IX(1, i)] = true;
 		boundaries[IX(width2 - 1,i)] = true;
 		boundaries[IX(width2 - 2,i)] = true;
 	}
-	for (int i = 0; i < width2; i++) {
+	for (int i = 0; i < width2 ; i++) {
 		boundaries[IX(i, 0)] = true;
 		boundaries[IX(i, 1)] = true;
 		boundaries[IX(i, height2 - 2)] = true;

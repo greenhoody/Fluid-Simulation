@@ -5,7 +5,7 @@
 #include <QMouseEvent>
 #include <QDebug>
 
-
+#define IX(i,j) ((i)+(simulation->simulator->width2)*(j))
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 {
@@ -35,13 +35,13 @@ void MyGraphicsView::mousePressEvent(QMouseEvent * e){
     QPoint mousePosition = e->pos();
     int x = mousePosition.x();
     int y = mousePosition.y();
-    //qDebug() << x;
-    //qDebug() << y;
+    qDebug() << x;
+    qDebug() << y;
     // test czy dodawanie gestosci zadziala
     if (simulation != nullptr) {
         simulation->AddSource(x, y, 0.2f);
+      //  qDebug() << "dodaje gêstoœæ";
     }
- 
 }
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
@@ -61,16 +61,11 @@ void MyGraphicsView::start() {
     this->setScene(scene);
     this->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
 
-    simulation = new Simulation(this->height(), this->width(), (float)this->v->value(), (float)this->d->value());
-    //qDebug() << this->height();
-    //qDebug() << simulation->simulator->height;
-    //qDebug() << simulation->simulator->height2;
-    //qDebug() << image->height();
-    //qDebug() << this->width();
-    //qDebug() << simulation->simulator->width;
-    //qDebug() << simulation->simulator->width2;
-    //qDebug() << image->width();
+    if (simulation != NULL) {
+        free(simulation);
+    }
 
+    simulation = new Simulation(this->height(), this->width(), (float)this->v->value(), (float)this->d->value());
     timer->setInterval(this->interval);
     timer->start();
 }
@@ -79,24 +74,25 @@ void MyGraphicsView::refresh(){
     //tutaj wycieka mi pamiêæ bo zawsze nowy obraz daje
     //qDebug() << "dziala timer";
 
-
-    simulation->GetNextFrame(pixels, this->interval);
-
+    float* tmp = (float*)malloc(((unsigned long long)this->height() + 4) * sizeof(float) * ((unsigned long long)this->width() + 4));
+    simulation->GetNextFrame(tmp, this->interval);
+    
     for (int i = 0; i < this->width(); i++) {
         for (int j = 0; j < this->height(); j++) {
-            //image->setPixelColor(j, i, getColor(pixels[i + 2, j + 2]));
-            image->setPixelColor(i, j, getColor(pixels[i + 2, j + 2]));
+            //image->setPixelColor(i, j, getColor(pixels[i + 2, j + 2]));
+            image->setPixelColor(i, j, getColor(tmp[IX(i + 2, j + 2)]));
         }
     }
     pixMapItem->setPixmap(QPixmap::fromImage(*image));
     this->show();
+    free(tmp);
 }
 
 QColor MyGraphicsView::getColor(float x) {
     //bardzo niskie x kilka tysiêcy poni¿ej 0
-    TCHAR s[32];
-    swprintf(s,32, __TEXT("Density is %f \n"), x);
-    OutputDebugString(s);
+    //TCHAR s[32];
+    //swprintf(s,32, __TEXT("Density is %f \n"), x);
+    //OutputDebugString(s);
     if (x < 0)
         return QColor(0, 255, 0, 255);
     else {
