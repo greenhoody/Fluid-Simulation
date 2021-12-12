@@ -35,10 +35,10 @@ float* Simulation2::NextFrame() {
 }
 
 void Simulation2::AddDensity(int x, int y, float density) {
-	dens[IX(x, y)] += density;
+	dens[IX(x + 1, y + 1)] += density;
 }
 
 void Simulation2::AddVelocity(int x, int y, float v_velocity, float h_velocity) {
-	v[IX(x, y)] += v_velocity;
-	u[IX(x, y)] += h_velocity;
+	v[IX(x + 1, y + 1)] += v_velocity;
+	u[IX(x + 1, y + 1)] += h_velocity;
 }
