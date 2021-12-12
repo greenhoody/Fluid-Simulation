@@ -16,7 +16,6 @@ public:
     MyGraphicsView(QWidget *parent);
     void giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit* ts);
 
-
     QTimer *timer;
     Simulation *simulation = nullptr;
     QSlider *v, *d;
@@ -25,8 +24,6 @@ public:
     QPixmap pixmap;
     QGraphicsPixmapItem* pixMapItem;
     float* pixels;
-    
-    
 
 public slots:
     void refresh();

@@ -15,13 +15,11 @@ MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
     //for some resone inside contructor size is diffrenet than intendet
     //qDebug() << this->height();
     //qDebug() << this->width();
-
-
 }
 
 void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit *ts) 
 {
-    // i'ts must be here because for now its best thing to get values from thes widgets in code 
+    // it's must be here because for now its best thing to get values from thes widgets in code 
     this->v = v;
     this->d = d;
     this->ts = ts;
@@ -35,20 +33,16 @@ void MyGraphicsView::mousePressEvent(QMouseEvent * e){
     QPoint mousePosition = e->pos();
     int x = mousePosition.x();
     int y = mousePosition.y();
-    qDebug() << x;
-    qDebug() << y;
+    //qDebug() << x;
+    //qDebug() << y;
     // test czy dodawanie gestosci zadziala
     if (simulation != nullptr) {
-        simulation->AddSource(x, y, 0.2f);
-      //  qDebug() << "dodaje gêstoœæ";
+        simulation->AddSource(x, y, 0.9f);
     }
 }
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
     QPoint mousePosition = e->pos();
-
-    //qDebug() << mousePosition.x();
-    //qDebug() << mousePosition.y();
 }
 
 

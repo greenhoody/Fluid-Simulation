@@ -26,11 +26,6 @@ void Simulation::GetNextFrame(float* density,  float dt) {
 			}
 			else {
 				density[IX(i, j)] = simulator->dens[IX(i, j)];
-
-				//TCHAR s[256];
-				//swprintf(s,256, __TEXT("Density at %i , %i is %i \n"), i, j, simulator->dens[IX(i, j)]);
-				//OutputDebugString(s);
-
 			}
 		}
 	}

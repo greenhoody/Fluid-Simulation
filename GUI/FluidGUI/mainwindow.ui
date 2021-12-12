@@ -17,10 +17,10 @@
    <widget class="MyGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>30</x>
       <y>80</y>
-      <width>480</width>
-      <height>360</height>
+      <width>90</width>
+      <height>90</height>
      </rect>
     </property>
    </widget>
@@ -43,7 +43,7 @@
       <x>20</x>
       <y>10</y>
       <width>541</width>
-      <height>61</height>
+      <height>51</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">

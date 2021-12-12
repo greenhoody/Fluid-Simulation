@@ -2,7 +2,6 @@
 #include "Simulator.h"
 #include <stdlib.h>
 
-
 //TODO indeksy s¹ Ÿle
 
 //i - kolumna czyli OX, j - rz¹d cyli OY
@@ -15,7 +14,6 @@ float* Simulator::NextFrame(float dt) {
 	return dens;
 }
 
-// TODO magic with forces and project
 void Simulator::vel_step(float* h, float* v, float* h0, float* v0, float visc, float dt) {
 	source(h, h0, dt);
 	source(v, v0, dt);
@@ -63,7 +61,6 @@ void Simulator::project(float* h, float* v, float* h0, float* v0) {
 		}
 		bnd(0, h0);
 	}
-
 
 	for (int i = 2; i <= (width + 2); i++) {
 		for (int j = 2; j <= (height + 2); j++) {
