@@ -7,6 +7,7 @@
 #include "qslider.h"
 #include "../Simulation/Simulation.h"
 #include "qplaintextedit.h"
+#include "../Simulation2/Simulation2.h"
 
 
 class MyGraphicsView : public QGraphicsView
@@ -18,6 +19,7 @@ public:
 
     QTimer *timer;
     Simulation *simulation = nullptr;
+    Simulation2* simulation2 = nullptr;
     QSlider *v, *d;
     QPlainTextEdit* ts;
     QImage* image;

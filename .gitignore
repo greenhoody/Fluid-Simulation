@@ -1,3 +1,6 @@
+
+.idb
+
 # Prerequisites
 *.d
 
@@ -51,3 +54,6 @@ GUI/FluidGUI/debug
 GUI/FluidGUI/v16
 GUI/.vs
 GUI/Simulation/.vs
+GUI/Simulation2/x64
+GUI/Simulation2/.vs
+GUI/x64

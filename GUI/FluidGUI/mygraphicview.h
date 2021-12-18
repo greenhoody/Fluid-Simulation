@@ -9,4 +9,8 @@ public:
     MyGraphicView();
 };
 
+class Old_mygraphicview
+{
+};
+
 #endif // MYGRAPHICVIEW_H
