@@ -6,7 +6,7 @@
 #include <QMouseEvent>
 #include <QDebug>
 
-#define IX(i,j) ((i)+(simulation->simulator->width2)*(j))
+#define IX(i,j) ((i)+(simulation2->size)*(j))
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 {
@@ -75,7 +75,7 @@ void MyGraphicsView::refresh(){
     for (int i = 0; i < this->width(); i++) {
         for (int j = 0; j < this->height(); j++) {
             //image->setPixelColor(i, j, getColor(pixels[i + 2, j + 2]));
-            image->setPixelColor(i, j, getColor(tmp[IX(i + 1, j + 1)]));
+            image->setPixelColor(i, j, getColor(tmp[IX(i, j)]));
         }
     }
     pixMapItem->setPixmap(QPixmap::fromImage(*image));
