@@ -2,6 +2,7 @@
 #include "Simulation2.h"
 #include "NotEdited.h"
 #include <corecrt_malloc.h>
+#include <string.h>
 
 #define IX(i,j) ((i)+(size+2)*(j))
 
@@ -28,10 +29,10 @@ void Simulation2::FreeSimulation2() {
 	free(dens_prev);
 }
 
-float* Simulation2::NextFrame() {
+void Simulation2::NextFrame(float* copy_array) {
 	vel_step(size, u, v, u_prev, v_prev, visc, dt);
 	dens_step(size, dens, dens_prev, u, v, diff, dt);
-	return dens;
+	memcpy(copy_array, dens, sizeof(float) * (size + 2) * (size + 2));
 }
 
 void Simulation2::AddDensity(int x, int y, float density) {

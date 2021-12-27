@@ -10,10 +10,10 @@
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 {
-    pixels = (float*)malloc(((unsigned long long)this->height() + 4) * sizeof(float) * ((unsigned long long)this->width() + 4));
+    pixels = (float*)malloc(((unsigned long long)this->height() + 2) * sizeof(float) * ((unsigned long long)this->width() + 2));
     timer = new QTimer(this);
     QObject::connect(timer, &QTimer::timeout, this, &MyGraphicsView::refresh);
-    //for some resone inside contructor size is diffrenet than intendet
+    //for some resone inside contructor size is diffrenet than after object is complete created
     //qDebug() << this->height();
     //qDebug() << this->width();
 }
@@ -66,21 +66,14 @@ void MyGraphicsView::start() {
 }
 
 void MyGraphicsView::refresh(){
-    //tutaj wycieka mi pamiêæ bo zawsze nowy obraz daje
-    //qDebug() << "dziala timer";
 
-    float* tmp = (float*)malloc(((unsigned long long)this->height() + 2) * sizeof(float) * ((unsigned long long)this->width() + 2));
-    tmp = simulation2->NextFrame();
-    
-    for (int i = 0; i < this->width(); i++) {
-        for (int j = 0; j < this->height(); j++) {
-            //image->setPixelColor(i, j, getColor(pixels[i + 2, j + 2]));
-            image->setPixelColor(i, j, getColor(tmp[IX(i, j)]));
+    for (int i = 1; i < this->width(); i++) {
+        for (int j = 1; j < this->height(); j++) {
+            image->setPixelColor(i, j, getColor(pixels[IX(i, j)]));
         }
     }
     pixMapItem->setPixmap(QPixmap::fromImage(*image));
     this->show();
-    free(tmp);
 }
 
 QColor MyGraphicsView::getColor(float x) {

@@ -12,7 +12,7 @@ public:
 
 	Simulation2(int size, float diffiusion, float viscosity, float dt);
 	void FreeSimulation2();
-	float* NextFrame();
+	void NextFrame(float*);
 	void AddDensity(int x, int y, float density);
 	void AddVelocity(int x, int y, float v_velocity, float h_velocity);
 
