@@ -1,4 +1,4 @@
-#include "windows.h"
+﻿#include "windows.h"
 #include "debugapi.h"
 
 #include "mygraphicsview.h"
@@ -38,7 +38,7 @@ void MyGraphicsView::mousePressEvent(QMouseEvent * e){
     //qDebug() << y;
     // test czy dodawanie gestosci zadziala
     if (simulation2 != nullptr) {
-        simulation2->AddDensity(x,y,0.2);
+        simulation2->AddDensity(x,y,0.2f);
     }
 }
 
@@ -57,6 +57,7 @@ void MyGraphicsView::start() {
     this->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
 
     if (simulation2 != NULL) {
+        simulation2->FreeSimulation2();
         free(simulation2);
     }
 
@@ -66,9 +67,11 @@ void MyGraphicsView::start() {
 }
 
 void MyGraphicsView::refresh(){
+    // zjakiegoś powodu wywala bład w mainie jesli jest niezakomentowane.
+    simulation2->NextFrame(pixels);
 
-    for (int i = 1; i < this->width(); i++) {
-        for (int j = 1; j < this->height(); j++) {
+    for (int i = 1; i < this->width() - 1; i++) {
+        for (int j = 1; j < this->height()-1; j++) {
             image->setPixelColor(i, j, getColor(pixels[IX(i, j)]));
         }
     }
@@ -77,7 +80,7 @@ void MyGraphicsView::refresh(){
 }
 
 QColor MyGraphicsView::getColor(float x) {
-    //bardzo niskie x kilka tysi�cy poni�ej 0
+    //bardzo niskie x kilka tysięcy poniżej 0
     //TCHAR s[32];
     //swprintf(s,32, __TEXT("Density is %f \n"), x);
     //OutputDebugString(s);
