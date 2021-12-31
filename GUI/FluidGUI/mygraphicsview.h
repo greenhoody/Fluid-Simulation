@@ -8,6 +8,7 @@
 #include "../Simulation/Simulation.h"
 #include "qplaintextedit.h"
 #include "../Simulation2/Simulation2.h"
+#include <vector>
 
 
 class MyGraphicsView : public QGraphicsView

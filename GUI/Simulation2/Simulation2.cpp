@@ -3,6 +3,9 @@
 #include "NotEdited.h"
 #include <corecrt_malloc.h>
 #include <string.h>
+#include <algorithm>
+
+
 
 #define IX(i,j) ((i)+(size+2)*(j))
 
@@ -32,6 +35,9 @@ void Simulation2::FreeSimulation2() {
 void Simulation2::NextFrame(float* copy_array) {
 	vel_step(size, u, v, u_prev, v_prev, visc, dt);
 	dens_step(size, dens, dens_prev, u, v, diff, dt);
+	// to wywala b³¹d
+	//copy_array.insert(copy_array.end(),dens[0], &dens[(size + 2) * (size + 2) -1])
+	//std::copy(&dens[0], &dens[(size + 2)*(size+2)-1],copy_array);
 	memcpy(copy_array, dens, sizeof(float) * (size + 2) * (size + 2));
 }
 

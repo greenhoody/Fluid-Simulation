@@ -10,7 +10,7 @@
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 {
-    pixels = (float*)malloc(((unsigned long long)this->height() + 2) * sizeof(float) * ((unsigned long long)this->width() + 2));
+    pixels = (float*)malloc(sizeof(float) * (this->width() + 2) * (this->width() + 2));
     timer = new QTimer(this);
     QObject::connect(timer, &QTimer::timeout, this, &MyGraphicsView::refresh);
     //for some resone inside contructor size is diffrenet than after object is complete created
