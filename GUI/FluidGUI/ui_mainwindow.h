@@ -65,8 +65,8 @@ public:
         gridLayout->setContentsMargins(0, 0, 0, 0);
         ViscositySlider = new QSlider(layoutWidget);
         ViscositySlider->setObjectName(QString::fromUtf8("ViscositySlider"));
-        ViscositySlider->setMinimum(2);
-        ViscositySlider->setMaximum(101);
+        ViscositySlider->setMinimum(1);
+        ViscositySlider->setMaximum(999);
         ViscositySlider->setSingleStep(25);
         ViscositySlider->setOrientation(Qt::Horizontal);
 
@@ -79,7 +79,8 @@ public:
 
         DiffusionSlider = new QSlider(layoutWidget);
         DiffusionSlider->setObjectName(QString::fromUtf8("DiffusionSlider"));
-        DiffusionSlider->setMinimum(2);
+        DiffusionSlider->setMinimum(1);
+        DiffusionSlider->setMaximum(999);
         DiffusionSlider->setOrientation(Qt::Horizontal);
 
         gridLayout->addWidget(DiffusionSlider, 1, 1, 1, 1);

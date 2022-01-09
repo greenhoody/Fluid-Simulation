@@ -10,7 +10,7 @@
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 {
-    pixels = (float*)malloc(sizeof(float) * (this->width() + 2) * (this->width() + 2));
+    
     timer = new QTimer(this);
     QObject::connect(timer, &QTimer::timeout, this, &MyGraphicsView::refresh);
     //for some resone inside contructor size is diffrenet than after object is complete created
@@ -21,6 +21,7 @@ MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit *ts) 
 {
     // it's must be here because for now its best thing to get values from thes widgets in code 
+
     this->v = v;
     this->d = d;
     this->ts = ts;
@@ -49,6 +50,7 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
 
 void MyGraphicsView::start() {
     //Its must be here and not in constructor because this->width() and this->height() in constractor return wrong size
+    pixels = (float*)malloc(sizeof(float) * (this->width() + 2) * (this->width() + 2));
     image = new QImage(this->width(), this->height(), QImage::Format_RGB888);
     pixmap = QPixmap(this->width(), this->height());
     scene = new QGraphicsScene(this);
@@ -61,18 +63,18 @@ void MyGraphicsView::start() {
         free(simulation2);
     }
 
-    simulation2 = new Simulation2(this->width(), d->value(), v->value(), this->interval);
+    simulation2 = new Simulation2(this->width(), (d->value()/1000), (v->value()/1000), this->interval);
     timer->setInterval(this->interval);
     timer->start();
 }
 
 void MyGraphicsView::refresh(){
-    // zjakiegoś powodu wywala bład w mainie jesli jest niezakomentowane.
+    //szerokość chyba jest większa niż rysowanie bo jest przesuniętę w kązdym rzędzie o kilka więcej pikxeli
     simulation2->NextFrame(pixels);
 
     for (int i = 1; i < this->width() - 1; i++) {
         for (int j = 1; j < this->height()-1; j++) {
-            image->setPixelColor(i, j, getColor(pixels[IX(i, j)]));
+            image->setPixelColor(i - 1, j - 1, getColor(pixels[IX(i, j)]));
         }
     }
     pixMapItem->setPixmap(QPixmap::fromImage(*image));

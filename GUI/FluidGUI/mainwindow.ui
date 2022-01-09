@@ -56,10 +56,10 @@
      <item row="1" column="0">
       <widget class="QSlider" name="ViscositySlider">
        <property name="minimum">
-        <number>2</number>
+        <number>1</number>
        </property>
        <property name="maximum">
-        <number>101</number>
+        <number>999</number>
        </property>
        <property name="singleStep">
         <number>25</number>
@@ -79,7 +79,10 @@
      <item row="1" column="1">
       <widget class="QSlider" name="DiffusionSlider">
        <property name="minimum">
-        <number>2</number>
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>999</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
