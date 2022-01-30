@@ -14,6 +14,12 @@
 class MyGraphicsView : public QGraphicsView
 {
     Q_OBJECT
+
+public slots:
+    void refresh();
+    void start();
+    //void intervalUpdate(int i);
+
 public:
     MyGraphicsView(QWidget *parent);
     void giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit* ts);
@@ -28,10 +34,7 @@ public:
     QGraphicsPixmapItem* pixMapItem;
     float* pixels;
 
-public slots:
-    void refresh();
-    void start();
-    //void intervalUpdate(int i);
+
 
 protected:
    // MyGraphicsView(QWidget* parent);

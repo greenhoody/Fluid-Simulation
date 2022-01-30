@@ -10,7 +10,6 @@
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 {
-    
     timer = new QTimer(this);
     QObject::connect(timer, &QTimer::timeout, this, &MyGraphicsView::refresh);
     //for some resone inside contructor size is diffrenet than after object is complete created
@@ -21,14 +20,9 @@ MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit *ts) 
 {
     // it's must be here because for now its best thing to get values from thes widgets in code 
-
     this->v = v;
     this->d = d;
     this->ts = ts;
-    QString tmp = ts->toPlainText();
-    QByteArray bytearray = tmp.toLocal8Bit();
-    const char* string = bytearray.data();
-    this->interval = atoi(string);
 }
 
 void MyGraphicsView::mousePressEvent(QMouseEvent * e){
@@ -49,6 +43,11 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
 
 
 void MyGraphicsView::start() {
+    QString tmp = ts->toPlainText();
+    QByteArray bytearray = tmp.toLocal8Bit();
+    const char* string = bytearray.data();
+    this->interval = atoi(string);
+
     //Its must be here and not in constructor because this->width() and this->height() in constractor return wrong size
     pixels = (float*)malloc(sizeof(float) * (this->width() + 2) * (this->width() + 2));
     image = new QImage(this->width(), this->height(), QImage::Format_RGB888);
@@ -63,7 +62,7 @@ void MyGraphicsView::start() {
         free(simulation2);
     }
 
-    simulation2 = new Simulation2(this->width(), (d->value()/1000), (v->value()/1000), this->interval);
+    simulation2 = new Simulation2(this->width(), (d->value()/100), (v->value()/100), this->interval/1000);
     timer->setInterval(this->interval);
     timer->start();
 }
