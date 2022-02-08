@@ -71,8 +71,8 @@ void MyGraphicsView::refresh(){
     //szerokość chyba jest większa niż rysowanie bo jest przesuniętę w kązdym rzędzie o kilka więcej pikxeli
     simulation2->NextFrame(pixels);
 
-    for (int i = 1; i < this->width() - 1; i++) {
-        for (int j = 1; j < this->height()-1; j++) {
+    for (int i = 1; i <= this->width() ; i++) {
+        for (int j = 1; j <= this->height() ; j++) {
             image->setPixelColor(i - 1, j - 1, getColor(pixels[IX(i, j)]));
         }
     }

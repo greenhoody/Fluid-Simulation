@@ -5,9 +5,7 @@
 #include <string.h>
 #include <algorithm>
 
-
-
-#define IX(i,j) ((i)+(size+2)*(j))
+#define IX(i,j) ((i+1)+(size)*(j+1))
 
 Simulation2::Simulation2(int size, float diffiusion, float viscosity, float dt) {
 	this->size = size;
@@ -42,10 +40,10 @@ void Simulation2::NextFrame(float* copy_array) {
 }
 
 void Simulation2::AddDensity(int x, int y, float density) {
-	dens[IX(x + 1, y + 1)] += density;
+	dens[IX(x, y)] += density;
 }
 
 void Simulation2::AddVelocity(int x, int y, float v_velocity, float h_velocity) {
-	v[IX(x + 1, y + 1)] += v_velocity;
-	u[IX(x + 1, y + 1)] += h_velocity;
+	v[IX(x , y)] += v_velocity;
+	u[IX(x , y)] += h_velocity;
 }
