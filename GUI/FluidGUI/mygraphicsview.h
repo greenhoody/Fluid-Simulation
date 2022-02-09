@@ -44,6 +44,7 @@ protected:
 private:
     QColor getColor(float x);
     int interval;
+    QPoint pressPosition;
 
     QGraphicsScene* scene;
 };

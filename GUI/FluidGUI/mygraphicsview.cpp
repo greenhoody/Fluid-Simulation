@@ -6,7 +6,7 @@
 #include <QMouseEvent>
 #include <QDebug>
 
-#define IX(i,j) ((i)+(simulation2->size)*(j))
+#define IX(i,j) ((i)+(simulation2->size+2)*(j))
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 {
@@ -26,19 +26,31 @@ void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit
 }
 
 void MyGraphicsView::mousePressEvent(QMouseEvent * e){
-    QPoint mousePosition = e->pos();
-    int x = mousePosition.x();
-    int y = mousePosition.y();
-    //qDebug() << x;
-    //qDebug() << y;
-    // test czy dodawanie gestosci zadziala
-    if (simulation2 != nullptr) {
-        simulation2->AddDensity(x,y,0.2f);
-    }
+    pressPosition = e->pos();
+    //int x = mousePosition.x();
+    //int y = mousePosition.y();
+    ////qDebug() << x;
+    ////qDebug() << y;
+    //// test czy dodawanie gestosci zadziala
+    //if (simulation2 != nullptr) {
+    //    simulation2->AddDensity(x,y,1.0f);
+    //}
 }
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
     QPoint mousePosition = e->pos();
+
+    int x1 = pressPosition.x() < mousePosition.x()  ? pressPosition.x() : mousePosition.x();
+    int x2 = pressPosition.x() > mousePosition.x() ? pressPosition.x() : mousePosition.x();
+    int y1 = pressPosition.y() < mousePosition.y() ? pressPosition.y() : mousePosition.y();
+    int y2 = pressPosition.y() > mousePosition.y() ? pressPosition.y() : mousePosition.y();
+
+    for (int j = y1; j <= y2; j++) {
+        for (int i = x1; i <= x2; i++) {
+            simulation2->AddDensity(i, j, 0.5f);
+        }
+    }
+    e->button()
 }
 
 
@@ -61,8 +73,9 @@ void MyGraphicsView::start() {
         simulation2->FreeSimulation2();
         free(simulation2);
     }
-
-    simulation2 = new Simulation2(this->width(), (d->value()/100), (v->value()/100), this->interval/1000);
+    float diff = ((float)d->value()) / 100;
+    float visc = ((float)v->value()) / 100;
+    simulation2 = new Simulation2(this->width(), diff, visc, ((float)this->interval)/1000);
     timer->setInterval(this->interval);
     timer->start();
 }
@@ -71,8 +84,8 @@ void MyGraphicsView::refresh(){
     //szerokość chyba jest większa niż rysowanie bo jest przesuniętę w kązdym rzędzie o kilka więcej pikxeli
     simulation2->NextFrame(pixels);
 
-    for (int i = 1; i <= this->width() ; i++) {
-        for (int j = 1; j <= this->height() ; j++) {
+    for (int i = 1; i < this->width() ; i++) {
+        for (int j = 1; j < this->height() ; j++) {
             image->setPixelColor(i - 1, j - 1, getColor(pixels[IX(i, j)]));
         }
     }

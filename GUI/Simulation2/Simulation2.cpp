@@ -5,7 +5,7 @@
 #include <string.h>
 #include <algorithm>
 
-#define IX(i,j) ((i+1)+(size)*(j+1))
+#define IX(i,j) ((i+1)+(size+2)*(j+1))
 
 Simulation2::Simulation2(int size, float diffiusion, float viscosity, float dt) {
 	this->size = size;
