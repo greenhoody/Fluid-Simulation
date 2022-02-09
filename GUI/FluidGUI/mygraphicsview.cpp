@@ -50,7 +50,6 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
             simulation2->AddDensity(i, j, 0.5f);
         }
     }
-    e->button()
 }
 
 
