@@ -43,11 +43,17 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
     x2 = x2 > simulation2->size ? simulation2->size : x2;
     y2 = y2 > simulation2->size ? simulation2->size : y2;
 
-    for (int j = y1; j <= y2; j++) {
-        for (int i = x1; i <= x2; i++) {
-            simulation2->AddDensity(i, j, 0.7f);
+    if (e->button() == Qt::LeftButton) {
+        for (int j = y1; j <= y2; j++) {
+            for (int i = x1; i <= x2; i++) {
+                simulation2->AddDensity(i, j, 0.7f);
+            }
         }
     }
+    else if(e->button() == Qt::RightButton) {
+        // dodać prędkość
+    }
+
 }
 
 

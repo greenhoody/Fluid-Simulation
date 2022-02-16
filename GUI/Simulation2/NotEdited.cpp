@@ -102,7 +102,7 @@ void dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float
 
 void vel_step(int N, float* u, float* v, float* u0, float* v0, float visc, float dt)
 {
-	//add_source(N, u, u0, dt); add_source(N, v, v0, dt);
+	//add_add_source(N, u, u0, dt); add_source(N, v, v0, dt);
 	SWAP(u0, u); diffuse(N, 1, u, u0, visc, dt);
 	SWAP(v0, v); diffuse(N, 2, v, v0, visc, dt);
 	project(N, u, v, u0, v0);
