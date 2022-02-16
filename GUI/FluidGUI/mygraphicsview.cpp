@@ -27,14 +27,6 @@ void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit
 
 void MyGraphicsView::mousePressEvent(QMouseEvent * e){
     pressPosition = e->pos();
-    //int x = mousePosition.x();
-    //int y = mousePosition.y();
-    ////qDebug() << x;
-    ////qDebug() << y;
-    //// test czy dodawanie gestosci zadziala
-    //if (simulation2 != nullptr) {
-    //    simulation2->AddDensity(x,y,1.0f);
-    //}
 }
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
@@ -45,9 +37,15 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
     int y1 = pressPosition.y() < mousePosition.y() ? pressPosition.y() : mousePosition.y();
     int y2 = pressPosition.y() > mousePosition.y() ? pressPosition.y() : mousePosition.y();
 
+    //boundary, not adding density to opposite side if coursor is far enough
+    x1 = x1 < 0 ? 0 : x1;
+    y1 = y1 < 0 ? 0 : y1;
+    x2 = x2 > simulation2->size ? simulation2->size : x2;
+    y2 = y2 > simulation2->size ? simulation2->size : y2;
+
     for (int j = y1; j <= y2; j++) {
         for (int i = x1; i <= x2; i++) {
-            simulation2->AddDensity(i, j, 0.5f);
+            simulation2->AddDensity(i, j, 0.7f);
         }
     }
 }
@@ -80,7 +78,6 @@ void MyGraphicsView::start() {
 }
 
 void MyGraphicsView::refresh(){
-    //szerokość chyba jest większa niż rysowanie bo jest przesuniętę w kązdym rzędzie o kilka więcej pikxeli
     simulation2->NextFrame(pixels);
 
     for (int i = 1; i < this->width() ; i++) {
@@ -93,10 +90,6 @@ void MyGraphicsView::refresh(){
 }
 
 QColor MyGraphicsView::getColor(float x) {
-    //bardzo niskie x kilka tysięcy poniżej 0
-    //TCHAR s[32];
-    //swprintf(s,32, __TEXT("Density is %f \n"), x);
-    //OutputDebugString(s);
     if (x < 0)
         return QColor(0, 255, 0, 255);
     else {
