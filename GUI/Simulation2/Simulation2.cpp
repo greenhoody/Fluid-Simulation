@@ -43,7 +43,7 @@ void Simulation2::AddDensity(int x, int y, float density) {
 	dens[IX(x, y)] += density;
 }
 
-void Simulation2::AddVelocity(int x, int y, float v_velocity, float h_velocity) {
+void Simulation2::AddVelocity(int x, int y, float h_velocity, float v_velocity) {
 	v[IX(x , y)] += v_velocity;
 	u[IX(x , y)] += h_velocity;
 }

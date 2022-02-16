@@ -40,11 +40,13 @@ protected:
    // MyGraphicsView(QWidget* parent);
     void mousePressEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;
+    void mouseMoveEvent(QMouseEvent* e) override;
 
 private:
     QColor getColor(float x);
     int interval;
     QPoint pressPosition;
+    QPoint lastPosition;
 
     QGraphicsScene* scene;
 };

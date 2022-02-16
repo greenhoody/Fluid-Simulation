@@ -8,6 +8,10 @@
 
 #define IX(i,j) ((i)+(simulation2->size+2)*(j))
 
+constexpr auto SPEED_SCALE = 10.0f;
+constexpr auto SPEED_CHANGE_RADIUS = 10;
+constexpr auto RADIUS_SQAURE = SPEED_CHANGE_RADIUS * SPEED_CHANGE_RADIUS;
+
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 {
     timer = new QTimer(this);
@@ -27,33 +31,63 @@ void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit
 
 void MyGraphicsView::mousePressEvent(QMouseEvent * e){
     pressPosition = e->pos();
+    lastPosition = e->pos();
 }
 
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
     QPoint mousePosition = e->pos();
 
-    int x1 = pressPosition.x() < mousePosition.x()  ? pressPosition.x() : mousePosition.x();
-    int x2 = pressPosition.x() > mousePosition.x() ? pressPosition.x() : mousePosition.x();
-    int y1 = pressPosition.y() < mousePosition.y() ? pressPosition.y() : mousePosition.y();
-    int y2 = pressPosition.y() > mousePosition.y() ? pressPosition.y() : mousePosition.y();
-
-    //boundary, not adding density to opposite side if coursor is far enough
-    x1 = x1 < 0 ? 0 : x1;
-    y1 = y1 < 0 ? 0 : y1;
-    x2 = x2 > simulation2->size ? simulation2->size : x2;
-    y2 = y2 > simulation2->size ? simulation2->size : y2;
-
     if (e->button() == Qt::LeftButton) {
+        int x1 = pressPosition.x() < mousePosition.x() ? pressPosition.x() : mousePosition.x();
+        int x2 = pressPosition.x() > mousePosition.x() ? pressPosition.x() : mousePosition.x();
+        int y1 = pressPosition.y() < mousePosition.y() ? pressPosition.y() : mousePosition.y();
+        int y2 = pressPosition.y() > mousePosition.y() ? pressPosition.y() : mousePosition.y();
+
+        //boundary, not adding density to opposite side if coursor is far enough
+        x1 = x1 < 0 ? 0 : x1;
+        y1 = y1 < 0 ? 0 : y1;
+        x2 = x2 > simulation2->size ? simulation2->size : x2;
+        y2 = y2 > simulation2->size ? simulation2->size : y2;
+
         for (int j = y1; j <= y2; j++) {
             for (int i = x1; i <= x2; i++) {
                 simulation2->AddDensity(i, j, 0.7f);
             }
         }
     }
-    else if(e->button() == Qt::RightButton) {
-        // dodać prędkość
-    }
 
+}
+
+void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
+{
+    //zawsze zwraca w tej funkcjio no Button
+    QPoint mousePosition = e->pos();
+    // ten if nie działa
+   // qDebug() << e->button();
+    if (e->buttons() == 2) {
+        int xPress = lastPosition.x();
+        int yPress = lastPosition.y();
+        int xCurrent = mousePosition.x();
+        int yCurrent = mousePosition.y();
+
+        // dane do wektora zmiany położenia myszki
+        int dx = xCurrent - xPress;
+        int dy = yCurrent - yPress;
+
+        float lenght = sqrt(dx * dx + dy * dy);
+        float xNormalized = (float)dx * SPEED_SCALE / lenght;
+        float yNormalized = (float)dy * SPEED_SCALE / lenght;
+
+        for (int i = -(SPEED_CHANGE_RADIUS / 2); i <= SPEED_CHANGE_RADIUS / 2; i++) {
+            for (int j = -(SPEED_CHANGE_RADIUS / 2); i <= SPEED_CHANGE_RADIUS / 2; i++) {
+                if (simulation2->size > xCurrent + i > 0 && simulation2->size > yCurrent + i > 0 && i * i + j * j < RADIUS_SQAURE) {
+                    simulation2->AddVelocity(xCurrent + i, yCurrent + i, xNormalized, yNormalized);
+                }
+            }
+        }
+
+
+    }
 }
 
 
@@ -77,7 +111,7 @@ void MyGraphicsView::start() {
         free(simulation2);
     }
     float diff = ((float)d->value()) / 100;
-    float visc = ((float)v->value()) / 100;
+    float visc = ((float)v->value());// / 100;
     simulation2 = new Simulation2(this->width(), diff, visc, ((float)this->interval)/1000);
     timer->setInterval(this->interval);
     timer->start();
