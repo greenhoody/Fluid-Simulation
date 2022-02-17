@@ -60,10 +60,9 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
 
 void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
 {
-    //zawsze zwraca w tej funkcjio no Button
     QPoint mousePosition = e->pos();
-    // ten if nie działa
-   // qDebug() << e->button();
+
+    qDebug() << e->pos();
     if (e->buttons() == 2) {
         int xPress = lastPosition.x();
         int yPress = lastPosition.y();
@@ -78,16 +77,15 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
         float xNormalized = (float)dx * SPEED_SCALE / lenght;
         float yNormalized = (float)dy * SPEED_SCALE / lenght;
 
-        for (int i = -(SPEED_CHANGE_RADIUS / 2); i <= SPEED_CHANGE_RADIUS / 2; i++) {
-            for (int j = -(SPEED_CHANGE_RADIUS / 2); i <= SPEED_CHANGE_RADIUS / 2; i++) {
-                if (simulation2->size > xCurrent + i > 0 && simulation2->size > yCurrent + i > 0 && i * i + j * j < RADIUS_SQAURE) {
-                    simulation2->AddVelocity(xCurrent + i, yCurrent + i, xNormalized, yNormalized);
+        for (int i = -SPEED_CHANGE_RADIUS; i <= SPEED_CHANGE_RADIUS; i++) {
+            for (int j = -SPEED_CHANGE_RADIUS; j <= SPEED_CHANGE_RADIUS; j++) {
+                if (simulation2->size > xCurrent + i && xCurrent + i > 0 && simulation2->size > yCurrent + j && yCurrent + j > 0 && i * i + j * j < RADIUS_SQAURE) {
+                    simulation2->AddVelocity(xCurrent + i, yCurrent + j, xNormalized, yNormalized);
                 }
             }
         }
-
-
     }
+    lastPosition = e->pos();
 }
 
 
