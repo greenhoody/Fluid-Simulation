@@ -33,9 +33,6 @@ void Simulation2::FreeSimulation2() {
 void Simulation2::NextFrame(float* copy_array) {
 	vel_step(size, u, v, u_prev, v_prev, visc, dt);
 	dens_step(size, dens, dens_prev, u, v, diff, dt);
-	// to wywala b³¹d
-	//copy_array.insert(copy_array.end(),dens[0], &dens[(size + 2) * (size + 2) -1])
-	//std::copy(&dens[0], &dens[(size + 2)*(size+2)-1],copy_array);
 	memcpy(copy_array, dens, sizeof(float) * (size + 2) * (size + 2));
 }
 
@@ -44,6 +41,8 @@ void Simulation2::AddDensity(int x, int y, float density) {
 }
 
 void Simulation2::AddVelocity(int x, int y, float h_velocity, float v_velocity) {
-	v[IX(x , y)] += v_velocity;
-	u[IX(x , y)] += h_velocity;
+	int index = IX(x, y);
+	//v z indeksem ujemnym wpisuje dane do u_prev/ mazanie po pamiêci
+	v_prev[IX(x , y)] += v_velocity;
+	u_prev[IX(x , y)] += h_velocity;
 }

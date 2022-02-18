@@ -1,6 +1,5 @@
 ﻿#include "windows.h"
 #include "debugapi.h"
-
 #include "mygraphicsview.h"
 
 #include <QMouseEvent>
@@ -55,7 +54,6 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
             }
         }
     }
-
 }
 
 void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
