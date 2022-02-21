@@ -60,7 +60,6 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
 {
     QPoint mousePosition = e->pos();
 
-    qDebug() << e->pos();
     if (e->buttons() == 2) {
         int xPress = lastPosition.x();
         int yPress = lastPosition.y();
@@ -106,7 +105,7 @@ void MyGraphicsView::start() {
         simulation2->FreeSimulation2();
         free(simulation2);
     }
-    float diff = ((float)d->value()) / 100;
+    float diff = ((float)d->value()) / 100000;
     float visc = ((float)v->value());// / 100;
     simulation2 = new Simulation2(this->width(), diff, visc, ((float)this->interval)/1000);
     timer->setInterval(this->interval);
