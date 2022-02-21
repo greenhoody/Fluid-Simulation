@@ -7,8 +7,8 @@
 
 #define IX(i,j) ((i)+(simulation2->size+2)*(j))
 
-constexpr auto SPEED_SCALE = 10.0f;
-constexpr auto SPEED_CHANGE_RADIUS = 10;
+constexpr auto SPEED_SCALE = 5.0f;
+constexpr auto SPEED_CHANGE_RADIUS = 6;
 constexpr auto RADIUS_SQAURE = SPEED_CHANGE_RADIUS * SPEED_CHANGE_RADIUS;
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
@@ -78,7 +78,7 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
         for (int i = -SPEED_CHANGE_RADIUS; i <= SPEED_CHANGE_RADIUS; i++) {
             for (int j = -SPEED_CHANGE_RADIUS; j <= SPEED_CHANGE_RADIUS; j++) {
                 if (simulation2->size > xCurrent + i && xCurrent + i > 0 && simulation2->size > yCurrent + j && yCurrent + j > 0 && i * i + j * j < RADIUS_SQAURE) {
-                    simulation2->AddVelocity(xCurrent + i, yCurrent + j, xNormalized, yNormalized);
+                    simulation2->AddVelocity(xCurrent + i, yCurrent + j, (float)dx * SPEED_SCALE, (float)dy * SPEED_SCALE);
                 }
             }
         }
@@ -133,4 +133,3 @@ QColor MyGraphicsView::getColor(float x) {
         return QColor(y, y, y, 255);
     }
 }
-
