@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Simulation2.h"
 #include "NotEdited.h"
 #include <vector>
 
@@ -16,6 +15,5 @@ public:
 	void NextFrame(float* copy_array);
 	void AddDensity(int x, int y, float density);
 	void AddVelocity(int x, int y, float v_velocity, float h_velocity);
-
 };
 
