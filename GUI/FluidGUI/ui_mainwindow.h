@@ -59,7 +59,7 @@ public:
         pushButton->setGeometry(QRect(610, 20, 80, 25));
         layoutWidget = new QWidget(centralwidget);
         layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        layoutWidget->setGeometry(QRect(20, 10, 541, 41));
+        layoutWidget->setGeometry(QRect(20, 10, 541, 51));
         gridLayout = new QGridLayout(layoutWidget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
@@ -80,7 +80,7 @@ public:
         DiffusionSlider = new QSlider(layoutWidget);
         DiffusionSlider->setObjectName(QString::fromUtf8("DiffusionSlider"));
         DiffusionSlider->setMinimum(1);
-        DiffusionSlider->setMaximum(999);
+        DiffusionSlider->setMaximum(1000);
         DiffusionSlider->setOrientation(Qt::Horizontal);
 
         gridLayout->addWidget(DiffusionSlider, 1, 1, 1, 1);

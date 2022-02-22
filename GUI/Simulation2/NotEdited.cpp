@@ -32,7 +32,7 @@ void set_bnd(int N, int b, float* x)
 void diffuse(int N, int b, float* x, float* x0, float diff, float dt)
 {
 	int i, j, k;
-	float a = dt * diff * N * N;
+	float a = dt * diff * (N - 2) * (N - 2);
 	for (k = 0; k < 20; k++) {
 	//for (k = 0; k < 4; k++) {
 		for (i = 1; i <= N; i++) {
@@ -102,30 +102,23 @@ void project(int N, float* u, float* v, float* p, float* div)
 	set_bnd(N, 1, u); set_bnd(N, 2, v);
 }
 
-void dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float dt)
-{
-	//add_source(N, x, x0, dt);
-	SWAP(x0, x); diffuse(N, 0, x, x0, diff, dt);
-	SWAP(x0, x); advect(N, 0, x, x0, u, v, dt);
-}
-
 void vel_step(int N, float* u, float* v, float* u0, float* v0, float visc, float dt)
 {
 	//add_add_source(N, u, u0, dt); add_source(N, v, v0, dt);
-	SWAP(u0, u); diffuse(N, 1, u, u0, visc, dt);
-	SWAP(v0, v); diffuse(N, 2, v, v0, visc, dt);
-	project(N, u, v, u0, v0);
-	SWAP(u0, u); SWAP(v0, v);
+	diffuse(N, 1, u0, u, visc, dt); //SWAP(u0, u); diffuse(N, 1, u, u0, visc, dt);
+	diffuse(N, 2, v0, v, visc, dt); //SWAP(v0, v); diffuse(N, 2, v, v0, visc, dt);
+	project(N, u0, v0, u, v);
+	//SWAP(u0, u); SWAP(v0, v);
 	advect(N, 1, u, u0, u0, v0, dt); 
 	advect(N, 2, v, v0, u0, v0, dt);
 	project(N, u, v, u0, v0);
 }
 
-
-//while (simulating)
-//{
-//	get_from_UI(dens_prev, u_prev, v_prev);
-//	vel_step(N, u, v, u_prev, v_prev, visc, dt);
-//	dens_step(N, dens, dens_prev, u, v, diff, dt);
-//	draw_dens(N, dens);
-//}
+void dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float dt)
+{
+	//add_source(N, x, x0, dt);
+	//SWAP(x0, x);
+	diffuse(N, 0, x0, x, diff, dt);
+	//SWAP(x0, x); 
+	advect(N, 0, x, x0, u, v, dt);
+}

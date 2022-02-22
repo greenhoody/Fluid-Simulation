@@ -7,6 +7,7 @@
 
 #define IX(i,j) ((i)+(simulation2->size+2)*(j))
 
+constexpr auto TIME_SCALE = 1.0f;
 constexpr auto SPEED_SCALE = 5.0f;
 constexpr auto SPEED_CHANGE_RADIUS = 6;
 constexpr auto RADIUS_SQAURE = SPEED_CHANGE_RADIUS * SPEED_CHANGE_RADIUS;
@@ -106,8 +107,8 @@ void MyGraphicsView::start() {
         free(simulation2);
     }
     float diff = ((float)d->value()) / 100000;
-    float visc = ((float)v->value());// / 100;
-    simulation2 = new Simulation2(this->width(), diff, visc, ((float)this->interval)/1000);
+    float visc = ((float)v->value()) / 100000; // viscosity but saomething is bad because i don't see much changes in it
+    simulation2 = new Simulation2(this->width(), diff, visc, ((float)this->interval) * TIME_SCALE /1000);
     timer->setInterval(this->interval);
     timer->start();
 }
