@@ -223,6 +223,9 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Factory\Factory.vcxproj">
+      <Project>{c7239c60-8c7e-433c-97c5-483bd81889a2}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Simulation2\Simulation2.vcxproj">
       <Project>{1a3d43a0-2313-4afe-b979-559772477bd1}</Project>
     </ProjectReference>

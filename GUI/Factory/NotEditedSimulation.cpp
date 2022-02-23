@@ -1,20 +1,59 @@
-// Simulation2.cpp : Defines the functions for the static library.
-//
+#include "NotEditedSimulation.h"
+#include <corecrt_malloc.h>
+#include <string.h>
+#include <algorithm>
 
-#include "pch.h"
-#include "NotEdited.h"
+#define IX(i,j) ((i)+(size+2)*(j))
 
-#define IX(i,j) ((i)+(N+2)*(j))
-#define SWAP(x0,x) {float *tmp=x0;x0=x;x=tmp;}
+NotEditedSimulation::NotEditedSimulation(int size, float diffiusion, float viscosity, float dt) {
+	this->size = size;
+	this->diff = diffiusion;
+	this->visc = viscosity;
+	this->dt = dt;
 
+	this->u = (float*)calloc((size + 2) * (size + 2), sizeof(float));
+	this->u_prev = (float*)calloc((size + 2) * (size + 2), sizeof(float));
+	this->v = (float*)calloc((size + 2) * (size + 2), sizeof(float));
+	this->v_prev = (float*)calloc((size + 2) * (size + 2), sizeof(float));
+	this->dens = (float*)calloc((size + 2) * (size + 2), sizeof(float));
+	this->dens_prev = (float*)calloc((size + 2) * (size + 2), sizeof(float));
+}
 
-void add_source(int N, float* x, float* s, float dt)
+NotEditedSimulation::~NotEditedSimulation() {
+	free(u);
+	free(u_prev);
+	free(v);
+	free(v_prev);
+	free(dens);
+	free(dens_prev);
+}
+
+void NotEditedSimulation::NextFrame(float* copy_array) {
+	vel_step(size, u, v, u_prev, v_prev, visc, dt);
+	dens_step(size, dens, dens_prev, u, v, diff, dt);
+	memcpy(copy_array, dens, sizeof(float) * (size + 2) * (size + 2));
+}
+
+void NotEditedSimulation::AddDensity(int x, int y, float density) {
+	dens[IX(x + 1, y + 1)] += density;
+}
+
+void NotEditedSimulation::AddVelocity(int x, int y, float h_velocity, float v_velocity) {
+	int index = IX(x + 1, y + 1);
+	//v z indeksem ujemnym wpisuje dane do u_prev/ mazanie po pamiêci
+	v_prev[index] += v_velocity;
+	u_prev[index] += h_velocity;
+}
+
+//=====================================================================================================================
+
+void NotEditedSimulation::add_source(int N, float* x, float* s, float dt)
 {
 	int i, size = (N + 2) * (N + 2);
 	for (i = 0; i < size; i++) x[i] += dt * s[i];
 }
 
-void set_bnd(int N, int b, float* x)
+void NotEditedSimulation::set_bnd(int N, int b, float* x)
 {
 	int i;
 	for (i = 1; i <= N; i++) {
@@ -29,7 +68,7 @@ void set_bnd(int N, int b, float* x)
 	x[IX(N + 1, N + 1)] = 0.5f * (x[IX(N, N + 1)] + x[IX(N + 1, N)]);
 }
 
-void diffuse(int N, int b, float* x, float* x0, float diff, float dt)
+void NotEditedSimulation::diffuse(int N, int b, float* x, float* x0, float diff, float dt)
 {
 	int i, j, k;
 	float a = dt * diff * (N - 2) * (N - 2);
@@ -44,17 +83,17 @@ void diffuse(int N, int b, float* x, float* x0, float diff, float dt)
 	}
 }
 
-void advect(int N, int b, float* d, float* d0, float* u, float* v, float dt)
+void NotEditedSimulation::advect(int N, int b, float* d, float* d0, float* u, float* v, float dt)
 {
 	int i, j, i0, j0, i1, j1;
 	float x, y, s0, t0, s1, t1, dt0;
 	dt0 = dt * (float)N;
 	for (i = 1; i <= N; i++) {
 		for (j = 1; j <= N; j++) {
-			x = (float)i - dt0 * u[IX(i, j)]; 
+			x = (float)i - dt0 * u[IX(i, j)];
 			y = (float)j - dt0 * v[IX(i, j)];
-			if (x < 0.5) x = 0.5f; if (x > N + 0.5) x = N + 0.5f; 
-			i0 = (int)x; 
+			if (x < 0.5) x = 0.5f; if (x > N + 0.5) x = N + 0.5f;
+			i0 = (int)x;
 			i1 = i0 + 1;
 			if (y < 0.5) y = 0.5f; if (y > N + 0.5) y = N + 0.5f;
 			j0 = (int)y;
@@ -70,7 +109,7 @@ void advect(int N, int b, float* d, float* d0, float* u, float* v, float dt)
 	set_bnd(N, b, d);
 }
 
-void project(int N, float* u, float* v, float* p, float* div)
+void NotEditedSimulation::project(int N, float* u, float* v, float* p, float* div)
 {
 	int i, j, k;
 	float h;
@@ -101,18 +140,18 @@ void project(int N, float* u, float* v, float* p, float* div)
 	set_bnd(N, 1, u); set_bnd(N, 2, v);
 }
 
-void vel_step(int N, float* u, float* v, float* u0, float* v0, float visc, float dt)
+void NotEditedSimulation::vel_step(int N, float* u, float* v, float* u0, float* v0, float visc, float dt)
 {
 	//add_add_source(N, u, u0, dt); add_source(N, v, v0, dt);
 	diffuse(N, 1, u0, u, visc, dt);
 	diffuse(N, 2, v0, v, visc, dt);
 	project(N, u0, v0, u, v);
-	advect(N, 1, u, u0, u0, v0, dt); 
+	advect(N, 1, u, u0, u0, v0, dt);
 	advect(N, 2, v, v0, u0, v0, dt);
 	project(N, u, v, u0, v0);
 }
 
-void dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float dt)
+void NotEditedSimulation::dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float dt)
 {
 	//add_source(N, x, x0, dt);
 	diffuse(N, 0, x0, x, diff, dt);

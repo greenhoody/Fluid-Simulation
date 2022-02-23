@@ -7,12 +7,8 @@ public:
 	int size;
 	float diff, visc, dt;
 
-	Simulation(int size, float diffiusion, float viscosity, float dt);
-	Simulation() {};
-	virtual ~Simulation();
-
-	virtual void NextFrame(float* copy_array) = 0;
-	virtual void AddDensity(int x, int y, float density) = 0;
-	virtual void AddVelocity(int x, int y, float v_velocity, float h_velocity) = 0;
+	void NextFrame(float* copy_array) = 0;
+	void AddDensity(int x, int y, float density) = 0;
+	void AddVelocity(int x, int y, float v_velocity, float h_velocity) = 0;
 
 };

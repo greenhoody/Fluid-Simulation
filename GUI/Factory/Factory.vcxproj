@@ -21,8 +21,13 @@
   <ItemGroup>
     <ClInclude Include="CudaSimulation.h" />
     <ClInclude Include="Factory.h" />
+    <ClInclude Include="FactoryNotEditedSimulation.h" />
     <ClInclude Include="NotEditedSimulation.h" />
     <ClInclude Include="Simulation.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FactoryNotEditedSimulation.cpp" />
+    <ClCompile Include="NotEditedSimulation.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
