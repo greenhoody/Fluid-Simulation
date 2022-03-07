@@ -2,6 +2,7 @@
 #include <corecrt_malloc.h>
 #include <string.h>
 #include <algorithm>
+#include"pch.h"
 
 #define IX(i,j) ((i)+(size+2)*(j))
 
@@ -35,7 +36,11 @@ void NotEditedSimulation::NextFrame(float* copy_array) {
 }
 
 void NotEditedSimulation::AddDensity(int x, int y, float density) {
-	dens[IX(x + 1, y + 1)] += density;
+	int index = IX(x + 1, y + 1);
+	dens[index] += density;
+	if (dens[index] > 1) {
+		dens[index] = 1;
+	}
 }
 
 void NotEditedSimulation::AddVelocity(int x, int y, float h_velocity, float v_velocity) {

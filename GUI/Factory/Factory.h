@@ -3,5 +3,6 @@
 
 class Factory
 {
-	virtual Simulation CreateSimulation() = 0;
+public :
+	virtual Simulation* CreateSimulation(int size, float diffiusion, float viscosity, float dt) = 0;
 };

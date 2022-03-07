@@ -1,14 +1,15 @@
 #pragma once
 #include "Simulation.h"
+#include"pch.h"
 
 class NotEditedSimulation : public Simulation
 {
 public:
 	NotEditedSimulation(int size, float diffiusion, float viscosity, float dt);
 	~NotEditedSimulation();
-	void NextFrame(float* copy_array) = 0;
-	void AddDensity(int x, int y, float density) = 0;
-	void AddVelocity(int x, int y, float v_velocity, float h_velocity) = 0;
+	void NextFrame(float* copy_array) ;
+	void AddDensity(int x, int y, float density) ;
+	void AddVelocity(int x, int y, float v_velocity, float h_velocity);
 private:
 	void vel_step(int N, float* u, float* v, float* u0, float* v0, float visc, float dt);
 	void dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float dt);

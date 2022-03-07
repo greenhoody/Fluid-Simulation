@@ -9,6 +9,7 @@
 #include "qplaintextedit.h"
 #include "../Simulation2/Simulation2.h"
 #include <vector>
+#include "../Factory/Factory.h"
 
 
 class MyGraphicsView : public QGraphicsView
@@ -22,13 +23,14 @@ public slots:
 
 public:
     MyGraphicsView(QWidget *parent);
-    void giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit* ts);
+    void giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit* it, QPlainTextEdit* ft);
 
+    Factory *factory;
     QTimer *timer;
     Simulation *simulation = nullptr;
     Simulation2* simulation2 = nullptr;
     QSlider *v, *d;
-    QPlainTextEdit* ts;
+    QPlainTextEdit* it,* ft;
     QImage* image;
     QPixmap pixmap;
     QGraphicsPixmapItem* pixMapItem;
@@ -44,7 +46,7 @@ protected:
 
 private:
     QColor getColor(float x);
-    int interval;
+    int interval, frameTime;
     QPoint pressPosition;
     QPoint lastPosition;
 

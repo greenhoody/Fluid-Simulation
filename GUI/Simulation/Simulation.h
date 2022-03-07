@@ -1,11 +1,7 @@
-#pragma once
 #include "Simulator.h"
 #include <vector>
 #include <iostream>
 #include <cstdlib>
-
-using namespace std;
-
 
 class Simulation 
 {
@@ -19,7 +15,6 @@ public:
 	void AddBoundaries(int x1, int y1, int x2, int y2);
 	void DeleteBoundaries(int x1, int y1, int x2, int y2);
 	void AddSource(int x, int y, float s);
-
 
 	// constructor 
 	Simulation(int height, int width, float viscosity,float diffusion);

@@ -229,9 +229,6 @@
     <ProjectReference Include="..\Simulation2\Simulation2.vcxproj">
       <Project>{1a3d43a0-2313-4afe-b979-559772477bd1}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\Simulation\Simulation.vcxproj">
-      <Project>{8ea49662-6ed5-43e5-9502-8f68198b7094}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

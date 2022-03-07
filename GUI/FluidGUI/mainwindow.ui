@@ -33,7 +33,7 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>610</x>
+      <x>810</x>
       <y>20</y>
       <width>80</width>
       <height>25</height>
@@ -48,11 +48,14 @@
      <rect>
       <x>20</x>
       <y>10</y>
-      <width>541</width>
-      <height>51</height>
+      <width>741</width>
+      <height>61</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
+     <property name="spacing">
+      <number>3</number>
+     </property>
      <item row="1" column="0">
       <widget class="QSlider" name="ViscositySlider">
        <property name="minimum">
@@ -69,10 +72,30 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Viscosity</string>
+     <item row="1" column="2">
+      <widget class="QPlainTextEdit" name="plainTextEdit">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="inputMethodHints">
+        <set>Qt::ImhDigitsOnly</set>
+       </property>
+       <property name="plainText">
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>ms</string>
        </property>
       </widget>
      </item>
@@ -96,20 +119,34 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="label_3">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Time step</string>
+        <string>Viscosity</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="2">
-      <widget class="QPlainTextEdit" name="plainTextEdit">
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Iteration time</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Frame time</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QPlainTextEdit" name="plainTextEdit_2">
        <property name="enabled">
         <bool>true</bool>
        </property>
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <sizepolicy hsizetype="Fixed" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -118,6 +155,9 @@
         <font>
          <pointsize>9</pointsize>
         </font>
+       </property>
+       <property name="inputMethodHints">
+        <set>Qt::ImhDigitsOnly</set>
        </property>
        <property name="plainText">
         <string/>

@@ -37,7 +37,9 @@ void Simulation2::NextFrame(float* copy_array) {
 }
 
 void Simulation2::AddDensity(int x, int y, float density) {
-	dens[IX(x, y)] += density;
+	int index = IX(x, y);
+	dens[index] += density;
+
 }
 
 void Simulation2::AddVelocity(int x, int y, float h_velocity, float v_velocity) {

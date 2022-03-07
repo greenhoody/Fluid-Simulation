@@ -2,12 +2,17 @@
 #include "debugapi.h"
 #include "mygraphicsview.h"
 
+#include "../Factory/Simulation.h"
+#include "../Factory/Factory.h"
+#include "../Factory/FactoryNotEditedSimulation.h"
+#include "../Factory/NotEditedSimulation.h"
+
 #include <QMouseEvent>
 #include <QDebug>
 
 #define IX(i,j) ((i)+(simulation2->size+2)*(j))
 
-constexpr auto TIME_SCALE = 1.0f;
+//working 
 constexpr auto SPEED_SCALE = 5.0f;
 constexpr auto SPEED_CHANGE_RADIUS = 6;
 constexpr auto RADIUS_SQAURE = SPEED_CHANGE_RADIUS * SPEED_CHANGE_RADIUS;
@@ -21,12 +26,13 @@ MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
     //qDebug() << this->width();
 }
 
-void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit *ts) 
+void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit *it, QPlainTextEdit* ft)
 {
     // it's must be here because for now its best thing to get values from thes widgets in code 
     this->v = v;
     this->d = d;
-    this->ts = ts;
+    this->it = it;
+    this->ft = ft;
 }
 
 void MyGraphicsView::mousePressEvent(QMouseEvent * e){
@@ -88,7 +94,7 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
 
 
 void MyGraphicsView::start() {
-    QString tmp = ts->toPlainText();
+    QString tmp = it->toPlainText();
     QByteArray bytearray = tmp.toLocal8Bit();
     const char* string = bytearray.data();
     this->interval = atoi(string);
@@ -107,9 +113,15 @@ void MyGraphicsView::start() {
         free(simulation2);
     }
     float diff = ((float)d->value()) / 100000;
-    float visc = ((float)v->value()) / 100000; // viscosity but saomething is bad because i don't see much changes in it
-    simulation2 = new Simulation2(this->width(), diff, visc, ((float)this->interval) * TIME_SCALE /1000);
-    timer->setInterval(this->interval);
+    float visc = ((float)v->value()) / 100000;
+    simulation2 = new Simulation2(this->width(), diff, visc, ((float)this->interval) / 1000);
+
+    tmp = ft->toPlainText();
+    bytearray = tmp.toLocal8Bit();
+    string = bytearray.data();
+    this->frameTime = atoi(string);
+
+    timer->setInterval(this->frameTime);
     timer->start();
 }
 
