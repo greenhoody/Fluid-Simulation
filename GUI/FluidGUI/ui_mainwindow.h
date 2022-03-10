@@ -11,6 +11,7 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
@@ -39,18 +40,19 @@ public:
     QLabel *label_3;
     QLabel *label_4;
     QPlainTextEdit *plainTextEdit_2;
+    QComboBox *comboBox;
     QMenuBar *menubar;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1111, 720);
+        MainWindow->resize(987, 720);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         graphicsView = new MyGraphicsView(centralwidget);
         graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
-        graphicsView->setGeometry(QRect(30, 80, 250, 250));
+        graphicsView->setGeometry(QRect(20, 120, 250, 250));
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -61,7 +63,7 @@ public:
         pushButton->setGeometry(QRect(810, 20, 80, 25));
         layoutWidget = new QWidget(centralwidget);
         layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        layoutWidget->setGeometry(QRect(20, 10, 741, 61));
+        layoutWidget->setGeometry(QRect(20, 10, 741, 51));
         gridLayout = new QGridLayout(layoutWidget);
         gridLayout->setSpacing(3);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
@@ -128,10 +130,15 @@ public:
 
         gridLayout->addWidget(plainTextEdit_2, 1, 3, 1, 1);
 
+        comboBox = new QComboBox(centralwidget);
+        comboBox->addItem(QString());
+        comboBox->addItem(QString());
+        comboBox->setObjectName(QString::fromUtf8("comboBox"));
+        comboBox->setGeometry(QRect(20, 80, 261, 22));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 1111, 22));
+        menubar->setGeometry(QRect(0, 0, 987, 22));
         MainWindow->setMenuBar(menubar);
 
         retranslateUi(MainWindow);
@@ -152,6 +159,9 @@ public:
         label_4->setText(QCoreApplication::translate("MainWindow", "Frame time", nullptr));
         plainTextEdit_2->setPlainText(QString());
         plainTextEdit_2->setPlaceholderText(QCoreApplication::translate("MainWindow", "ms", nullptr));
+        comboBox->setItemText(0, QCoreApplication::translate("MainWindow", "orginal", nullptr));
+        comboBox->setItemText(1, QCoreApplication::translate("MainWindow", "cuda", nullptr));
+
     } // retranslateUi
 
 };

@@ -2,7 +2,7 @@
 #include "debugapi.h"
 #include "mygraphicsview.h"
 
-#include "../Factory/Simulation.h"
+//#include "../Factory/Simulation.h"
 #include "../Factory/Factory.h"
 #include "../Factory/FactoryNotEditedSimulation.h"
 #include "../Factory/NotEditedSimulation.h"
@@ -10,7 +10,7 @@
 #include <QMouseEvent>
 #include <QDebug>
 
-#define IX(i,j) ((i)+(simulation2->size+2)*(j))
+#define IX(i,j) ((i)+(simulation->size+2)*(j))
 
 //working 
 constexpr auto SPEED_SCALE = 5.0f;
@@ -26,13 +26,14 @@ MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
     //qDebug() << this->width();
 }
 
-void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit *it, QPlainTextEdit* ft)
+void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit *it, QPlainTextEdit* ft, QComboBox* kind)
 {
     // it's must be here because for now its best thing to get values from thes widgets in code 
     this->v = v;
     this->d = d;
     this->it = it;
     this->ft = ft;
+    this->kind = kind;
 }
 
 void MyGraphicsView::mousePressEvent(QMouseEvent * e){
@@ -52,12 +53,12 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
         //boundary, not adding density to opposite side if coursor is far enough
         x1 = x1 < 0 ? 0 : x1;
         y1 = y1 < 0 ? 0 : y1;
-        x2 = x2 > simulation2->size ? simulation2->size : x2;
-        y2 = y2 > simulation2->size ? simulation2->size : y2;
+        x2 = x2 > simulation->size ? simulation->size : x2;
+        y2 = y2 > simulation->size ? simulation->size : y2;
 
         for (int j = y1; j <= y2; j++) {
             for (int i = x1; i <= x2; i++) {
-                simulation2->AddDensity(i, j, 0.7f);
+                simulation->AddDensity(i, j, 0.7f);
             }
         }
     }
@@ -83,8 +84,8 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
 
         for (int i = -SPEED_CHANGE_RADIUS; i <= SPEED_CHANGE_RADIUS; i++) {
             for (int j = -SPEED_CHANGE_RADIUS; j <= SPEED_CHANGE_RADIUS; j++) {
-                if (simulation2->size > xCurrent + i && xCurrent + i > 0 && simulation2->size > yCurrent + j && yCurrent + j > 0 && i * i + j * j < RADIUS_SQAURE) {
-                    simulation2->AddVelocity(xCurrent + i, yCurrent + j, (float)dx * SPEED_SCALE, (float)dy * SPEED_SCALE);
+                if (simulation->size > xCurrent + i && xCurrent + i > 0 && simulation->size > yCurrent + j && yCurrent + j > 0 && i * i + j * j < RADIUS_SQAURE) {
+                    simulation->AddVelocity(xCurrent + i, yCurrent + j, (float)dx * SPEED_SCALE, (float)dy * SPEED_SCALE);
                 }
             }
         }
@@ -100,21 +101,27 @@ void MyGraphicsView::start() {
     this->interval = atoi(string);
 
     //Its must be here and not in constructor because this->width() and this->height() in constractor return wrong size
-    pixels = (float*)malloc(sizeof(float) * (this->width() + 2) * (this->width() + 2));
-    image = new QImage(this->width(), this->height(), QImage::Format_RGB888);
+    pixels.reset((float*)malloc(sizeof(float) * (this->width() + 2) * (this->width() + 2)));
+    image.reset(new QImage(this->width(), this->height(), QImage::Format_RGB888));
     pixmap = QPixmap(this->width(), this->height());
-    scene = new QGraphicsScene(this);
+    scene.reset(new QGraphicsScene(this));
     pixMapItem = scene->addPixmap(pixmap);
-    this->setScene(scene);
+    this->setScene(&*scene);
     this->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
 
-    if (simulation2 != NULL) {
-        simulation2->FreeSimulation2();
-        free(simulation2);
-    }
+
     float diff = ((float)d->value()) / 100000;
     float visc = ((float)v->value()) / 100000;
-    simulation2 = new Simulation2(this->width(), diff, visc, ((float)this->interval) / 1000);
+
+
+    switch (kind->currentIndex()) {
+    case 0:
+        factory.reset(new FactoryNotEditedSimulation());
+        simulation.reset(factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000));
+        break;
+    case 1:
+        break;
+    }
 
     tmp = ft->toPlainText();
     bytearray = tmp.toLocal8Bit();
@@ -126,7 +133,7 @@ void MyGraphicsView::start() {
 }
 
 void MyGraphicsView::refresh(){
-    simulation2->NextFrame(pixels);
+    simulation->NextFrame(pixels.get());
 
     for (int i = 1; i < this->width() ; i++) {
         for (int j = 1; j < this->height() ; j++) {

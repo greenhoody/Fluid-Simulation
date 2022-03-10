@@ -4,13 +4,14 @@
 #include <QGraphicsView>
 #include <QTimer>
 #include <QGraphicsPixmapItem>
-#include "qslider.h"
-#include "../Simulation/Simulation.h"
-#include "qplaintextedit.h"
-#include "../Simulation2/Simulation2.h"
 #include <vector>
-#include "../Factory/Factory.h"
+#include <QComboBox>
+#include <memory>
 
+#include "qslider.h"
+#include "../Factory/Simulation.h"
+#include "qplaintextedit.h"
+#include "../Factory/Factory.h"
 
 class MyGraphicsView : public QGraphicsView
 {
@@ -23,19 +24,19 @@ public slots:
 
 public:
     MyGraphicsView(QWidget *parent);
-    void giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit* it, QPlainTextEdit* ft);
+    void giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit* it, QPlainTextEdit* ft, QComboBox* kind);
+    
+    QComboBox * kind;
+    QSlider * v, * d;
+    QPlainTextEdit * it, * ft;
+    QTimer* timer;
 
-    Factory *factory;
-    QTimer *timer;
-    Simulation *simulation = nullptr;
-    Simulation2* simulation2 = nullptr;
-    QSlider *v, *d;
-    QPlainTextEdit* it,* ft;
-    QImage* image;
-    QPixmap pixmap;
+    std::unique_ptr<Factory> factory;
+    std::unique_ptr<Simulation> simulation;
+    std::unique_ptr<QImage> image;
+    std::unique_ptr<float[]> pixels;
     QGraphicsPixmapItem* pixMapItem;
-    float* pixels;
-
+    QPixmap pixmap;
 
 
 protected:
@@ -50,7 +51,7 @@ private:
     QPoint pressPosition;
     QPoint lastPosition;
 
-    QGraphicsScene* scene;
+    std::unique_ptr<QGraphicsScene> scene;
 };
 
 #endif // MYGRAPHICSVIEW_H
