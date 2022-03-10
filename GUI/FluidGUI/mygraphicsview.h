@@ -35,8 +35,15 @@ public:
     std::unique_ptr<Simulation> simulation;
     std::unique_ptr<QImage> image;
     std::unique_ptr<float[]> pixels;
+
+    //pix map itembronii siê przed unique pointer to musi byæ coœ u nich, popsuty destructor
+
+    //std::unique_ptr<QGraphicsPixmapItem> pixMapItemTEST;
     QGraphicsPixmapItem* pixMapItem;
+
     QPixmap pixmap;
+
+    
 
 
 protected:

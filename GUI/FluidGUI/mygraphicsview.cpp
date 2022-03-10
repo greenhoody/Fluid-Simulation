@@ -106,6 +106,7 @@ void MyGraphicsView::start() {
     pixmap = QPixmap(this->width(), this->height());
     scene.reset(new QGraphicsScene(this));
     pixMapItem = scene->addPixmap(pixmap);
+    //pixMapItemTEST.reset((scene->addPixmap(pixmap)));
     this->setScene(&*scene);
     this->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
 
