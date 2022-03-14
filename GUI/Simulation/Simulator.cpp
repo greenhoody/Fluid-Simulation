@@ -129,14 +129,6 @@ void Simulator::diffuse(int b, float* grid, float* grid2, float diff, float dt) 
 
 void Simulator::bnd(int b, float* x)
 {
-//orginal tylko krawedzie
-//for (i = 1; i <= N; i++) {
-//	x[IX(0, i)] = b == 1 ? –x[IX(1, i)] : x[IX(1, i)];
-//	x[IX(N + 1, i)] = b == 1 ? –x[IX(N, i)] : x[IX(N, i)];
-//	x[IX(i, 0)] = b == 2 ? –x[IX(i, 1)] : x[IX(i, 1)];
-//	x[IX(i, N + 1)] = b == 2 ? –x[IX(i, N)] : x[IX(i, N)];
-//}
-
 //sprawdza bariery rownie¿ w srodku, musz¹ byæ one szerokie i wysokie na co najmnie 2 pola
 	for (int i = 1; i < this->width2; i++) {
 		for (int j = 1; i < this->height2; i++) {
@@ -147,13 +139,6 @@ void Simulator::bnd(int b, float* x)
 			x[IX(i, j)] = (b == 1 && boundaries[IX(i, j)] && boundaries[IX(i + 1, j)]) ? -x[IX(i + 1, j)] : x[IX(i + 1, j)];//prawo
 		}
 	}
-
-
-// orginalne od naroznikow od naroznikow
-//x[IX(0, 0)] = 0.5 * (x[IX(1, 0)] + x[IX(0, 1)]);
-//x[IX(0, N + 1)] = 0.5 * (x[IX(1, N + 1)] + x[IX(0, N)]);
-//x[IX(N + 1, 0)] = 0.5 * (x[IX(N, 0)] + x[IX(N + 1, 1)]);
-//x[IX(N + 1, N + 1)] = 0.5 * (x[IX(N, N + 1)] + x[IX(N + 1, N)]);
 
 	x[IX(1, 1)] = 0.5 * (x[IX(2, 1)] + x[IX(1, 2)]); //lewygorny
 	x[IX(1, height + 2)] = 0.5 * (x[IX(1, height+1)] + x[IX(2, height + 2)]); //lewydolny
@@ -184,18 +169,6 @@ Simulator::Simulator(int height, int width, float viscosity, float diffusion) {
 	densSources = (float*) calloc(size, sizeof(float));
 	boundaries = (bool*) calloc(size, sizeof(bool));
 	
-	//for (int i = 0; i < height2; i++) {
-	//	boundaries[IX(0,i)] = true;
-	//	boundaries[IX(1, i)] = true;
-	//	boundaries[IX(width2 - 1,i)] = true;
-	//	boundaries[IX(width2 - 2,i)] = true;
-	//}
-	//for (int i = 0; i < width2; i++) {
-	//	boundaries[IX(i, 0)] = true;
-	//	boundaries[IX(i, 1)] = true;
-	//	boundaries[IX(i, height2 - 2)] = true;
-	//	boundaries[IX(i, height2 - 1)] = true;
-	//}
 	for (int i = 0; i < height2; i++) {
 		boundaries[IX(0,i)] = true;
 		boundaries[IX(1, i)] = true;

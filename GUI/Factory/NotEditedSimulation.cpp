@@ -126,7 +126,10 @@ void NotEditedSimulation::project(int N, float* u, float* v, float* p, float* di
 			p[IX(i, j)] = 0;
 		}
 	}
-	set_bnd(N, 0, div); set_bnd(N, 0, p);
+	set_bnd(N, 0, div); 
+	set_bnd(N, 0, p);
+
+
 	for (k = 0; k < 20; k++) {
 		for (i = 1; i <= N; i++) {
 			for (j = 1; j <= N; j++) {
@@ -142,7 +145,8 @@ void NotEditedSimulation::project(int N, float* u, float* v, float* p, float* di
 			v[IX(i, j)] -= 0.5f * (p[IX(i, j + 1)] - p[IX(i, j - 1)]) / h;
 		}
 	}
-	set_bnd(N, 1, u); set_bnd(N, 2, v);
+	set_bnd(N, 1, u); 
+	set_bnd(N, 2, v);
 }
 
 void NotEditedSimulation::vel_step(int N, float* u, float* v, float* u0, float* v0, float visc, float dt)

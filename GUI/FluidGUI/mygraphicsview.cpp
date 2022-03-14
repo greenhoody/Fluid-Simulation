@@ -13,8 +13,8 @@
 #define IX(i,j) ((i)+(simulation->size+2)*(j))
 
 //working 
-constexpr auto SPEED_SCALE = 5.0f;
-constexpr auto SPEED_CHANGE_RADIUS = 6;
+constexpr auto SPEED_SCALE = 3.0f;
+constexpr auto SPEED_CHANGE_RADIUS = 5;
 constexpr auto RADIUS_SQAURE = SPEED_CHANGE_RADIUS * SPEED_CHANGE_RADIUS;
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
@@ -89,6 +89,9 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
                 }
             }
         }
+
+        //simulation->AddVelocity(xCurrent, yCurrent, (float)dx * SPEED_SCALE, (float)dy * SPEED_SCALE);
+
     }
     lastPosition = e->pos();
 }
