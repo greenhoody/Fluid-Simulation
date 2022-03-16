@@ -48,8 +48,8 @@ EditedSimulation::~EditedSimulation() {
 }
 
 void EditedSimulation::NextFrame(float* copy_array) {
-	vel_step(size, u, v, u_prev, v_prev, visc, dt);
-	dens_step(size, dens, dens_prev, u, v, diff, dt);
+	vel_step(u, v, u_prev, v_prev, visc);
+	dens_step(dens, dens_prev, u, v, diff);
 	memcpy(copy_array, dens, sizeof(float) * (size + 2) * (size + 2));
 }
 
@@ -138,7 +138,7 @@ void EditedSimulation::advect(int  b, float* d, float* d0, float* u, float* v) {
 				s1 * (t0 * d0[IX(i1, j0)] + t1 * d0[IX(i1, j1)]);
 		}
 	}
-	set_bnd(size, b, d);
+	set_bnd(b, d);
 }
 
 void EditedSimulation::project(float* u, float* v, float* p, float* div) {
@@ -178,7 +178,7 @@ void EditedSimulation::project(float* u, float* v, float* p, float* div) {
 
 void EditedSimulation::vel_step(float* u, float* v, float* u0, float* v0, float visc) {
 	
-	//add_add_source(N, u, u0, dt); add_source(N, v, v0, dt);
+	add_source(u, u0); add_source(v, v0);
 	diffuse(1, u0, u, visc);
 	diffuse(2, v0, v, visc);
 	project(u0, v0, u, v);
@@ -188,7 +188,15 @@ void EditedSimulation::vel_step(float* u, float* v, float* u0, float* v0, float 
 }
 
 void EditedSimulation::dens_step(float* x, float* x0, float* u, float* v, float diff) {
-	//add_source(N, x, x0, dt);
+	//add_source(x0, source);
 	diffuse(0, x0, x, diff);
 	advect(0, x, x0, u, v);
+}
+
+void EditedSimulation::add_source(float* x, float* s) {
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			x[IX(i, j)] += s[IX(i, j)]*dt;
+		}
+	}
 }

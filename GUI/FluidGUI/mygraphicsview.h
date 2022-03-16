@@ -12,6 +12,7 @@
 #include "../Factory/Simulation.h"
 #include "qplaintextedit.h"
 #include "../Factory/Factory.h"
+#include "../Factory/EditedSimulation.h"
 
 class MyGraphicsView : public QGraphicsView
 {
@@ -32,7 +33,8 @@ public:
     QTimer* timer;
 
     std::unique_ptr<Factory> factory;
-    std::unique_ptr<Simulation> simulation;
+    std::shared_ptr<Simulation> simulation;
+    std::shared_ptr<EditedSimulation> e_simulation;
     std::unique_ptr<QImage> image;
     std::unique_ptr<float[]> pixels;
 

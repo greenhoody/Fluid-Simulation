@@ -6,6 +6,8 @@
 #include "../Factory/Factory.h"
 #include "../Factory/FactoryNotEditedSimulation.h"
 #include "../Factory/NotEditedSimulation.h"
+#include "../Factory//FactoryEditedSimulation.h"
+
 
 #include <QMouseEvent>
 #include <QDebug>
@@ -13,7 +15,7 @@
 #define IX(i,j) ((i)+(simulation->size+2)*(j))
 
 //working 
-constexpr auto SPEED_SCALE = 3.0f;
+constexpr auto SPEED_SCALE = 0.80f;
 constexpr auto SPEED_CHANGE_RADIUS = 5;
 constexpr auto RADIUS_SQAURE = SPEED_CHANGE_RADIUS * SPEED_CHANGE_RADIUS;
 
@@ -62,6 +64,25 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
             }
         }
     }
+    //dynamic cast
+    if (e->button() == Qt::MiddleButton) {
+        int x1 = pressPosition.x() < mousePosition.x() ? pressPosition.x() : mousePosition.x();
+        int x2 = pressPosition.x() > mousePosition.x() ? pressPosition.x() : mousePosition.x();
+        int y1 = pressPosition.y() < mousePosition.y() ? pressPosition.y() : mousePosition.y();
+        int y2 = pressPosition.y() > mousePosition.y() ? pressPosition.y() : mousePosition.y();
+
+        //boundary, not adding density to opposite side if coursor is far enough
+        x1 = x1 < 0 ? 0 : x1;
+        y1 = y1 < 0 ? 0 : y1;
+        x2 = x2 > simulation->size ? simulation->size : x2;
+        y2 = y2 > simulation->size ? simulation->size : y2;
+
+        for (int j = y1; j <= y2; j++) {
+            for (int i = x1; i <= x2; i++) {
+                e_simulation->AddWall(i, j);
+            }
+        }
+    }
 }
 
 void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
@@ -75,8 +96,8 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
         int yCurrent = mousePosition.y();
 
         // dane do wektora zmiany położenia myszki
-        int dx = xCurrent - xPress;
-        int dy = yCurrent - yPress;
+        float dx = xCurrent - xPress;
+        float dy = yCurrent - yPress;
 
         float lenght = sqrt(dx * dx + dy * dy);
         float xNormalized = (float)dx * SPEED_SCALE / lenght;
@@ -84,9 +105,12 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
 
         for (int i = -SPEED_CHANGE_RADIUS; i <= SPEED_CHANGE_RADIUS; i++) {
             for (int j = -SPEED_CHANGE_RADIUS; j <= SPEED_CHANGE_RADIUS; j++) {
-                if (simulation->size > xCurrent + i && xCurrent + i > 0 && simulation->size > yCurrent + j && yCurrent + j > 0 && i * i + j * j < RADIUS_SQAURE) {
-                    simulation->AddVelocity(xCurrent + i, yCurrent + j, (float)dx * SPEED_SCALE, (float)dy * SPEED_SCALE);
+                if (simulation->size - 2 > xCurrent + i && xCurrent + i > 2 && simulation->size - 2 > yCurrent + j && yCurrent + j > 2 && i * i + j * j < RADIUS_SQAURE) {
+                    simulation->AddVelocity(xCurrent + i, yCurrent + j, dx * SPEED_SCALE, dy * SPEED_SCALE);
                 }
+                //if (simulation->size > xCurrent + i && xCurrent + i > 0 && simulation->size > yCurrent + j && yCurrent + j > 0 && i * i + j * j < RADIUS_SQAURE) {
+                //    simulation->AddVelocity(xCurrent + i, yCurrent + j, (float)dx * SPEED_SCALE, (float)dy * SPEED_SCALE);
+                //}
             }
         }
 
@@ -119,11 +143,23 @@ void MyGraphicsView::start() {
 
 
     switch (kind->currentIndex()) {
+        //prawie orginał
     case 0:
         factory.reset(new FactoryNotEditedSimulation());
         simulation.reset(factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000));
         break;
+        //w sumie to teraz bardziej przypomina orginał niż orginalny
     case 1:
+        //dynamic cast
+        factory.reset(new FactoryEditedSimulation());
+        simulation.reset(factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000));
+        e_simulation = std::dynamic_pointer_cast<EditedSimulation>(simulation);
+        break;
+        //openMP
+    case 2:
+        break;
+        //cuda
+    case 3:
         break;
     }
 
@@ -138,14 +174,16 @@ void MyGraphicsView::start() {
 
 void MyGraphicsView::refresh(){
     simulation->NextFrame(pixels.get());
-
+    float combined_density = 0;
     for (int i = 1; i < this->width() ; i++) {
         for (int j = 1; j < this->height() ; j++) {
             image->setPixelColor(i - 1, j - 1, getColor(pixels[IX(i, j)]));
+            combined_density += pixels[IX(i, j)];
         }
     }
     pixMapItem->setPixmap(QPixmap::fromImage(*image));
     this->show();
+    //qDebug() << combined_density;
 }
 
 QColor MyGraphicsView::getColor(float x) {

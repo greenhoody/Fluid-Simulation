@@ -3,6 +3,11 @@
 #include <string.h>
 #include <algorithm>
 #include"pch.h"
+#include <string>
+
+#include <windows.h>
+#include <debugapi.h>;
+
 
 #define IX(i,j) ((i)+(size+2)*(j))
 
@@ -151,7 +156,7 @@ void NotEditedSimulation::project(int N, float* u, float* v, float* p, float* di
 
 void NotEditedSimulation::vel_step(int N, float* u, float* v, float* u0, float* v0, float visc, float dt)
 {
-	//add_add_source(N, u, u0, dt); add_source(N, v, v0, dt);
+	//add_source(N, u, u0, dt); add_source(N, v, v0, dt);
 	diffuse(N, 1, u0, u, visc, dt);
 	diffuse(N, 2, v0, v, visc, dt);
 	project(N, u0, v0, u, v);
@@ -163,6 +168,23 @@ void NotEditedSimulation::vel_step(int N, float* u, float* v, float* u0, float* 
 void NotEditedSimulation::dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float dt)
 {
 	//add_source(N, x, x0, dt);
+	print(x, "poczatek:");
 	diffuse(N, 0, x0, x, diff, dt);
+	print(x, "po dyfuzji:");
+	//adwekcja zmienia iloœæ2 cieczy
 	advect(N, 0, x, x0, u, v, dt);
+	print(x, "po advekcji:");
+}
+
+void NotEditedSimulation::print(float* x, std::string s) {
+	int lns = (size + 2) * (size + 2);
+	float combined = 0;
+	for (int i = 0; i < lns; i++) {
+		combined += x[i];
+	}
+	s.append(" ").append(std::to_string(combined)).append("\n\0");
+	char* c = &*(s.begin());
+	OutputDebugString(c);
+
+
 }

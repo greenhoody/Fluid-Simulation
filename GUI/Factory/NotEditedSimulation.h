@@ -18,4 +18,6 @@ private:
 	void diffuse(int N, int b, float* x, float* x0, float diff, float dt);
 	void set_bnd(int N, int b, float* x);
 	void add_source(int N, float* x, float* s, float dt);
+	//testowa
+	void print(float* x, std::string prefix);
 };

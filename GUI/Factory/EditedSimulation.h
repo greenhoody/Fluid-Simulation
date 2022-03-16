@@ -22,5 +22,5 @@ private:
 	void advect(int b, float* d, float* d0, float* u, float* v);
 	void diffuse(int b, float* x, float* x0, float diff);
 	void set_bnd(int b, float* x);
-	void add_source(int N, float* x, float* s, float dt);
+	void add_source(float* x, float* s);
 };
