@@ -1,4 +1,4 @@
-#include "NotEditedSimulation.h"
+﻿#include "NotEditedSimulation.h"
 #include <corecrt_malloc.h>
 #include <string.h>
 #include <algorithm>
@@ -50,9 +50,9 @@ void NotEditedSimulation::AddDensity(int x, int y, float density) {
 
 void NotEditedSimulation::AddVelocity(int x, int y, float h_velocity, float v_velocity) {
 	int index = IX(x + 1, y + 1);
-	//v z indeksem ujemnym wpisuje dane do u_prev/ mazanie po pami�ci
-	v_prev[index] += v_velocity;
-	u_prev[index] += h_velocity;
+	//v z indeksem ujemnym wpisuje dane do u_prev/ mazanie po pamięci
+	v[index] += v_velocity;
+	u[index] += h_velocity;
 }
 
 //=====================================================================================================================
@@ -81,12 +81,12 @@ void NotEditedSimulation::set_bnd(int N, int b, float* x)
 void NotEditedSimulation::diffuse(int N, int b, float* x, float* x0, float diff, float dt)
 {
 	int i, j, k;
-	float a = dt * diff * (N - 2) * (N - 2);
+	float a = dt * diff * N * N;
 	for (k = 0; k < 20; k++) {
 		for (i = 1; i <= N; i++) {
 			for (j = 1; j <= N; j++) {
 				x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] +
-					x[IX(i, j - 1)] + x[IX(i, j + 1)])) / (1 + 4 * a);
+					x[IX(i, j - 1)] + x[IX(i, j + 1)])) / (1 + (4 * a));
 			}
 		}
 		set_bnd(N, b, x);
@@ -95,25 +95,41 @@ void NotEditedSimulation::diffuse(int N, int b, float* x, float* x0, float diff,
 
 void NotEditedSimulation::advect(int N, int b, float* d, float* d0, float* u, float* v, float dt)
 {
-	int i, j, i0, j0, i1, j1;
+	int i0, j0, i1, j1;
 	float x, y, s0, t0, s1, t1, dt0;
 	dt0 = dt * (float)N;
-	for (i = 1; i <= N; i++) {
-		for (j = 1; j <= N; j++) {
+	for (int i = 1; i <= N; i++) {
+		for (int j = 1; j <= N; j++) {
+
 			x = (float)i - dt0 * u[IX(i, j)];
-			y = (float)j - dt0 * v[IX(i, j)];
-			if (x < 0.5) x = 0.5f; if (x > N + 0.5) x = N + 0.5f;
+			if (x < 0.5) x = 0.5f; 
+			if (x > N + 0.5) x = N + 0.5f;
 			i0 = (int)x;
 			i1 = i0 + 1;
-			if (y < 0.5) y = 0.5f; if (y > N + 0.5) y = N + 0.5f;
+
+			//proporcje ile gę┌stości wylądowało z których komórek
+			s1 = x - (float)i0;
+			s0 = 1.0f - s1;
+
+			y = (float)j - dt0 * v[IX(i, j)];
+			if (y < 0.5) y = 0.5f; 
+			if (y > N + 0.5) y = N + 0.5f;
 			j0 = (int)y;
 			j1 = j0 + 1;
-			s1 = x - i0;
-			s0 = 1 - s1;
-			t1 = y - j0;
-			t0 = 1 - t1;
+
+			//proporcje ile gęstości wylądowało z których komórek
+			t1 = y - (float)j0;
+			t0 = 1.0f - t1;
+
 			d[IX(i, j)] = s0 * (t0 * d0[IX(i0, j0)] + t1 * d0[IX(i0, j1)]) +
 				s1 * (t0 * d0[IX(i1, j0)] + t1 * d0[IX(i1, j1)]);
+
+
+			//TEST
+			if (i == 100 && j == 100) {
+				printf("dupa");
+			}
+
 		}
 	}
 	set_bnd(N, b, d);
@@ -128,7 +144,7 @@ void NotEditedSimulation::project(int N, float* u, float* v, float* p, float* di
 		for (j = 1; j <= N; j++) {
 			div[IX(i, j)] = -0.5f * h * (u[IX(i + 1, j)] - u[IX(i - 1, j)] +
 				v[IX(i, j + 1)] - v[IX(i, j - 1)]);
-			p[IX(i, j)] = 0;
+			p[IX(i, j)] = 0.0f;
 		}
 	}
 	set_bnd(N, 0, div); 
@@ -171,7 +187,7 @@ void NotEditedSimulation::dens_step(int N, float* x, float* x0, float* u, float*
 	print(x, "poczatek:");
 	diffuse(N, 0, x0, x, diff, dt);
 	print(x, "po dyfuzji:");
-	//adwekcja zmienia ilo��2 cieczy
+	//adwekcja zmienia ilość2 cieczy
 	advect(N, 0, x, x0, u, v, dt);
 	print(x, "po advekcji:");
 }

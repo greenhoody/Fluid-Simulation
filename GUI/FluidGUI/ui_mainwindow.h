@@ -63,7 +63,7 @@ public:
         pushButton->setGeometry(QRect(810, 20, 80, 25));
         layoutWidget = new QWidget(centralwidget);
         layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        layoutWidget->setGeometry(QRect(20, 10, 741, 61));
+        layoutWidget->setGeometry(QRect(20, 10, 741, 51));
         gridLayout = new QGridLayout(layoutWidget);
         gridLayout->setSpacing(3);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
@@ -135,6 +135,7 @@ public:
         comboBox->addItem(QString());
         comboBox->addItem(QString());
         comboBox->addItem(QString());
+        comboBox->addItem(QString());
         comboBox->setObjectName(QString::fromUtf8("comboBox"));
         comboBox->setGeometry(QRect(20, 80, 261, 22));
         MainWindow->setCentralWidget(centralwidget);
@@ -165,6 +166,7 @@ public:
         comboBox->setItemText(1, QCoreApplication::translate("MainWindow", "edited", nullptr));
         comboBox->setItemText(2, QCoreApplication::translate("MainWindow", "openMP", nullptr));
         comboBox->setItemText(3, QCoreApplication::translate("MainWindow", "cuda", nullptr));
+        comboBox->setItemText(4, QCoreApplication::translate("MainWindow", "MA", nullptr));
 
     } // retranslateUi
 

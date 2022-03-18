@@ -24,23 +24,27 @@
     <ClInclude Include="Factory.h" />
     <ClInclude Include="FactoryCudaSimulation.h" />
     <ClInclude Include="FactoryEditedSimulation.h" />
+    <ClInclude Include="FactoryMA.h" />
     <ClInclude Include="FactoryNotEditedSimulation.h" />
     <ClInclude Include="FactoryOpenMPSimulation.h" />
     <ClInclude Include="NotEditedSimulation.h" />
     <ClInclude Include="OpenMPSimulation.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Simulation.h" />
+    <ClInclude Include="SimulationMA.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CudaSimulation.cpp" />
     <ClCompile Include="EditedSimulation.cpp" />
     <ClCompile Include="FactoryCudaSimulation.cpp" />
     <ClCompile Include="FactoryEditedSimulation.cpp" />
+    <ClCompile Include="FactoryMA.cpp" />
     <ClCompile Include="FactoryNotEditedSimulation.cpp" />
     <ClCompile Include="FactoryOpenMPSimulation.cpp" />
     <ClCompile Include="NotEditedSimulation.cpp" />
     <ClCompile Include="OpenMPSimulation.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="SimulationMA.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

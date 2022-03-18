@@ -7,6 +7,7 @@
 #include "../Factory/FactoryNotEditedSimulation.h"
 #include "../Factory/NotEditedSimulation.h"
 #include "../Factory//FactoryEditedSimulation.h"
+#include "../Factory//FactoryMA.h"
 
 
 #include <QMouseEvent>
@@ -160,6 +161,10 @@ void MyGraphicsView::start() {
         break;
         //cuda
     case 3:
+        break;
+    case 4:
+        factory.reset(new FactoryMA());
+        simulation.reset(factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000));
         break;
     }
 
