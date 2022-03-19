@@ -17,7 +17,7 @@
 
 //working 
 constexpr auto SPEED_SCALE = 0.80f;
-constexpr auto SPEED_CHANGE_RADIUS = 5;
+constexpr auto SPEED_CHANGE_RADIUS = 1.2f;
 constexpr auto RADIUS_SQAURE = SPEED_CHANGE_RADIUS * SPEED_CHANGE_RADIUS;
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
