@@ -6,18 +6,10 @@
 
 #define IX(i,j) ((i)+(size+2)*(j))
 
-EditedSimulation::EditedSimulation(int size, float diffiusion, float viscosity, float dt) {
-	this->size = size;
-	this->diff = diffiusion;
-	this->visc = viscosity;
-	this->dt = dt;
+EditedSimulation::EditedSimulation(int size, float diffiusion, float viscosity, float dt):Simulation(size, diffiusion, viscosity, dt) {
+	
+	
 
-	this->u = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->u_prev = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->v = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->v_prev = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->dens = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->dens_prev = (float*)calloc((size + 2) * (size + 2), sizeof(float));
 	this->source = (float*)calloc((size + 2) * (size + 2), sizeof(float));
 	this->walls = (bool*)calloc((size + 4) * (size + 4), sizeof(bool));
 
@@ -37,12 +29,6 @@ EditedSimulation::EditedSimulation(int size, float diffiusion, float viscosity, 
 }
 
 EditedSimulation::~EditedSimulation() {
-	free(u);
-	free(u_prev);
-	free(v);
-	free(v_prev);
-	free(dens);
-	free(dens_prev);
 	free(source);
 	free(walls);
 }
@@ -75,12 +61,22 @@ void EditedSimulation::DeleteWall(int x, int y) {
 	walls[IX(x + 1, y + 1)] = false;
 }
 
-void EditedSimulation::AddSource(int x, int y, float volume) {
-	source[IX(x + 1, y + 1)] = volume;
+void EditedSimulation::AddConstantDensity(int x, int y, float density) {
+	this->dens_const[IX(x + 1, y + 1)] = density;
 }
 
-void EditedSimulation::DeleteSource(int x, int y) {
-	source[IX(x + 1, y + 1)] = 0;
+void EditedSimulation::DeleteConstantDensity(int x, int y) {
+	this->dens_const[IX(x + 1, y + 1)] = 0;
+}
+
+void EditedSimulation::AddConstantVelocity(int x, int y, float v_velocity, float h_velocity) {
+	this->u[IX(x + 1, y + 1)] = h_velocity;
+	this->v[IX(x + 1, y + 1)] = v_velocity;
+}
+
+void EditedSimulation::DeleteConstantVelocity(int x, int y) {
+	this->u[IX(x + 1, y + 1)] = 0;
+	this->v[IX(x + 1, y + 1)] = 0;
 }
 
 //========================================================================================
@@ -178,25 +174,30 @@ void EditedSimulation::project(float* u, float* v, float* p, float* div) {
 
 void EditedSimulation::vel_step(float* u, float* v, float* u0, float* v0, float visc) {
 	
-	add_source(u, u0); add_source(v, v0);
 	diffuse(1, u0, u, visc);
 	diffuse(2, v0, v, visc);
 	project(u0, v0, u, v);
 	advect(1, u, u0, u0, v0);
 	advect(2, v, v0, u0, v0);
 	project(u, v, u0, v0);
+
+	constant(u, u_const);
+	constant(v, v_const);
 }
 
 void EditedSimulation::dens_step(float* x, float* x0, float* u, float* v, float diff) {
-	//add_source(x0, source);
+
 	diffuse(0, x0, x, diff);
 	advect(0, x, x0, u, v);
+
+
+	constant(dens, dens_const);
 }
 
-void EditedSimulation::add_source(float* x, float* s) {
-	for (int i = 0; i < size; i++) {
-		for (int j = 0; j < size; j++) {
-			x[IX(i, j)] += s[IX(i, j)]*dt;
+void EditedSimulation::constant(float *x, float *cnt) {
+	for (int i = 1; i <= size; i++) {
+		for (int j = 1; j <= size; j++) {
+			x[IX(i, j)] = cnt[IX(i, j)];
 		}
 	}
 }

@@ -25,11 +25,11 @@ public slots:
 
 public:
     MyGraphicsView(QWidget *parent);
-    void giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit* it, QPlainTextEdit* ft, QComboBox* kind);
+    void giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit* it, QPlainTextEdit* ft, QPlainTextEdit* den, QPlainTextEdit* hs, QPlainTextEdit* vs, QComboBox* kind);
     
     QComboBox * kind;
     QSlider * v, * d;
-    QPlainTextEdit * it, * ft;
+    QPlainTextEdit * it, * ft, * den, * hs, * vs;
     QTimer* timer;
 
     std::unique_ptr<Factory> factory;

@@ -29,13 +29,16 @@ MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
     //qDebug() << this->width();
 }
 
-void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit *it, QPlainTextEdit* ft, QComboBox* kind)
+void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit* it, QPlainTextEdit* ft, QPlainTextEdit* den, QPlainTextEdit* hs, QPlainTextEdit* vs, QComboBox* kind)
 {
     // it's must be here because for now its best thing to get values from thes widgets in code 
     this->v = v;
     this->d = d;
     this->it = it;
     this->ft = ft;
+    this->den = den;
+    this->hs = hs;
+    this->vs = vs;
     this->kind = kind;
 }
 

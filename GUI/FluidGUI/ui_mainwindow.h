@@ -33,14 +33,22 @@ public:
     QWidget *layoutWidget;
     QGridLayout *gridLayout;
     QSlider *ViscositySlider;
-    QPlainTextEdit *plainTextEdit;
+    QPlainTextEdit *iterationTime;
     QSlider *DiffusionSlider;
     QLabel *label;
     QLabel *label_2;
     QLabel *label_3;
     QLabel *label_4;
-    QPlainTextEdit *plainTextEdit_2;
+    QPlainTextEdit *frameTime;
     QComboBox *comboBox;
+    QWidget *gridLayoutWidget;
+    QGridLayout *gridLayout_2;
+    QLabel *label_7;
+    QLabel *label_6;
+    QLabel *label_5;
+    QPlainTextEdit *density;
+    QPlainTextEdit *horizontalSpeed;
+    QPlainTextEdit *verticalSpeed;
     QMenuBar *menubar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -63,10 +71,12 @@ public:
         pushButton->setGeometry(QRect(810, 20, 80, 25));
         layoutWidget = new QWidget(centralwidget);
         layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        layoutWidget->setGeometry(QRect(20, 10, 741, 51));
+        layoutWidget->setGeometry(QRect(20, 10, 741, 64));
         gridLayout = new QGridLayout(layoutWidget);
-        gridLayout->setSpacing(3);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        gridLayout->setSizeConstraint(QLayout::SetFixedSize);
+        gridLayout->setHorizontalSpacing(3);
+        gridLayout->setVerticalSpacing(1);
         gridLayout->setContentsMargins(0, 0, 0, 0);
         ViscositySlider = new QSlider(layoutWidget);
         ViscositySlider->setObjectName(QString::fromUtf8("ViscositySlider"));
@@ -77,20 +87,31 @@ public:
 
         gridLayout->addWidget(ViscositySlider, 1, 0, 1, 1);
 
-        plainTextEdit = new QPlainTextEdit(layoutWidget);
-        plainTextEdit->setObjectName(QString::fromUtf8("plainTextEdit"));
-        plainTextEdit->setEnabled(true);
+        iterationTime = new QPlainTextEdit(layoutWidget);
+        iterationTime->setObjectName(QString::fromUtf8("iterationTime"));
+        iterationTime->setEnabled(true);
         QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Minimum);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(plainTextEdit->sizePolicy().hasHeightForWidth());
-        plainTextEdit->setSizePolicy(sizePolicy1);
+        sizePolicy1.setHeightForWidth(iterationTime->sizePolicy().hasHeightForWidth());
+        iterationTime->setSizePolicy(sizePolicy1);
+        iterationTime->setMaximumSize(QSize(16777215, 40));
         QFont font;
         font.setPointSize(9);
-        plainTextEdit->setFont(font);
-        plainTextEdit->setInputMethodHints(Qt::ImhDigitsOnly);
+        iterationTime->setFont(font);
+#if QT_CONFIG(accessibility)
+        iterationTime->setAccessibleName(QString::fromUtf8(""));
+#endif // QT_CONFIG(accessibility)
+#if QT_CONFIG(accessibility)
+        iterationTime->setAccessibleDescription(QString::fromUtf8(""));
+#endif // QT_CONFIG(accessibility)
+        iterationTime->setInputMethodHints(Qt::ImhDigitsOnly);
+        iterationTime->setLineWrapMode(QPlainTextEdit::NoWrap);
+        iterationTime->setPlainText(QString::fromUtf8(""));
+        iterationTime->setTabStopDistance(50.000000000000000);
+        iterationTime->setPlaceholderText(QString::fromUtf8("ms"));
 
-        gridLayout->addWidget(plainTextEdit, 1, 2, 1, 1);
+        gridLayout->addWidget(iterationTime, 1, 2, 1, 1);
 
         DiffusionSlider = new QSlider(layoutWidget);
         DiffusionSlider->setObjectName(QString::fromUtf8("DiffusionSlider"));
@@ -120,15 +141,18 @@ public:
 
         gridLayout->addWidget(label_4, 0, 3, 1, 1);
 
-        plainTextEdit_2 = new QPlainTextEdit(layoutWidget);
-        plainTextEdit_2->setObjectName(QString::fromUtf8("plainTextEdit_2"));
-        plainTextEdit_2->setEnabled(true);
-        sizePolicy1.setHeightForWidth(plainTextEdit_2->sizePolicy().hasHeightForWidth());
-        plainTextEdit_2->setSizePolicy(sizePolicy1);
-        plainTextEdit_2->setFont(font);
-        plainTextEdit_2->setInputMethodHints(Qt::ImhDigitsOnly);
+        frameTime = new QPlainTextEdit(layoutWidget);
+        frameTime->setObjectName(QString::fromUtf8("frameTime"));
+        frameTime->setEnabled(true);
+        sizePolicy1.setHeightForWidth(frameTime->sizePolicy().hasHeightForWidth());
+        frameTime->setSizePolicy(sizePolicy1);
+        frameTime->setMaximumSize(QSize(16777215, 40));
+        frameTime->setFont(font);
+        frameTime->setInputMethodHints(Qt::ImhDigitsOnly);
+        frameTime->setPlainText(QString::fromUtf8(""));
+        frameTime->setPlaceholderText(QString::fromUtf8("ms"));
 
-        gridLayout->addWidget(plainTextEdit_2, 1, 3, 1, 1);
+        gridLayout->addWidget(frameTime, 1, 3, 1, 1);
 
         comboBox = new QComboBox(centralwidget);
         comboBox->addItem(QString());
@@ -138,10 +162,46 @@ public:
         comboBox->addItem(QString());
         comboBox->setObjectName(QString::fromUtf8("comboBox"));
         comboBox->setGeometry(QRect(20, 80, 261, 22));
+        gridLayoutWidget = new QWidget(centralwidget);
+        gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
+        gridLayoutWidget->setGeometry(QRect(350, 130, 312, 114));
+        gridLayout_2 = new QGridLayout(gridLayoutWidget);
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+        gridLayout_2->setContentsMargins(0, 0, 0, 0);
+        label_7 = new QLabel(gridLayoutWidget);
+        label_7->setObjectName(QString::fromUtf8("label_7"));
+
+        gridLayout_2->addWidget(label_7, 0, 2, 1, 1);
+
+        label_6 = new QLabel(gridLayoutWidget);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
+
+        gridLayout_2->addWidget(label_6, 0, 1, 1, 1);
+
+        label_5 = new QLabel(gridLayoutWidget);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+
+        gridLayout_2->addWidget(label_5, 0, 0, 1, 1);
+
+        density = new QPlainTextEdit(gridLayoutWidget);
+        density->setObjectName(QString::fromUtf8("density"));
+
+        gridLayout_2->addWidget(density, 1, 0, 1, 1);
+
+        horizontalSpeed = new QPlainTextEdit(gridLayoutWidget);
+        horizontalSpeed->setObjectName(QString::fromUtf8("horizontalSpeed"));
+
+        gridLayout_2->addWidget(horizontalSpeed, 1, 1, 1, 1);
+
+        verticalSpeed = new QPlainTextEdit(gridLayoutWidget);
+        verticalSpeed->setObjectName(QString::fromUtf8("verticalSpeed"));
+
+        gridLayout_2->addWidget(verticalSpeed, 1, 2, 1, 1);
+
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 987, 22));
+        menubar->setGeometry(QRect(0, 0, 987, 25));
         MainWindow->setMenuBar(menubar);
 
         retranslateUi(MainWindow);
@@ -154,20 +214,19 @@ public:
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         pushButton->setText(QCoreApplication::translate("MainWindow", "Start", nullptr));
-        plainTextEdit->setPlainText(QString());
-        plainTextEdit->setPlaceholderText(QCoreApplication::translate("MainWindow", "ms", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "Diffusion", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "Viscosity", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "Iteration time", nullptr));
         label_4->setText(QCoreApplication::translate("MainWindow", "Frame time", nullptr));
-        plainTextEdit_2->setPlainText(QString());
-        plainTextEdit_2->setPlaceholderText(QCoreApplication::translate("MainWindow", "ms", nullptr));
         comboBox->setItemText(0, QCoreApplication::translate("MainWindow", "orginal", nullptr));
         comboBox->setItemText(1, QCoreApplication::translate("MainWindow", "edited", nullptr));
         comboBox->setItemText(2, QCoreApplication::translate("MainWindow", "openMP", nullptr));
         comboBox->setItemText(3, QCoreApplication::translate("MainWindow", "cuda", nullptr));
         comboBox->setItemText(4, QCoreApplication::translate("MainWindow", "MA", nullptr));
 
+        label_7->setText(QCoreApplication::translate("MainWindow", "Vertical Speed", nullptr));
+        label_6->setText(QCoreApplication::translate("MainWindow", "Horizontal Speed", nullptr));
+        label_5->setText(QCoreApplication::translate("MainWindow", "Density", nullptr));
     } // retranslateUi
 
 };

@@ -49,12 +49,18 @@
       <x>20</x>
       <y>10</y>
       <width>741</width>
-      <height>51</height>
+      <height>64</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <property name="spacing">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetFixedSize</enum>
+     </property>
+     <property name="horizontalSpacing">
       <number>3</number>
+     </property>
+     <property name="verticalSpacing">
+      <number>1</number>
      </property>
      <item row="1" column="0">
       <widget class="QSlider" name="ViscositySlider">
@@ -73,7 +79,7 @@
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QPlainTextEdit" name="plainTextEdit">
+      <widget class="QPlainTextEdit" name="iterationTime">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -83,19 +89,37 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>40</height>
+        </size>
+       </property>
        <property name="font">
         <font>
          <pointsize>9</pointsize>
         </font>
        </property>
+       <property name="accessibleName">
+        <string notr="true"/>
+       </property>
+       <property name="accessibleDescription">
+        <string notr="true"/>
+       </property>
        <property name="inputMethodHints">
         <set>Qt::ImhDigitsOnly</set>
        </property>
+       <property name="lineWrapMode">
+        <enum>QPlainTextEdit::NoWrap</enum>
+       </property>
        <property name="plainText">
-        <string/>
+        <string notr="true"/>
+       </property>
+       <property name="tabStopDistance">
+        <double>50.000000000000000</double>
        </property>
        <property name="placeholderText">
-        <string>ms</string>
+        <string notr="true">ms</string>
        </property>
       </widget>
      </item>
@@ -141,7 +165,7 @@
       </widget>
      </item>
      <item row="1" column="3">
-      <widget class="QPlainTextEdit" name="plainTextEdit_2">
+      <widget class="QPlainTextEdit" name="frameTime">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -150,6 +174,12 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>40</height>
+        </size>
        </property>
        <property name="font">
         <font>
@@ -160,10 +190,10 @@
         <set>Qt::ImhDigitsOnly</set>
        </property>
        <property name="plainText">
-        <string/>
+        <string notr="true"/>
        </property>
        <property name="placeholderText">
-        <string>ms</string>
+        <string notr="true">ms</string>
        </property>
       </widget>
      </item>
@@ -204,6 +234,60 @@
      </property>
     </item>
    </widget>
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>130</y>
+      <width>312</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Vertical Speed</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Horizontal Speed</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Density</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPlainTextEdit" name="density">
+       <property name="inputMethodHints">
+        <set>Qt::ImhDigitsOnly</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPlainTextEdit" name="horizontalSpeed">
+       <property name="inputMethodHints">
+        <set>Qt::ImhDigitsOnly</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QPlainTextEdit" name="verticalSpeed">
+       <property name="inputMethodHints">
+        <set>Qt::ImhDigitsOnly</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -211,7 +295,7 @@
      <x>0</x>
      <y>0</y>
      <width>987</width>
-     <height>22</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

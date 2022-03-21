@@ -10,8 +10,10 @@ public :
 	void AddVelocity(int x, int y, float v_velocity, float h_velocity);
 	void AddWall(int x, int y);
 	void DeleteWall(int x, int y);
-	void AddSource(int x, int y, float volume);
-	void DeleteSource(int x, int y);
+	void AddConstantDensity(int x, int y, float density);
+	void DeleteConstantDensity(int x, int y);
+	void AddConstantVelocity(int x, int y, float v_velocity, float h_velocity);
+	void DeleteConstantVelocity(int x, int y);
 private:
 	float* source;
 	bool* walls;
@@ -22,5 +24,5 @@ private:
 	void advect(int b, float* d, float* d0, float* u, float* v);
 	void diffuse(int b, float* x, float* x0, float diff);
 	void set_bnd(int b, float* x);
-	void add_source(float* x, float* s);
+	void constant (float* x, float* c);
 };

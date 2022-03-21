@@ -11,27 +11,11 @@
 
 #define IX(i,j) ((i)+(size+2)*(j))
 
-NotEditedSimulation::NotEditedSimulation(int size, float diffiusion, float viscosity, float dt) {
-	this->size = size;
-	this->diff = diffiusion;
-	this->visc = viscosity;
-	this->dt = dt;
+NotEditedSimulation::NotEditedSimulation(int size, float diffiusion, float viscosity, float dt): Simulation(size, diffiusion, viscosity, dt) {
 
-	this->u = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->u_prev = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->v = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->v_prev = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->dens = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->dens_prev = (float*)calloc((size + 2) * (size + 2), sizeof(float));
 }
 
 NotEditedSimulation::~NotEditedSimulation() {
-	free(u);
-	free(u_prev);
-	free(v);
-	free(v_prev);
-	free(dens);
-	free(dens_prev);
 }
 
 void NotEditedSimulation::NextFrame(float* copy_array) {
