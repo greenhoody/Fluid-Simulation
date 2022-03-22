@@ -164,7 +164,7 @@ public:
         comboBox->setGeometry(QRect(20, 80, 261, 22));
         gridLayoutWidget = new QWidget(centralwidget);
         gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(350, 130, 312, 114));
+        gridLayoutWidget->setGeometry(QRect(350, 130, 312, 61));
         gridLayout_2 = new QGridLayout(gridLayoutWidget);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
         gridLayout_2->setContentsMargins(0, 0, 0, 0);
@@ -185,16 +185,19 @@ public:
 
         density = new QPlainTextEdit(gridLayoutWidget);
         density->setObjectName(QString::fromUtf8("density"));
+        density->setInputMethodHints(Qt::ImhDigitsOnly);
 
         gridLayout_2->addWidget(density, 1, 0, 1, 1);
 
         horizontalSpeed = new QPlainTextEdit(gridLayoutWidget);
         horizontalSpeed->setObjectName(QString::fromUtf8("horizontalSpeed"));
+        horizontalSpeed->setInputMethodHints(Qt::ImhDigitsOnly);
 
         gridLayout_2->addWidget(horizontalSpeed, 1, 1, 1, 1);
 
         verticalSpeed = new QPlainTextEdit(gridLayoutWidget);
         verticalSpeed->setObjectName(QString::fromUtf8("verticalSpeed"));
+        verticalSpeed->setInputMethodHints(Qt::ImhDigitsOnly);
 
         gridLayout_2->addWidget(verticalSpeed, 1, 2, 1, 1);
 

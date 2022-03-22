@@ -36,17 +36,14 @@ public:
     std::shared_ptr<Simulation> simulation;
     std::shared_ptr<EditedSimulation> e_simulation;
     std::unique_ptr<QImage> image;
-    std::unique_ptr<float[]> pixels;
+    std::shared_ptr<float[]> pixels;
 
-    //pix map itembronii siê przed unique pointer to musi byæ coœ u nich, popsuty destructor
+    //pix map item broni siê przed unique pointer to musi byæ coœ u nich, popsuty destructor
 
     //std::unique_ptr<QGraphicsPixmapItem> pixMapItemTEST;
     QGraphicsPixmapItem* pixMapItem;
 
     QPixmap pixmap;
-
-    
-
 
 protected:
    // MyGraphicsView(QWidget* parent);
@@ -59,6 +56,9 @@ private:
     int interval, frameTime;
     QPoint pressPosition;
     QPoint lastPosition;
+
+    int pressedKey;
+
 
     std::unique_ptr<QGraphicsScene> scene;
 };

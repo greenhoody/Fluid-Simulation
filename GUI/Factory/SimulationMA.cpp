@@ -11,33 +11,16 @@
 
 #define IX(i,j) ((i)+(size+2)*(j))
 
-SimulationMA::SimulationMA(int size, float diffiusion, float viscosity, float dt) {
-	this->size = size;
-	this->diff = diffiusion;
-	this->visc = viscosity;
-	this->dt = dt;
-
-	this->u = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->u_prev = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->v = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->v_prev = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->dens = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->dens_prev = (float*)calloc((size + 2) * (size + 2), sizeof(float));
+SimulationMA::SimulationMA(int size, float diffiusion, float viscosity, float dt):Simulation(size, diffiusion, viscosity, dt) {
 }
 
 SimulationMA::~SimulationMA() {
-	free(u);
-	free(u_prev);
-	free(v);
-	free(v_prev);
-	free(dens);
-	free(dens_prev);
 }
 
-void SimulationMA::NextFrame(float* copy_array) {
+void SimulationMA::NextFrame(std::shared_ptr<float[]> copy_array) {
 	vel_step(size + 2, u, v, u_prev, v_prev, visc, dt);
 	dens_step(size + 2, dens, dens_prev, u, v, diff, dt);
-	memcpy(copy_array, dens, sizeof(float) * (size + 2) * (size + 2));
+	memcpy(copy_array.get(), dens.get(), sizeof(float) * (size + 2) * (size + 2));
 }
 
 void SimulationMA::AddDensity(int x, int y, float density) {
@@ -57,13 +40,13 @@ void SimulationMA::AddVelocity(int x, int y, float h_velocity, float v_velocity)
 
 //=====================================================================================================================
 
-void SimulationMA::add_source(int N, float* x, float* s, float dt)
+void SimulationMA::add_source(int N, std::shared_ptr<float[]> x, std::shared_ptr<float[]> s, float dt)
 {
 	int i, size = (N + 2) * (N + 2);
 	for (i = 0; i < size; i++) x[i] += dt * s[i];
 }
 
-void SimulationMA::set_bnd(int b, float* x, int N)
+void SimulationMA::set_bnd(int b, std::shared_ptr<float[]> x, int N)
 {
 	for (int i = 1; i < N - 1; i++) {
 		x[IX(0, i)] = b == 1 ? -x[IX(1, i)] : x[IX(1, i)];
@@ -77,7 +60,7 @@ void SimulationMA::set_bnd(int b, float* x, int N)
 	x[IX(N - 1, N - 1)] = 0.5f * (x[IX(N - 2, N - 1)] + x[IX(N - 1, N - 2)]);
 }
 
-void SimulationMA::diffuse(int b, float* x, float* x0, float diff, float dt, int iter, int N)
+void SimulationMA::diffuse(int b, std::shared_ptr<float[]> x, std::shared_ptr<float[]> x0, float diff, float dt, int iter, int N)
 {
 	float a = dt * diff * (N - 2) * (N - 2);
 	lin_solve(b, x, x0, a, 1 + 4 * a, iter, N);
@@ -85,7 +68,7 @@ void SimulationMA::diffuse(int b, float* x, float* x0, float diff, float dt, int
 
 
 //jak na filmie
-void SimulationMA::advect( int b, float* d, float* d0, float* u, float* v, float dt, int N)
+void SimulationMA::advect( int b, std::shared_ptr<float[]> d, std::shared_ptr<float[]> d0, std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, float dt, int N)
 {
 	float i0, i1, j0, j1;
 
@@ -134,7 +117,7 @@ void SimulationMA::advect( int b, float* d, float* d0, float* u, float* v, float
 	set_bnd(b, d, N);
 }
 
-void SimulationMA::project(float* u, float* v, float* p, float* div, int iter, int N)
+void SimulationMA::project(std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, std::shared_ptr<float[]> p, std::shared_ptr<float[]> div, int iter, int N)
 {
 	for (int j = 1; j < N - 1; j++) {
 		for (int i = 1; i < N - 1; i++) {
@@ -166,7 +149,7 @@ void SimulationMA::project(float* u, float* v, float* p, float* div, int iter, i
 
 }
 
-void SimulationMA::vel_step(int N, float* u, float* v, float* u0, float* v0, float visc, float dt)
+void SimulationMA::vel_step(int N, std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, std::shared_ptr<float[]> u0, std::shared_ptr<float[]> v0, float visc, float dt)
 {
 	//add_source(N, u, u0, dt); add_source(N, v, v0, dt);
 	diffuse(1, u0, u, visc, dt, 4, N);
@@ -177,7 +160,7 @@ void SimulationMA::vel_step(int N, float* u, float* v, float* u0, float* v0, flo
 	project(u, v, u0, v0, 4, N);
 }
 
-void SimulationMA::dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float dt)
+void SimulationMA::dens_step(int N, std::shared_ptr<float[]> x, std::shared_ptr<float[]> x0, std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, float diff, float dt)
 {
 	//add_source(N, x, x0, dt);
 	print(x, "poczatek:");
@@ -188,7 +171,7 @@ void SimulationMA::dens_step(int N, float* x, float* x0, float* u, float* v, flo
 	print(x, "po advekcji:");
 }
 
-void SimulationMA::print(float* x, std::string s) {
+void SimulationMA::print(std::shared_ptr<float[]> x, std::string s) {
 	int lns = (size + 2) * (size + 2);
 	float combined = 0;
 	for (int i = 0; i < lns; i++) {
@@ -201,7 +184,7 @@ void SimulationMA::print(float* x, std::string s) {
 
 }
 
-void SimulationMA::lin_solve(int b, float* x, float* x0, float a, float c, int iter, int N) {
+void SimulationMA::lin_solve(int b, std::shared_ptr<float[]> x, std::shared_ptr<float[]> x0, float a, float c, int iter, int N) {
 	float cRecip = 1.0 / c;
 	for (int k = 0; k < iter; k++) {
 		for (int j = 1; j < N - 1; j++) {
@@ -219,3 +202,8 @@ void SimulationMA::lin_solve(int b, float* x, float* x0, float a, float c, int i
 	}
 		
 }
+
+void SimulationMA::AddConstantDensity(int x, int y, float density){}
+void SimulationMA::DeleteConstantDensity(int x, int y){}
+void SimulationMA::AddConstantVelocity(int x, int y, float v_velocity, float h_velocity){}
+void SimulationMA::DeleteConstantVelocity(int x, int y){}

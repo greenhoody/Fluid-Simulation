@@ -18,10 +18,10 @@ NotEditedSimulation::NotEditedSimulation(int size, float diffiusion, float visco
 NotEditedSimulation::~NotEditedSimulation() {
 }
 
-void NotEditedSimulation::NextFrame(float* copy_array) {
+void NotEditedSimulation::NextFrame(std::shared_ptr<float[]> copy_array) {
 	vel_step(size, u, v, u_prev, v_prev, visc, dt);
 	dens_step(size, dens, dens_prev, u, v, diff, dt);
-	memcpy(copy_array, dens, sizeof(float) * (size + 2) * (size + 2));
+	memcpy(copy_array.get(), dens.get(), sizeof(float) * (size + 2) * (size + 2));
 }
 
 void NotEditedSimulation::AddDensity(int x, int y, float density) {
@@ -41,13 +41,13 @@ void NotEditedSimulation::AddVelocity(int x, int y, float h_velocity, float v_ve
 
 //=====================================================================================================================
 
-void NotEditedSimulation::add_source(int N, float* x, float* s, float dt)
+void NotEditedSimulation::add_source(int N, std::shared_ptr<float[]> x, std::shared_ptr<float[]> s, float dt)
 {
 	int i, size = (N + 2) * (N + 2);
 	for (i = 0; i < size; i++) x[i] += dt * s[i];
 }
 
-void NotEditedSimulation::set_bnd(int N, int b, float* x)
+void NotEditedSimulation::set_bnd(int N, int b, std::shared_ptr<float[]> x)
 {
 	int i;
 	for (i = 1; i <= N; i++) {
@@ -62,7 +62,7 @@ void NotEditedSimulation::set_bnd(int N, int b, float* x)
 	x[IX(N + 1, N + 1)] = 0.5f * (x[IX(N, N + 1)] + x[IX(N + 1, N)]);
 }
 
-void NotEditedSimulation::diffuse(int N, int b, float* x, float* x0, float diff, float dt)
+void NotEditedSimulation::diffuse(int N, int b, std::shared_ptr<float[]> x, std::shared_ptr<float[]> x0, float diff, float dt)
 {
 	int i, j, k;
 	float a = dt * diff * N * N;
@@ -77,7 +77,7 @@ void NotEditedSimulation::diffuse(int N, int b, float* x, float* x0, float diff,
 	}
 }
 
-void NotEditedSimulation::advect(int N, int b, float* d, float* d0, float* u, float* v, float dt)
+void NotEditedSimulation::advect(int N, int b, std::shared_ptr<float[]> d, std::shared_ptr<float[]> d0, std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, float dt)
 {
 	int i0, j0, i1, j1;
 	float x, y, s0, t0, s1, t1, dt0;
@@ -119,7 +119,7 @@ void NotEditedSimulation::advect(int N, int b, float* d, float* d0, float* u, fl
 	set_bnd(N, b, d);
 }
 
-void NotEditedSimulation::project(int N, float* u, float* v, float* p, float* div)
+void NotEditedSimulation::project(int N, std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, std::shared_ptr<float[]> p, std::shared_ptr<float[]> div)
 {
 	int i, j, k;
 	float h;
@@ -154,7 +154,7 @@ void NotEditedSimulation::project(int N, float* u, float* v, float* p, float* di
 	set_bnd(N, 2, v);
 }
 
-void NotEditedSimulation::vel_step(int N, float* u, float* v, float* u0, float* v0, float visc, float dt)
+void NotEditedSimulation::vel_step(int N, std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, std::shared_ptr<float[]> u0, std::shared_ptr<float[]> v0, float visc, float dt)
 {
 	//add_source(N, u, u0, dt); add_source(N, v, v0, dt);
 	diffuse(N, 1, u0, u, visc, dt);
@@ -165,7 +165,7 @@ void NotEditedSimulation::vel_step(int N, float* u, float* v, float* u0, float* 
 	project(N, u, v, u0, v0);
 }
 
-void NotEditedSimulation::dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float dt)
+void NotEditedSimulation::dens_step(int N, std::shared_ptr<float[]> x, std::shared_ptr<float[]> x0, std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, float diff, float dt)
 {
 	//add_source(N, x, x0, dt);
 	print(x, "poczatek:");
@@ -176,7 +176,7 @@ void NotEditedSimulation::dens_step(int N, float* x, float* x0, float* u, float*
 	print(x, "po advekcji:");
 }
 
-void NotEditedSimulation::print(float* x, std::string s) {
+void NotEditedSimulation::print(std::shared_ptr<float[]> x, std::string s) {
 	int lns = (size + 2) * (size + 2);
 	float combined = 0;
 	for (int i = 0; i < lns; i++) {
@@ -188,3 +188,8 @@ void NotEditedSimulation::print(float* x, std::string s) {
 
 
 }
+
+void NotEditedSimulation::AddConstantDensity(int x, int y, float density) {}
+void NotEditedSimulation::DeleteConstantDensity(int x, int y) {}
+void NotEditedSimulation::AddConstantVelocity(int x, int y, float v_velocity, float h_velocity) {}
+void NotEditedSimulation::DeleteConstantVelocity(int x, int y) {}

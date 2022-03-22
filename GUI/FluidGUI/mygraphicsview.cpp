@@ -50,22 +50,71 @@ void MyGraphicsView::mousePressEvent(QMouseEvent * e){
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
     QPoint mousePosition = e->pos();
 
+    int x1 = pressPosition.x() < mousePosition.x() ? pressPosition.x() : mousePosition.x();
+    int x2 = pressPosition.x() > mousePosition.x() ? pressPosition.x() : mousePosition.x();
+    int y1 = pressPosition.y() < mousePosition.y() ? pressPosition.y() : mousePosition.y();
+    int y2 = pressPosition.y() > mousePosition.y() ? pressPosition.y() : mousePosition.y();
+
+    //boundary, not adding density to opposite side if coursor is far enough
+    x1 = x1 < 0 ? 0 : x1;
+    y1 = y1 < 0 ? 0 : y1;
+    x2 = x2 > simulation->size ? simulation->size : x2;
+    y2 = y2 > simulation->size ? simulation->size : y2;
+
     if (e->button() == Qt::LeftButton) {
-        int x1 = pressPosition.x() < mousePosition.x() ? pressPosition.x() : mousePosition.x();
-        int x2 = pressPosition.x() > mousePosition.x() ? pressPosition.x() : mousePosition.x();
-        int y1 = pressPosition.y() < mousePosition.y() ? pressPosition.y() : mousePosition.y();
-        int y2 = pressPosition.y() > mousePosition.y() ? pressPosition.y() : mousePosition.y();
-
-        //boundary, not adding density to opposite side if coursor is far enough
-        x1 = x1 < 0 ? 0 : x1;
-        y1 = y1 < 0 ? 0 : y1;
-        x2 = x2 > simulation->size ? simulation->size : x2;
-        y2 = y2 > simulation->size ? simulation->size : y2;
-
-        for (int j = y1; j <= y2; j++) {
-            for (int i = x1; i <= x2; i++) {
-                simulation->AddDensity(i, j, 0.7f);
+        switch (e->modifiers()) {
+        //dodanie stałej gęstości
+        case Qt::ControlModifier: {
+            float constantDenisty = den->toPlainText().toFloat();
+            for (int j = y1; j <= y2; j++) {
+                for (int i = x1; i <= x2; i++) {
+                    simulation->AddConstantDensity(i, j, constantDenisty);
+                }
             }
+        }
+            break;
+        // dodanie stałej prędkości
+        case Qt::AltModifier: {
+                float vSpeed = vs->toPlainText().toFloat();
+                float hSpeed = hs->toPlainText().toFloat();
+                for (int j = y1; j <= y2; j++) {
+                    for (int i = x1; i <= x2; i++) {
+                        simulation->AddConstantVelocity(i, j, vSpeed, hSpeed);
+                    }
+                }
+            }
+            break;
+
+        // dodanie normalnej gęstości
+        default:
+            for (int j = y1; j <= y2; j++) {
+                for (int i = x1; i <= x2; i++) {
+                    simulation->AddDensity(i, j, 0.7f);
+                }
+            }
+        }
+    }
+    else if (e->button() == Qt::RightButton) {
+        switch (e->modifiers()) {
+        case Qt::ControlModifier: {
+            float constantDenisty = den->toPlainText().toFloat();
+            for (int j = y1; j <= y2; j++) {
+                for (int i = x1; i <= x2; i++) {
+                    simulation->DeleteConstantDensity(i, j);
+                }
+            }
+        }
+            break;
+            // dodanie stałej prędkości
+        case Qt::AltModifier:
+            float vSpeed = vs->toPlainText().toFloat();
+            float hSpeed = hs->toPlainText().toFloat();
+            for (int j = y1; j <= y2; j++) {
+                for (int i = x1; i <= x2; i++) {
+                    simulation->DeleteConstantVelocity(i, j);
+                }
+            }
+            break;
         }
     }
     //dynamic cast
@@ -141,10 +190,8 @@ void MyGraphicsView::start() {
     this->setScene(&*scene);
     this->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
 
-
     float diff = ((float)d->value()) / 100000;
     float visc = ((float)v->value()) / 100000;
-
 
     switch (kind->currentIndex()) {
         //prawie orginał
@@ -181,7 +228,7 @@ void MyGraphicsView::start() {
 }
 
 void MyGraphicsView::refresh(){
-    simulation->NextFrame(pixels.get());
+    simulation->NextFrame(pixels);
     float combined_density = 0;
     for (int i = 1; i < this->width() ; i++) {
         for (int j = 1; j < this->height() ; j++) {
