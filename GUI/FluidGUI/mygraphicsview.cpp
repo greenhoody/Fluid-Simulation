@@ -97,7 +97,6 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
     else if (e->button() == Qt::RightButton) {
         switch (e->modifiers()) {
         case Qt::ControlModifier: {
-            float constantDenisty = den->toPlainText().toFloat();
             for (int j = y1; j <= y2; j++) {
                 for (int i = x1; i <= x2; i++) {
                     simulation->DeleteConstantDensity(i, j);
@@ -107,8 +106,6 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
             break;
             // dodanie stałej prędkości
         case Qt::AltModifier:
-            float vSpeed = vs->toPlainText().toFloat();
-            float hSpeed = hs->toPlainText().toFloat();
             for (int j = y1; j <= y2; j++) {
                 for (int i = x1; i <= x2; i++) {
                     simulation->DeleteConstantVelocity(i, j);
@@ -161,9 +158,9 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
                 if (simulation->size - 2 > xCurrent + i && xCurrent + i > 2 && simulation->size - 2 > yCurrent + j && yCurrent + j > 2 && i * i + j * j < RADIUS_SQAURE) {
                     simulation->AddVelocity(xCurrent + i, yCurrent + j, dx * SPEED_SCALE, dy * SPEED_SCALE);
                 }
-                //if (simulation->size > xCurrent + i && xCurrent + i > 0 && simulation->size > yCurrent + j && yCurrent + j > 0 && i * i + j * j < RADIUS_SQAURE) {
-                //    simulation->AddVelocity(xCurrent + i, yCurrent + j, (float)dx * SPEED_SCALE, (float)dy * SPEED_SCALE);
-                //}
+                if (simulation->size > xCurrent + i && xCurrent + i > 0 && simulation->size > yCurrent + j && yCurrent + j > 0 && i * i + j * j < RADIUS_SQAURE) {
+                    simulation->AddVelocity(xCurrent + i, yCurrent + j, (float)dx * SPEED_SCALE, (float)dy * SPEED_SCALE);
+                }
             }
         }
 
