@@ -108,12 +108,6 @@ void NotEditedSimulation::advect(int N, int b, std::shared_ptr<float[]> d, std::
 			d[IX(i, j)] = s0 * (t0 * d0[IX(i0, j0)] + t1 * d0[IX(i0, j1)]) +
 				s1 * (t0 * d0[IX(i1, j0)] + t1 * d0[IX(i1, j1)]);
 
-
-			//TEST
-			if (i == 100 && j == 100) {
-				printf("dupa");
-			}
-
 		}
 	}
 	set_bnd(N, b, d);

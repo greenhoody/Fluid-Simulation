@@ -16,8 +16,8 @@
 #define IX(i,j) ((i)+(simulation->size+2)*(j))
 
 //working 
-constexpr auto SPEED_SCALE = 0.80f;
-constexpr auto SPEED_CHANGE_RADIUS = 1.2f;
+constexpr auto SPEED_SCALE = 3.0f;
+constexpr auto SPEED_CHANGE_RADIUS = 2.0f;
 constexpr auto RADIUS_SQAURE = SPEED_CHANGE_RADIUS * SPEED_CHANGE_RADIUS;
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
@@ -230,7 +230,6 @@ void MyGraphicsView::refresh(){
     for (int i = 1; i < this->width() ; i++) {
         for (int j = 1; j < this->height() ; j++) {
             image->setPixelColor(i - 1, j - 1, getColor(pixels[IX(i, j)]));
-            combined_density += pixels[IX(i, j)];
         }
     }
     pixMapItem->setPixmap(QPixmap::fromImage(*image));
@@ -239,8 +238,9 @@ void MyGraphicsView::refresh(){
 }
 
 QColor MyGraphicsView::getColor(float x) {
-    if (x < 0)
-        return QColor(0, 255, 0, 255);
+    if (x < 0) {
+        return QColor(0, 255, 0, 120);
+    }
     else {
         int y = (int)(x * 255);
         return QColor(y, y, y, 255);

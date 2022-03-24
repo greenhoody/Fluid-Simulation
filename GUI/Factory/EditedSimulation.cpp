@@ -5,6 +5,7 @@
 #include"pch.h"
 
 #define IX(i,j) ((i)+(size+2)*(j))
+#define IW(i,j) ((i+2)+(size+4)*(j))
 
 EditedSimulation::EditedSimulation(int size, float diffiusion, float viscosity, float dt):Simulation(size, diffiusion, viscosity, dt) {
 
@@ -35,6 +36,16 @@ void EditedSimulation::NextFrame(std::shared_ptr<float[]> copy_array) {
 	vel_step(u, v, u_prev, v_prev, visc);
 	dens_step(dens, dens_prev, u, v, diff);
 	memcpy(copy_array.get(), dens.get(), sizeof(float) * (size + 2) * (size + 2));
+
+	// TEST czy dzia³aj¹ œciany
+	for (int i = 2; i < this->size + 3; i++) {
+		for (int j = 2; i < this->size + 3; i++) {
+			copy_array[IX(i - 1, j - 1)] = walls[IW(i, j)] ? -1.0f : copy_array[IX(i - 1, j - 1)];
+		}
+	}
+
+
+
 }
 
 void EditedSimulation::AddDensity(int x, int y, float density) {
@@ -52,7 +63,9 @@ void EditedSimulation::AddVelocity(int x, int y, float h_velocity, float v_veloc
 }
 
 void EditedSimulation::AddWall(int x, int y) {
-	walls[IX(x + 1, y + 1)] = true;
+	int index = IX(x + 1, y + 1);
+	int index2 = IW(x, y);
+	walls[index] = true;
 }
 
 void EditedSimulation::DeleteWall(int x, int y) {
@@ -90,10 +103,10 @@ void EditedSimulation::set_bnd(int b, std::shared_ptr<float[]> x) {
 		}
 	}
 
-	x[IX(0, 0)] = 0.5f * (x[IX(1, 0)] + x[IX(0, 1)]); //lewygorny
-	x[IX(0, size + 1)] = 0.5f * (x[IX(1, size + 1)] + x[IX(0, size)]); //lewydolny
-	x[IX(size + 1, 0)] = 0.5f * (x[IX(size + 1, 1)] + x[IX(size, 0)]); //prawygorny
-	x[IX(size + 1, size + 1)] = 0.5f * (x[IX(size, size + 1)] + x[IX(size + 1, size)]); //prawydolny
+	//x[IX(0, 0)] = 0.5f * (x[IX(1, 0)] + x[IX(0, 1)]); //lewygorny
+	//x[IX(0, size + 1)] = 0.5f * (x[IX(1, size + 1)] + x[IX(0, size)]); //lewydolny
+	//x[IX(size + 1, 0)] = 0.5f * (x[IX(size + 1, 1)] + x[IX(size, 0)]); //prawygorny
+	//x[IX(size + 1, size + 1)] = 0.5f * (x[IX(size, size + 1)] + x[IX(size + 1, size)]); //prawydolny
 }
 
 void EditedSimulation::diffuse(int b, std::shared_ptr<float[]> x, std::shared_ptr<float[]> x0, float diff) {
