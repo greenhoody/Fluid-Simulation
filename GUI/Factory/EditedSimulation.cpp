@@ -9,26 +9,24 @@
 
 EditedSimulation::EditedSimulation(int size, float diffiusion, float viscosity, float dt):Simulation(size, diffiusion, viscosity, dt) {
 
-	this->source = (float*)calloc((size + 2) * (size + 2), sizeof(float));
-	this->walls = (bool*)calloc((size + 4) * (size + 4), sizeof(bool));
+	walls = (bool*)calloc((size + 4) * (size + 4), sizeof(bool));
 
 	for (int i = 0; i < size + 4; i++) {
-		walls[IX(0, i)] = true;
-		walls[IX(1, i)] = true;
-		walls[IX(size+2, i)] = true;
-		walls[IX(size+3, i)] = true;
+		walls[IW(0, i)] = true;
+		walls[IW(1, i)] = true;
+		walls[IW(size+2, i)] = true;
+		walls[IW(size+3, i)] = true;
 	}
 
 	for (int i = 0; i < size + 4; i++) {
-		walls[IX(i, 0)] = true;
-		walls[IX(i, 1)] = true;
-		walls[IX(i, size + 2)] = true;
-		walls[IX(i, size + 3)] = true;
+		walls[IW(i, 0)] = true;
+		walls[IW(i, 1)] = true;
+		walls[IW(i, size + 2)] = true;
+		walls[IW(i, size + 3)] = true;
 	}
 }
 
 EditedSimulation::~EditedSimulation() {
-	free(source);
 	free(walls);
 }
 
@@ -39,8 +37,8 @@ void EditedSimulation::NextFrame(std::shared_ptr<float[]> copy_array) {
 
 	// TEST czy dzia³aj¹ œciany
 	for (int i = 2; i < this->size + 3; i++) {
-		for (int j = 2; i < this->size + 3; i++) {
-			copy_array[IX(i - 1, j - 1)] = walls[IW(i, j)] ? -1.0f : copy_array[IX(i - 1, j - 1)];
+		for (int j = 2; j < this->size + 3; j++) {
+			copy_array.get()[IX(i - 1, j - 1)] = walls[IW(i, j)] ? -1.0f : copy_array[IX(i - 1, j - 1)];
 		}
 	}
 
@@ -65,7 +63,7 @@ void EditedSimulation::AddVelocity(int x, int y, float h_velocity, float v_veloc
 void EditedSimulation::AddWall(int x, int y) {
 	int index = IX(x + 1, y + 1);
 	int index2 = IW(x, y);
-	walls[index] = true;
+	walls[index2] = true;
 }
 
 void EditedSimulation::DeleteWall(int x, int y) {
@@ -96,10 +94,10 @@ void EditedSimulation::set_bnd(int b, std::shared_ptr<float[]> x) {
 	for (int i = 2; i < this->size + 3; i++) {
 		for (int j = 2; i < this->size + 3; i++) {
 			// b1 horyzontalnie b2 pionowo
-			x[IX(i - 1, j - 1)] = (b == 2 && walls[IX(i, j)] && walls[IX(i, j - 1)]) ? -x[IX(i-1, j - 2)] : x[IX(i - 1, j  -2)]; // gora
-			x[IX(i - 1, j - 1)] = (b == 2 && walls[IX(i, j)] && walls[IX(i, j + 1)]) ? -x[IX(i - 1, j)] : x[IX(i - 1, j)];//dol
-			x[IX(i - 1, j - 1)] = (b == 1 && walls[IX(i, j)] && walls[IX(i - 1, j)]) ? -x[IX(i - 2, j -1)] : x[IX(i - 2, j -1)];//lewo
-			x[IX(i - 1, j - 1)] = (b == 1 && walls[IX(i, j)] && walls[IX(i + 1, j)]) ? -x[IX(i, j - 1)] : x[IX(i, j - 1)];//prawo
+			x[IX(i - 1, j - 1)] = (b == 2 && walls[IW(i, j)] && walls[IW(i, j - 1)]) ? -x[IX(i-1, j - 2)] : x[IX(i - 1, j  -2)]; // gora
+			x[IX(i - 1, j - 1)] = (b == 2 && walls[IW(i, j)] && walls[IW(i, j + 1)]) ? -x[IX(i - 1, j)] : x[IX(i - 1, j)];//dol
+			x[IX(i - 1, j - 1)] = (b == 1 && walls[IW(i, j)] && walls[IW(i - 1, j)]) ? -x[IX(i - 2, j -1)] : x[IX(i - 2, j -1)];//lewo
+			x[IX(i - 1, j - 1)] = (b == 1 && walls[IW(i, j)] && walls[IW(i + 1, j)]) ? -x[IX(i, j - 1)] : x[IX(i, j - 1)];//prawo
 		}
 	}
 

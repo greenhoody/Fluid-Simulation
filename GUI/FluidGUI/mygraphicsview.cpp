@@ -114,7 +114,7 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
             break;
         }
     }
-    //dynamic cast
+
     if (e->button() == Qt::MiddleButton) {
         int x1 = pressPosition.x() < mousePosition.x() ? pressPosition.x() : mousePosition.x();
         int x2 = pressPosition.x() > mousePosition.x() ? pressPosition.x() : mousePosition.x();
@@ -127,6 +127,8 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
         x2 = x2 > simulation->size ? simulation->size : x2;
         y2 = y2 > simulation->size ? simulation->size : y2;
 
+
+        // dodaje tylko w pierwszym rzędzie
         for (int j = y1; j <= y2; j++) {
             for (int i = x1; i <= x2; i++) {
                 e_simulation->AddWall(i, j);
@@ -200,6 +202,7 @@ void MyGraphicsView::start() {
     case 1:
         //dynamic cast
         factory.reset(new FactoryEditedSimulation());
+        e_simulation.reset();
         simulation.reset(factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000));
         e_simulation = std::dynamic_pointer_cast<EditedSimulation>(simulation);
         break;
@@ -226,7 +229,6 @@ void MyGraphicsView::start() {
 
 void MyGraphicsView::refresh(){
     simulation->NextFrame(pixels);
-    float combined_density = 0;
     for (int i = 1; i < this->width() ; i++) {
         for (int j = 1; j < this->height() ; j++) {
             image->setPixelColor(i - 1, j - 1, getColor(pixels[IX(i, j)]));

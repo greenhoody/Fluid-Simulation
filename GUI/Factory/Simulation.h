@@ -34,15 +34,15 @@ public:
 
 		int n = (size + 2) * (size + 2);
 
-		u.reset((float*)calloc((size + 2) * (size + 2), sizeof(float)));
-		v.reset((float*)calloc((size + 2) * (size + 2), sizeof(float)));
-		u_prev.reset((float*)calloc((size + 2) * (size + 2), sizeof(float)));
-		v_prev.reset((float*)calloc((size + 2) * (size + 2), sizeof(float)));
-		u_const.reset((float*)calloc((size + 2) * (size + 2), sizeof(float)));
-		v_const.reset((float*)calloc((size + 2) * (size + 2), sizeof(float)));
-		dens.reset((float*)calloc((size + 2) * (size + 2), sizeof(float)));
-		dens_prev.reset((float*)calloc((size + 2) * (size + 2), sizeof(float)));
-		dens_const.reset((float*)calloc((size + 2) * (size + 2), sizeof(float)));
+		u.reset((float*)calloc(n, sizeof(float)));
+		v.reset((float*)calloc(n, sizeof(float)));
+		u_prev.reset((float*)calloc(n, sizeof(float)));
+		v_prev.reset((float*)calloc(n, sizeof(float)));
+		u_const.reset((float*)calloc(n, sizeof(float)));
+		v_const.reset((float*)calloc(n, sizeof(float)));
+		dens.reset((float*)calloc(n, sizeof(float)));
+		dens_prev.reset((float*)calloc(n, sizeof(float)));
+		dens_const.reset((float*)calloc(n, sizeof(float)));
 
 		//this->u_prev = (float*)calloc((size + 2) * (size + 2), sizeof(float));
 		//this->u_const = (float*)calloc((size + 2) * (size + 2), sizeof(float));
