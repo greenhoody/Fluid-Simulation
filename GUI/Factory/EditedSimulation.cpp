@@ -9,7 +9,7 @@
 
 EditedSimulation::EditedSimulation(int size, float diffiusion, float viscosity, float dt):Simulation(size, diffiusion, viscosity, dt) {
 
-	walls = (bool*)calloc((size + 4) * (size + 4), sizeof(bool));
+	walls.reset((bool*)calloc((size + 4) * (size + 4), sizeof(bool)));
 
 	for (int i = 0; i < size + 4; i++) {
 		walls[IW(0, i)] = true;
@@ -27,7 +27,6 @@ EditedSimulation::EditedSimulation(int size, float diffiusion, float viscosity, 
 }
 
 EditedSimulation::~EditedSimulation() {
-	free(walls);
 }
 
 void EditedSimulation::NextFrame(std::shared_ptr<float[]> copy_array) {

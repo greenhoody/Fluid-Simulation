@@ -131,7 +131,7 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
         // dodaje tylko w pierwszym rzędzie
         for (int j = y1; j <= y2; j++) {
             for (int i = x1; i <= x2; i++) {
-                e_simulation->AddWall(i, j);
+               // e_simulation->AddWall(i, j);
             }
         }
     }
@@ -202,9 +202,13 @@ void MyGraphicsView::start() {
     case 1:
         //dynamic cast
         factory.reset(new FactoryEditedSimulation());
-        e_simulation.reset();
+
+        // tu jest błąd
         simulation.reset(factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000));
+
+        
         e_simulation = std::dynamic_pointer_cast<EditedSimulation>(simulation);
+
         break;
         //openMP
     case 2:

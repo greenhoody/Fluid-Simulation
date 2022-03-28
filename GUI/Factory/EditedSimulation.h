@@ -15,7 +15,7 @@ public :
 	void AddConstantVelocity(int x, int y, float v_velocity, float h_velocity);
 	void DeleteConstantVelocity(int x, int y);
 private:
-	bool* walls;
+	std::unique_ptr<bool[]> walls;
 
 	void vel_step(std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, std::shared_ptr<float[]> u0, std::shared_ptr<float[]> v0, float visc);
 	void dens_step(std::shared_ptr<float[]> x, std::shared_ptr<float[]> x0, std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, float diff);
