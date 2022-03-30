@@ -7,7 +7,17 @@
 #define IX(i,j) ((i)+(size+2)*(j))
 #define IW(i,j) ((i+2)+(size+4)*(j))
 
-EditedSimulation::EditedSimulation(int size, float diffiusion, float viscosity, float dt):Simulation(size, diffiusion, viscosity, dt) {
+EditedSimulation::EditedSimulation(int size, float diffiusion, float viscosity, float dt):Simulation(size, diffiusion, viscosity, dt) 
+{
+
+	this->u_prev = (float*)calloc(n, sizeof(float));
+	this->u_const = (float*)calloc(n, sizeof(float));
+	this->v = (float*)calloc(n, sizeof(float));
+	this->v_prev = (float*)calloc(n, sizeof(float));
+	this->v_const = (float*)calloc(n, sizeof(float));
+	this->dens = (float*)calloc(n, sizeof(float));
+	this->dens_prev = (float*)calloc(n, sizeof(float));
+	this->dens_const = (float*)calloc(n, sizeof(float));
 
 	walls.reset((bool*)calloc((size + 4) * (size + 4), sizeof(bool)));
 
@@ -26,37 +36,83 @@ EditedSimulation::EditedSimulation(int size, float diffiusion, float viscosity, 
 	}
 }
 
-EditedSimulation::~EditedSimulation() {
+EditedSimulation::~EditedSimulation() 
+{
+	free(u);
+	free(u_prev);
+	free(u_const);
+	free(v);
+	free(v_prev);
+	free(v_const);
+	free(dens);
+	free(dens_prev);
+	free(dens_const);
 }
 
 void EditedSimulation::NextFrame(std::shared_ptr<float[]> copy_array) {
 	vel_step(u, v, u_prev, v_prev, visc);
 	dens_step(dens, dens_prev, u, v, diff);
-	memcpy(copy_array.get(), dens.get(), sizeof(float) * (size + 2) * (size + 2));
+	memcpy(copy_array.get(), dens, sizeof(float) * (size + 2) * (size + 2));
 
-	// TEST czy dzia³aj¹ œciany
+	// TEST czy dzia³aj¹ œciany // dzia³aj¹
 	for (int i = 2; i < this->size + 3; i++) {
 		for (int j = 2; j < this->size + 3; j++) {
 			copy_array.get()[IX(i - 1, j - 1)] = walls[IW(i, j)] ? -1.0f : copy_array[IX(i - 1, j - 1)];
 		}
 	}
-
-
-
 }
 
-void EditedSimulation::AddDensity(int x, int y, float density) {
-	int index = IX(x + 1, y + 1);
-	dens[index] += density;
-	if (dens[index] > 1) {
-		dens[index] = 1;
+void EditedSimulation::AddDensity(int x1, int x2, int y1, int y2, float density) {
+	if (x1 > x2)
+	{
+		int tmp = x1;
+		x1 = x2;
+		x2 = tmp;
+	}
+
+	if (y1 > y2)
+	{
+		int tmp = y1;
+		y1 = y2;
+		y2 = tmp;
+	}
+
+	x1 = x1 < 0 ? 0 : x1;
+	y1 = y1 < 0 ? 0 : y1;
+	x2 = x2 > size ? size : x2;
+	y2 = y2 > size ? size : y2;
+
+	for (int i = x1; i <= x2; i++)
+	{
+		for (int j = y1; j <= y2; j++)
+		{
+			// to dodawanie jest potrzbne poniewa¿, pierwszy rz¹d i kolumna nie sa pokazywane, wiêc obraz jest przesuniêty
+			int index = IX(i + 1, j + 1);
+			dens[index] += density;
+			if (dens[index] > 1) {
+				dens[index] = 1;
+			}
+		}
+
 	}
 }
 
-void EditedSimulation::AddVelocity(int x, int y, float h_velocity, float v_velocity) {
-	int index = IX(x + 1, y + 1);
-	v_prev[index] += v_velocity;
-	u_prev[index] += h_velocity;
+void EditedSimulation::AddVelocity(int x, int y, int r, float v_velocity, float h_velocity) 
+{
+	int r_square = r * r;
+
+	for (int i = x - r; i <= x + r; i++)
+	{
+		for (int j = y - r; j <= y + r; j++)
+		{
+			if (size > x + i && x + i > 0 && size > y + j && y + j > 0 && i * i + j * j < r_square) {
+				// to dodawanie jest potrzbne poniewa¿, pierwszy rz¹d i kolumna nie sa pokazywane, wiêc obraz jest przesuniêty
+				int index = IX(i + 1, j + 1);
+				v[index] += v_velocity;
+				u[index] += h_velocity;
+			}
+		}
+	}
 }
 
 void EditedSimulation::AddWall(int x, int y) {
@@ -89,7 +145,7 @@ void EditedSimulation::DeleteConstantVelocity(int x, int y) {
 
 //========================================================================================
 
-void EditedSimulation::set_bnd(int b, std::shared_ptr<float[]> x) {
+void EditedSimulation::set_bnd(int b, float* x) {
 	for (int i = 2; i < this->size + 3; i++) {
 		for (int j = 2; i < this->size + 3; i++) {
 			// b1 horyzontalnie b2 pionowo
@@ -106,7 +162,7 @@ void EditedSimulation::set_bnd(int b, std::shared_ptr<float[]> x) {
 	//x[IX(size + 1, size + 1)] = 0.5f * (x[IX(size, size + 1)] + x[IX(size + 1, size)]); //prawydolny
 }
 
-void EditedSimulation::diffuse(int b, std::shared_ptr<float[]> x, std::shared_ptr<float[]> x0, float diff) {
+void EditedSimulation::diffuse(int b, float* x, float* x0, float diff) {
 	float a = dt * diff * size * size;
 
 	for (int k = 0; k < 20; k++) {
@@ -120,7 +176,7 @@ void EditedSimulation::diffuse(int b, std::shared_ptr<float[]> x, std::shared_pt
 	}
 }
 
-void EditedSimulation::advect(int  b, std::shared_ptr<float[]> d, std::shared_ptr<float[]> d0, std::shared_ptr<float[]> u, std::shared_ptr<float[]> v) {
+void EditedSimulation::advect(int  b, float* d, float* d0, float* u, float* v) {
 	int i, j, i0, j0, i1, j1;
 	float x, y, s0, t0, s1, t1, dt0;
 	dt0 = dt * (float)size;
@@ -145,7 +201,7 @@ void EditedSimulation::advect(int  b, std::shared_ptr<float[]> d, std::shared_pt
 	set_bnd(b, d);
 }
 
-void EditedSimulation::project(std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, std::shared_ptr<float[]> p, std::shared_ptr<float[]> div) {
+void EditedSimulation::project(float* u, float* v, float* p, float* div) {
 	int i, j, k;
 	float h;
 	h = 1.0f / size;
@@ -180,7 +236,7 @@ void EditedSimulation::project(std::shared_ptr<float[]> u, std::shared_ptr<float
 	set_bnd(2, v);
 }
 
-void EditedSimulation::vel_step(std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, std::shared_ptr<float[]> u0, std::shared_ptr<float[]> v0, float visc) {
+void EditedSimulation::vel_step(float* u, float* v, float* u0, float* v0, float visc) {
 	
 	diffuse(1, u0, u, visc);
 	diffuse(2, v0, v, visc);
@@ -193,7 +249,7 @@ void EditedSimulation::vel_step(std::shared_ptr<float[]> u, std::shared_ptr<floa
 	constant_no_limit(v, v_const);
 }
 
-void EditedSimulation::dens_step(std::shared_ptr<float[]> x, std::shared_ptr<float[]> x0, std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, float diff) {
+void EditedSimulation::dens_step(float* x, float* x0, float* u, float* v, float diff) {
 
 	diffuse(0, x0, x, diff);
 	advect(0, x, x0, u, v);
@@ -202,7 +258,7 @@ void EditedSimulation::dens_step(std::shared_ptr<float[]> x, std::shared_ptr<flo
 	constant(dens, dens_const);
 }
 
-void EditedSimulation::constant(std::shared_ptr<float[]>x, std::shared_ptr<float[]> cnt) {
+void EditedSimulation::constant(float*x, float* cnt) {
 	for (int i = 1; i <= size; i++) {
 		for (int j = 1; j <= size; j++) {
 			x[IX(i, j)] += cnt[IX(i, j)];
@@ -213,7 +269,7 @@ void EditedSimulation::constant(std::shared_ptr<float[]>x, std::shared_ptr<float
 	}
 }
 
-void EditedSimulation::constant_no_limit(std::shared_ptr<float[]>x, std::shared_ptr<float[]> cnt) {
+void EditedSimulation::constant_no_limit(float*x, float* cnt) {
 	for (int i = 1; i <= size; i++) {
 		for (int j = 1; j <= size; j++) {
 			x[IX(i, j)] += cnt[IX(i, j)];

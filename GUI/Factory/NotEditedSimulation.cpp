@@ -11,43 +11,100 @@
 
 #define IX(i,j) ((i)+(size+2)*(j))
 
-NotEditedSimulation::NotEditedSimulation(int size, float diffiusion, float viscosity, float dt): Simulation(size, diffiusion, viscosity, dt) {
-
+NotEditedSimulation::NotEditedSimulation(int size, float diffiusion, float viscosity, float dt): Simulation(size, diffiusion, viscosity, dt)
+{
+	this->u_prev = (float*)calloc(n, sizeof(float));
+	this->u_const = (float*)calloc(n, sizeof(float));
+	this->v = (float*)calloc(n, sizeof(float));
+	this->v_prev = (float*)calloc(n, sizeof(float));
+	this->v_const = (float*)calloc(n, sizeof(float));
+	this->dens = (float*)calloc(n, sizeof(float));
+	this->dens_prev = (float*)calloc(n, sizeof(float));
+	this->dens_const = (float*)calloc(n, sizeof(float));
 }
 
-NotEditedSimulation::~NotEditedSimulation() {
+NotEditedSimulation::~NotEditedSimulation() 
+{
+	free(u);
+	free(u_prev);
+	free(u_const);
+	free(v);
+	free(v_prev);
+	free(v_const);
+	free(dens);
+	free(dens_prev);
+	free(dens_const);
+
 }
 
 void NotEditedSimulation::NextFrame(std::shared_ptr<float[]> copy_array) {
 	vel_step(size, u, v, u_prev, v_prev, visc, dt);
 	dens_step(size, dens, dens_prev, u, v, diff, dt);
-	memcpy(copy_array.get(), dens.get(), sizeof(float) * (size + 2) * (size + 2));
+	memcpy(copy_array.get(), dens, sizeof(float) * (size + 2) * (size + 2));
 }
 
-void NotEditedSimulation::AddDensity(int x, int y, float density) {
-	int index = IX(x + 1, y + 1);
-	dens[index] += density;
-	if (dens[index] > 1) {
-		dens[index] = 1;
+void NotEditedSimulation::AddDensity(int x1, int x2, int y1, int y2, float density)
+{	
+	if(x1 > x2)
+	{
+		int tmp = x1;
+		x1 = x2;
+		x2 = tmp;
+	}
+
+	if (y1 > y2)
+	{
+		int tmp = y1;
+		y1 = y2;
+		y2 = tmp;
+	}
+	
+	x1 = x1 < 0 ? 0 : x1;
+	y1 = y1 < 0 ? 0 : y1;
+	x2 = x2 > size ? size : x2;
+	y2 = y2 > size ? size : y2;
+	
+	for (int i = x1; i <= x2; i++) 
+	{
+		for (int j = y1; j <= y2; j++) 
+		{
+			// to dodawanie jest potrzbne ponieważ, pierwszy rząd i kolumna nie sa pokazywane, więc obraz jest przesunięty
+			int index = IX(i + 1, j + 1);
+			dens[index] += density;
+			if (dens[index] > 1) {
+				dens[index] = 1;
+			}
+		}
 	}
 }
 
-void NotEditedSimulation::AddVelocity(int x, int y, float h_velocity, float v_velocity) {
-	int index = IX(x + 1, y + 1);
-	//v z indeksem ujemnym wpisuje dane do u_prev/ mazanie po pamięci
-	v[index] += v_velocity;
-	u[index] += h_velocity;
+void NotEditedSimulation::AddVelocity(int x, int y, int r, float v_velocity, float h_velocity)
+{	
+	int r_square = r * r;
+
+	for (int i = x - r; i <= x + r; i++)
+	{
+		for (int j = y - r; j <= y + r; j++)
+		{
+			if (size > x + i && x + i > 0 && size > y + j && y + j > 0 && i * i + j * j < r_square) {
+				// to dodawanie jest potrzbne ponieważ, pierwszy rząd i kolumna nie sa pokazywane, więc obraz jest przesunięty
+				int index = IX(i + 1, j + 1);
+				v[index] += v_velocity;
+				u[index] += h_velocity;
+			}
+		}
+	}
 }
 
 //=====================================================================================================================
 
-void NotEditedSimulation::add_source(int N, std::shared_ptr<float[]> x, std::shared_ptr<float[]> s, float dt)
+void NotEditedSimulation::add_source(int N, float* x, float* s, float dt)
 {
 	int i, size = (N + 2) * (N + 2);
 	for (i = 0; i < size; i++) x[i] += dt * s[i];
 }
 
-void NotEditedSimulation::set_bnd(int N, int b, std::shared_ptr<float[]> x)
+void NotEditedSimulation::set_bnd(int N, int b, float* x)
 {
 	int i;
 	for (i = 1; i <= N; i++) {
@@ -62,7 +119,7 @@ void NotEditedSimulation::set_bnd(int N, int b, std::shared_ptr<float[]> x)
 	x[IX(N + 1, N + 1)] = 0.5f * (x[IX(N, N + 1)] + x[IX(N + 1, N)]);
 }
 
-void NotEditedSimulation::diffuse(int N, int b, std::shared_ptr<float[]> x, std::shared_ptr<float[]> x0, float diff, float dt)
+void NotEditedSimulation::diffuse(int N, int b, float* x, float* x0, float diff, float dt)
 {
 	int i, j, k;
 	float a = dt * diff * N * N;
@@ -77,7 +134,7 @@ void NotEditedSimulation::diffuse(int N, int b, std::shared_ptr<float[]> x, std:
 	}
 }
 
-void NotEditedSimulation::advect(int N, int b, std::shared_ptr<float[]> d, std::shared_ptr<float[]> d0, std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, float dt)
+void NotEditedSimulation::advect(int N, int b, float* d, float* d0, float* u, float* v, float dt)
 {
 	int i0, j0, i1, j1;
 	float x, y, s0, t0, s1, t1, dt0;
@@ -113,7 +170,7 @@ void NotEditedSimulation::advect(int N, int b, std::shared_ptr<float[]> d, std::
 	set_bnd(N, b, d);
 }
 
-void NotEditedSimulation::project(int N, std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, std::shared_ptr<float[]> p, std::shared_ptr<float[]> div)
+void NotEditedSimulation::project(int N, float* u, float* v, float* p, float* div)
 {
 	int i, j, k;
 	float h;
@@ -148,7 +205,7 @@ void NotEditedSimulation::project(int N, std::shared_ptr<float[]> u, std::shared
 	set_bnd(N, 2, v);
 }
 
-void NotEditedSimulation::vel_step(int N, std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, std::shared_ptr<float[]> u0, std::shared_ptr<float[]> v0, float visc, float dt)
+void NotEditedSimulation::vel_step(int N, float* u, float* v, float* u0, float* v0, float visc, float dt)
 {
 	//add_source(N, u, u0, dt); add_source(N, v, v0, dt);
 	diffuse(N, 1, u0, u, visc, dt);
@@ -159,7 +216,7 @@ void NotEditedSimulation::vel_step(int N, std::shared_ptr<float[]> u, std::share
 	project(N, u, v, u0, v0);
 }
 
-void NotEditedSimulation::dens_step(int N, std::shared_ptr<float[]> x, std::shared_ptr<float[]> x0, std::shared_ptr<float[]> u, std::shared_ptr<float[]> v, float diff, float dt)
+void NotEditedSimulation::dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float dt)
 {
 	//add_source(N, x, x0, dt);
 	print(x, "poczatek:");
@@ -170,7 +227,7 @@ void NotEditedSimulation::dens_step(int N, std::shared_ptr<float[]> x, std::shar
 	print(x, "po advekcji:");
 }
 
-void NotEditedSimulation::print(std::shared_ptr<float[]> x, std::string s) {
+void NotEditedSimulation::print(float* x, std::string s) {
 	int lns = (size + 2) * (size + 2);
 	float combined = 0;
 	for (int i = 0; i < lns; i++) {

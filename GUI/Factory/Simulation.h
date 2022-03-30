@@ -9,22 +9,22 @@ class Simulation
 {
 public:
 	virtual void NextFrame(std::shared_ptr<float[]> copy_array) = 0;
-	virtual void AddDensity(int x, int y, float density) = 0;
-	virtual void AddVelocity(int x, int y, float v_velocity, float h_velocity) = 0;
+	virtual void AddDensity(int x1, int x2, int y1, int y2, float density) = 0;
+	virtual void AddVelocity(int x, int y, int r, float v_velocity, float h_velocity) = 0;
 	virtual void AddConstantDensity(int x, int y, float density) = 0;
 	virtual void DeleteConstantDensity(int x, int y) = 0;
 	virtual void AddConstantVelocity(int x, int y, float v_velocity, float h_velocity) = 0;
 	virtual void DeleteConstantVelocity(int x, int y) = 0;
 	virtual ~Simulation() {
-		free(u);
-		free(u_prev);
-		free(u_const);
-		free(v);
-		free(v_prev);
-		free(v_const);
-		free(dens);
-		free(dens_prev);
-		free(dens_const);
+		//free(u);
+		//free(u_prev);
+		//free(u_const);
+		//free(v);
+		//free(v_prev);
+		//free(v_const);
+		//free(dens);
+		//free(dens_prev);
+		//free(dens_const);
 	};
 	Simulation(int size, float diffiusion, float viscosity, float dt) {
 		this->size = size;
@@ -32,7 +32,7 @@ public:
 		this->visc = viscosity;
 		this->dt = dt;
 
-		int n = (size + 2) * (size + 2);
+		n = (size + 2) * (size + 2);
 
 		//u.reset((float*)calloc(n, sizeof(float)));
 		//v.reset((float*)calloc(n, sizeof(float)));
@@ -44,18 +44,18 @@ public:
 		//dens_prev.reset((float*)calloc(n, sizeof(float)));
 		//dens_const.reset((float*)calloc(n, sizeof(float)));
 
-		this->u_prev = (float*)calloc(n, sizeof(float));
-		this->u_const = (float*)calloc(n, sizeof(float));
-		this->v = (float*)calloc(n, sizeof(float));
-		this->v_prev = (float*)calloc(n, sizeof(float));
-		this->v_const = (float*)calloc(n, sizeof(float));
-		this->dens = (float*)calloc(n, sizeof(float));
-		this->dens_prev = (float*)calloc(n, sizeof(float));
-		this->dens_const = (float*)calloc(n, sizeof(float));
+		//this->u_prev = (float*)calloc(n, sizeof(float));
+		//this->u_const = (float*)calloc(n, sizeof(float));
+		//this->v = (float*)calloc(n, sizeof(float));
+		//this->v_prev = (float*)calloc(n, sizeof(float));
+		//this->v_const = (float*)calloc(n, sizeof(float));
+		//this->dens = (float*)calloc(n, sizeof(float));
+		//this->dens_prev = (float*)calloc(n, sizeof(float));
+		//this->dens_const = (float*)calloc(n, sizeof(float));
 	};
 	//std::shared_ptr<float[]> u, v, u_prev, v_prev, u_const, v_const, dens, dens_prev, dens_const;
 	float* u, * v, * u_prev, * v_prev, * u_const, * v_const, * dens, * dens_prev, * dens_const;
-	int size;
+	int size,n;
 	float diff, visc, dt;
 };
 

@@ -17,8 +17,7 @@
 
 //working 
 constexpr auto SPEED_SCALE = 3.0f;
-constexpr auto SPEED_CHANGE_RADIUS = 2.0f;
-constexpr auto RADIUS_SQAURE = SPEED_CHANGE_RADIUS * SPEED_CHANGE_RADIUS;
+constexpr auto SPEED_CHANGE_RADIUS = 2;
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 {
@@ -50,16 +49,10 @@ void MyGraphicsView::mousePressEvent(QMouseEvent * e){
 void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
     QPoint mousePosition = e->pos();
 
-    int x1 = pressPosition.x() < mousePosition.x() ? pressPosition.x() : mousePosition.x();
-    int x2 = pressPosition.x() > mousePosition.x() ? pressPosition.x() : mousePosition.x();
-    int y1 = pressPosition.y() < mousePosition.y() ? pressPosition.y() : mousePosition.y();
-    int y2 = pressPosition.y() > mousePosition.y() ? pressPosition.y() : mousePosition.y();
-
-    //boundary, not adding density to opposite side if coursor is far enough
-    x1 = x1 < 0 ? 0 : x1;
-    y1 = y1 < 0 ? 0 : y1;
-    x2 = x2 > simulation->size ? simulation->size : x2;
-    y2 = y2 > simulation->size ? simulation->size : y2;
+    int x1 = pressPosition.x();
+    int x2 = mousePosition.x();
+    int y1 = pressPosition.y();
+    int y2 = mousePosition.y();
 
     if (e->button() == Qt::LeftButton) {
         switch (e->modifiers()) {
@@ -87,11 +80,7 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
 
         // dodanie normalnej gęstości
         default:
-            for (int j = y1; j <= y2; j++) {
-                for (int i = x1; i <= x2; i++) {
-                    simulation->AddDensity(i, j, 0.7f);
-                }
-            }
+            simulation->AddDensity(x1,x2,y1,y2,0.7f);
         }
     }
     else if (e->button() == Qt::RightButton) {
@@ -151,22 +140,11 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
         float dx = xCurrent - xPress;
         float dy = yCurrent - yPress;
 
-        float lenght = sqrt(dx * dx + dy * dy);
-        float xNormalized = (float)dx * SPEED_SCALE / lenght;
-        float yNormalized = (float)dy * SPEED_SCALE / lenght;
+        //float lenght = sqrt(dx * dx + dy * dy);
+        //float xNormalized = (float)dx * SPEED_SCALE / lenght;
+        //float yNormalized = (float)dy * SPEED_SCALE / lenght;
 
-        for (int i = -SPEED_CHANGE_RADIUS; i <= SPEED_CHANGE_RADIUS; i++) {
-            for (int j = -SPEED_CHANGE_RADIUS; j <= SPEED_CHANGE_RADIUS; j++) {
-                if (simulation->size - 2 > xCurrent + i && xCurrent + i > 2 && simulation->size - 2 > yCurrent + j && yCurrent + j > 2 && i * i + j * j < RADIUS_SQAURE) {
-                    simulation->AddVelocity(xCurrent + i, yCurrent + j, dx * SPEED_SCALE, dy * SPEED_SCALE);
-                }
-                if (simulation->size > xCurrent + i && xCurrent + i > 0 && simulation->size > yCurrent + j && yCurrent + j > 0 && i * i + j * j < RADIUS_SQAURE) {
-                    simulation->AddVelocity(xCurrent + i, yCurrent + j, (float)dx * SPEED_SCALE, (float)dy * SPEED_SCALE);
-                }
-            }
-        }
-
-        //simulation->AddVelocity(xCurrent, yCurrent, (float)dx * SPEED_SCALE, (float)dy * SPEED_SCALE);
+        simulation->AddVelocity(xCurrent, yCurrent, SPEED_CHANGE_RADIUS, (float)dy * SPEED_SCALE, (float)dx * SPEED_SCALE);
 
     }
     lastPosition = e->pos();
