@@ -277,7 +277,7 @@ __global__ void addVelocity(int N, float* d_u, float* d_v, int x, int y, int r, 
 	int i = (index % (r*2));
 	int r_square = r * r;
 
-	if (N > x + i && x + i > 0 && N > y + j && y + j > 0 && i * i + j * j < r_square)
+	if (N > x + i && x + i > 0 && N > y + j && y + j > 0 && (i - x) * (i - x) + (j - y) * (j - y) <= r_square)
 	{
 		d_u[IX(x + i, y + j)] += u_velocity;
 		d_v[IX(x + i, y + j)] += v_velocity;

@@ -166,6 +166,12 @@
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <CudaLink>
+      <AdditionalLibraryDirectories>$(CUDA_PATH);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </CudaLink>
+    <CudaLink>
+      <AdditionalDependencies>$(CUDA_PATH)\lib\cudart.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </CudaLink>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

@@ -5,9 +5,9 @@
 //#include "../Factory/Simulation.h"
 #include "../Factory/Factory.h"
 #include "../Factory/FactoryNotEditedSimulation.h"
-#include "../Factory/NotEditedSimulation.h"
 #include "../Factory//FactoryEditedSimulation.h"
 #include "../Factory//FactoryMA.h"
+#include "../Factory/FactoryCudaSimulation.h"
 
 
 #include <QMouseEvent>
@@ -16,8 +16,8 @@
 #define IX(i,j) ((i)+(simulation->size+2)*(j))
 
 //working 
-constexpr auto SPEED_SCALE = 3.0f;
-constexpr auto SPEED_CHANGE_RADIUS = 2;
+constexpr auto SPEED_SCALE = 2.0f;
+constexpr auto SPEED_CHANGE_RADIUS = 3;
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
 {
@@ -150,7 +150,6 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
     lastPosition = e->pos();
 }
 
-
 void MyGraphicsView::start() {
     QString tmp = it->toPlainText();
     QByteArray bytearray = tmp.toLocal8Bit();
@@ -173,19 +172,26 @@ void MyGraphicsView::start() {
     switch (kind->currentIndex()) {
         //prawie orginał
     case 0:
+        if (simulation != nullptr)
+        {
+            free(simulation);
+        }
         factory.reset(new FactoryNotEditedSimulation());
-        simulation.reset(factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000));
+        simulation = factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000);
         break;
         //w sumie to teraz bardziej przypomina orginał niż orginalny
     case 1:
         //dynamic cast
         factory.reset(new FactoryEditedSimulation());
-
+        if (simulation != nullptr)
+        {
+            free(simulation);
+        }
         // tu jest błąd
-        simulation.reset(factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000));
+        simulation = factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000);
 
         
-        e_simulation = std::dynamic_pointer_cast<EditedSimulation>(simulation);
+        e_simulation = static_cast<EditedSimulation*>(simulation);
 
         break;
         //openMP
@@ -193,10 +199,22 @@ void MyGraphicsView::start() {
         break;
         //cuda
     case 3:
+        factory.reset(new FactoryCudaSimulation());
+
+        if (simulation != nullptr)
+        {
+            free(simulation);
+        }
+
+        simulation = factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000);
         break;
     case 4:
         factory.reset(new FactoryMA());
-        simulation.reset(factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000));
+        if (simulation != nullptr)
+        {
+            free(simulation);
+        }
+        simulation = factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000);
         break;
     }
 

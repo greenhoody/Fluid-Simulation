@@ -1,6 +1,8 @@
 #include "HostCudaSimulation.h"
 #include "DeviceCudaSimulation.cuh"
 
+#include <cuda_runtime_api.h>
+
 HostCudaSimulation::HostCudaSimulation(int size, float diffiusion, float viscosity, float dt):Simulation(size,diffiusion,viscosity,dt)
 {	
 	// w cuda nie ma odpowiednika calloc
@@ -109,3 +111,8 @@ void HostCudaSimulation::AddVelocity(int x, int y, int r, float v_velocity, floa
 
 	cudaLaunchCooperativeKernel((void*)addVelocity, gridDim, blockDim, kernelArgs);
 }
+
+void HostCudaSimulation::AddConstantDensity(int x, int y, float density) {}
+void HostCudaSimulation::DeleteConstantDensity(int x, int y){}
+void HostCudaSimulation::AddConstantVelocity(int x, int y, float v_velocity, float h_velocity){}
+void HostCudaSimulation::DeleteConstantVelocity(int x, int y){}

@@ -87,7 +87,7 @@ void NotEditedSimulation::AddVelocity(int x, int y, int r, float v_velocity, flo
 	{
 		for (int j = y - r; j <= y + r; j++)
 		{
-			if (size > x + i && x + i > 0 && size > y + j && y + j > 0 && i * i + j * j < r_square) {
+			if (size > x + i && x + i > 0 && size > y + j && y + j > 0 && (i-x) * (i-x) + (j-y) * (j-y) <= r_square) {
 				// to dodawanie jest potrzbne ponieważ, pierwszy rząd i kolumna nie sa pokazywane, więc obraz jest przesunięty
 				int index = IX(i + 1, j + 1);
 				v[index] += v_velocity;

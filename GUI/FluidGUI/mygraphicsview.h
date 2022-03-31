@@ -33,8 +33,8 @@ public:
     QTimer* timer;
 
     std::unique_ptr<Factory> factory;
-    std::shared_ptr<Simulation> simulation;
-    std::shared_ptr<EditedSimulation> e_simulation;
+    Simulation* simulation = nullptr;
+    EditedSimulation* e_simulation = nullptr;
     std::unique_ptr<QImage> image;
     std::shared_ptr<float[]> pixels;
 

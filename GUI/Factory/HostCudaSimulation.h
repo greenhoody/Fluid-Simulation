@@ -2,6 +2,7 @@
 #include "Simulation.h"
 #include "pch.h"
 
+#include <cuda_runtime_api.h> 
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
 
