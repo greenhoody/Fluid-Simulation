@@ -11,10 +11,30 @@
 
 #define IX(i,j) ((i)+(size+2)*(j))
 
-SimulationMA::SimulationMA(int size, float diffiusion, float viscosity, float dt):Simulation(size, diffiusion, viscosity, dt) {
+SimulationMA::SimulationMA(int size, float diffiusion, float viscosity, float dt):Simulation(size, diffiusion, viscosity, dt) 
+{
+	this->u = (float*)calloc(n, sizeof(float));
+	this->u_prev = (float*)calloc(n, sizeof(float));
+	this->u_const = (float*)calloc(n, sizeof(float));
+	this->v = (float*)calloc(n, sizeof(float));
+	this->v_prev = (float*)calloc(n, sizeof(float));
+	this->v_const = (float*)calloc(n, sizeof(float));
+	this->dens = (float*)calloc(n, sizeof(float));
+	this->dens_prev = (float*)calloc(n, sizeof(float));
+	this->dens_const = (float*)calloc(n, sizeof(float));
 }
 
-SimulationMA::~SimulationMA() {
+SimulationMA::~SimulationMA() 
+{
+	free(u);
+	free(u_prev);
+	free(u_const);
+	free(v);
+	free(v_prev);
+	free(v_const);
+	free(dens);
+	free(dens_prev);
+	free(dens_const);
 }
 
 void SimulationMA::NextFrame(std::shared_ptr<float[]> copy_array) {

@@ -9,7 +9,7 @@
 
 EditedSimulation::EditedSimulation(int size, float diffiusion, float viscosity, float dt):Simulation(size, diffiusion, viscosity, dt) 
 {
-
+	this->u = (float*)calloc(n, sizeof(float));
 	this->u_prev = (float*)calloc(n, sizeof(float));
 	this->u_const = (float*)calloc(n, sizeof(float));
 	this->v = (float*)calloc(n, sizeof(float));
