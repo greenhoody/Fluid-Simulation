@@ -39,6 +39,10 @@ void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit
     this->hs = hs;
     this->vs = vs;
     this->kind = kind;
+
+
+    
+
 }
 
 void MyGraphicsView::mousePressEvent(QMouseEvent * e){
@@ -153,16 +157,28 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
 void MyGraphicsView::start() {
     QString tmp = it->toPlainText();
     QByteArray bytearray = tmp.toLocal8Bit();
-    const char* string = bytearray.data();
+    char* string = bytearray.data();
     this->interval = atoi(string);
+
+
+
 
     //Its must be here and not in constructor because this->width() and this->height() in constractor return wrong size
     pixels.reset((float*)malloc(sizeof(float) * (this->width() + 2) * (this->width() + 2)));
     image.reset(new QImage(this->width(), this->height(), QImage::Format_RGB888));
+
     pixmap = QPixmap(this->width(), this->height());
     scene.reset(new QGraphicsScene(this));
+
+    //if (pixMapItem != nullptr)
+    //{
+    //    free(pixMapItem);
+    //}
+
     pixMapItem = scene->addPixmap(pixmap);
+
     //pixMapItemTEST.reset((scene->addPixmap(pixmap)));
+
     this->setScene(&*scene);
     this->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
 
@@ -174,6 +190,7 @@ void MyGraphicsView::start() {
     case 0:
         if (simulation != nullptr)
         {
+            simulation->~Simulation();
             free(simulation);
         }
         factory.reset(new FactoryNotEditedSimulation());
@@ -185,6 +202,7 @@ void MyGraphicsView::start() {
         factory.reset(new FactoryEditedSimulation());
         if (simulation != nullptr)
         {
+            simulation->~Simulation();
             free(simulation);
         }
         // tu jest błąd
@@ -203,6 +221,7 @@ void MyGraphicsView::start() {
 
         if (simulation != nullptr)
         {
+            simulation->~Simulation();
             free(simulation);
         }
 
@@ -212,6 +231,7 @@ void MyGraphicsView::start() {
         factory.reset(new FactoryMA());
         if (simulation != nullptr)
         {
+            simulation->~Simulation();
             free(simulation);
         }
         simulation = factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000);

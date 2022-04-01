@@ -41,7 +41,7 @@ public:
     //pix map item broni siê przed unique pointer to musi byæ coœ u nich, popsuty destructor
 
     //std::unique_ptr<QGraphicsPixmapItem> pixMapItemTEST;
-    QGraphicsPixmapItem* pixMapItem;
+    QGraphicsPixmapItem* pixMapItem = nullptr;
 
     QPixmap pixmap;
 
