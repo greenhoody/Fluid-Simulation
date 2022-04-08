@@ -101,11 +101,11 @@ void HostCudaSimulation::AddDensity(int x1, int x2, int y1, int y2, float densit
 	dim3 blockDim = dim3(1024, 1, 1);
 
 
-	void* kernelArgs[] = { &size,dens, &x1, &x2, &y1, &y2, &density };
+	void* kernelArgs[] = { &size, &dens, &x1, &x2, &y1, &y2, &density };
 
-	//cudaLaunchCooperativeKernel((void*)addDensity, gridDim, blockDim, kernelArgs);
+	cudaLaunchCooperativeKernel((void*)addDensity, gridDim, blockDim, kernelArgs);
 
-	addDensity<<<gridDim, blockDim>>>(size,dens,x1,x2,y1,y2,density);
+	//addDensity<<<gridDim, blockDim>>>(size,dens,x1,x2,y1,y2,density);
 	cudaDeviceSynchronize();
 }
 
@@ -125,10 +125,10 @@ void HostCudaSimulation::AddVelocity(int x, int y, int r, float v_velocity, floa
 
 	
 
-	void* kernelArgs[] = { &size,u,v, &x, &y, &r, &h_velocity, &v_velocity };
+	void* kernelArgs[] = { &size,&u,&v, &x, &y, &r, &h_velocity, &v_velocity };
 
-	//cudaLaunchCooperativeKernel((void*)addVelocity, gridDim, blockDim, kernelArgs);
-	addVelocity<<<gridDim, blockDim>>>(size,u,v,x,y,r,h_velocity,v_velocity);
+	cudaLaunchCooperativeKernel((void*)addVelocity, gridDim, blockDim, kernelArgs);
+	//addVelocity<<<gridDim, blockDim>>>(size,u,v,x,y,r,h_velocity,v_velocity);
 	cudaDeviceSynchronize();
 }
 
