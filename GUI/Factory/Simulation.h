@@ -8,6 +8,8 @@
 class Simulation
 {
 public:
+	int size, n;
+	float diff, visc, dt;
 	virtual void NextFrame(std::shared_ptr<float[]> copy_array) = 0;
 	virtual void AddDensity(int x1, int x2, int y1, int y2, float density) = 0;
 	virtual void AddVelocity(int x, int y, int r, float v_velocity, float h_velocity) = 0;
@@ -54,9 +56,8 @@ public:
 		//this->dens_const = (float*)calloc(n, sizeof(float));
 	};
 	//std::shared_ptr<float[]> u, v, u_prev, v_prev, u_const, v_const, dens, dens_prev, dens_const;
-	float* u, * v, * u_prev, * v_prev, * u_const, * v_const, * dens, * dens_prev, * dens_const;
-	int size,n;
-	float diff, visc, dt;
+	//float* u, * v, * u_prev, * v_prev, * u_const, * v_const, * dens, * dens_prev, * dens_const;
+
 };
 
 #endif

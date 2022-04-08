@@ -3,6 +3,8 @@
 
 class EditedSimulation : public Simulation {
 public :
+	float* u, * v, * u_prev, * v_prev, * u_const, * v_const, * dens, * dens_prev, * dens_const;
+
 	EditedSimulation(int size, float diffiusion, float viscosity, float dt);
 	~EditedSimulation();
 	void NextFrame(std::shared_ptr<float[]> copy_array);

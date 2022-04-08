@@ -19,8 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="HostCudaSimulation.h" />
-    <ClInclude Include="DeviceCudaSimulation.cuh" />
+    <CudaCompile Include="HostCudaSimulation.cuh">
+      <TargetMachinePlatform Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">64</TargetMachinePlatform>
+    </CudaCompile>
+    <CudaCompile Include="DeviceCudaSimulation.cuh">
+      <TargetMachinePlatform Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">64</TargetMachinePlatform>
+    </CudaCompile>
     <ClInclude Include="EditedSimulation.h" />
     <ClInclude Include="Factory.h" />
     <ClInclude Include="FactoryCudaSimulation.h" />
@@ -41,7 +45,10 @@
     <ClCompile Include="FactoryMA.cpp" />
     <ClCompile Include="FactoryNotEditedSimulation.cpp" />
     <ClCompile Include="FactoryOpenMPSimulation.cpp" />
-    <ClCompile Include="HostCudaSimulation.cpp" />
+    <CudaCompile Include="HostCudaSimulation.cu">
+      <FileType>Document</FileType>
+      <TargetMachinePlatform Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">64</TargetMachinePlatform>
+    </CudaCompile>
     <ClCompile Include="NotEditedSimulation.cpp" />
     <ClCompile Include="OpenMPSimulation.cpp" />
     <ClCompile Include="pch.cpp" />

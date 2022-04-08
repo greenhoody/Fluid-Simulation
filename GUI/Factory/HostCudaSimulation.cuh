@@ -21,6 +21,8 @@ public:
 	void DeleteConstantDensity(int x, int y);
 	void AddConstantVelocity(int x, int y, float v_velocity, float h_velocity);
 	void DeleteConstantVelocity(int x, int y);
+
+	float* u, * v, * u_prev, * v_prev, * u_const, * v_const, * dens, * dens_prev, * dens_const;
 private:
 
 };

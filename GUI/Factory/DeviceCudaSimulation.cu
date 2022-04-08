@@ -7,66 +7,6 @@
 
 #define IX(i,j) ((i)+(N+2)*(j))
 
-//CudaSimulation::CudaSimulation(int size, float diffiusion, float viscosity, float dt) : Simulation(size, diffiusion, viscosity, dt) {
-//	n = (size + 2) * (size + 2);
-//	
-//	block_no = (n / 1024);
-//
-//	// w cuda nie ma odpowiednika calloc
-//	
-//	cudaMalloc(&d_u, sizeof(float) * n);
-//	cudaMalloc(&d_v, sizeof(float) * n);
-//	cudaMalloc(&d_u_prev, sizeof(float) * n);
-//	cudaMalloc(&d_v_prev, sizeof(float) * n);
-//	cudaMalloc(&d_dens, sizeof(float) * n);
-//	cudaMalloc(&d_dens_prev, sizeof(float) * n);
-//
-//	cudaMalloc(&d_u_const, sizeof(float) * n);
-//	cudaMalloc(&d_v_const, sizeof(float) * n);
-//	cudaMalloc(&d_dens_const, sizeof(float) * n);
-//
-//	cudaMemset(d_u, 0, sizeof(float) * n);
-//	cudaMemset(d_v, 0, sizeof(float) * n);
-//	cudaMemset(d_u_prev, 0, sizeof(float) * n);
-//	cudaMemset(d_v_prev, 0, sizeof(float) * n);
-//	cudaMemset(d_dens, 0, sizeof(float) * n);
-//	cudaMemset(d_dens_prev, 0, sizeof(float) * n);
-//
-//	cudaMemset(d_u_const, 0, sizeof(float) * n);
-//	cudaMemset(d_v_const, 0, sizeof(float) * n);
-//	cudaMemset(d_dens_const, 0, sizeof(float) * n);
-//	
-//}
-//
-//CudaSimulation::~CudaSimulation() {
-//	cudaFree(d_u);
-//	cudaFree(d_v);
-//	cudaFree(d_u_prev);
-//	cudaFree(d_v_prev);
-//	cudaFree(d_dens);
-//	cudaFree(d_dens_prev);
-//
-//	cudaFree(d_u_const);
-//	cudaFree(d_v_const);
-//	cudaFree(d_dens_const);
-//}
-
-//void CudaSimulation::NextFrame(std::shared_ptr<float[]> copy_array) {
-//	
-//	int blocks = ceilf((float)n / 1024);
-//	dim3 gridDim = dim3(blocks,1,1);
-//	dim3 blockDim = dim3(1024, 1, 1);
-//	void* kernelArgs = {};
-//
-//	cudaLaunchCooperativeKernel(  (void*) CudaSimulation::cuda_NextFrame, gridDim, blockDim, kernelArgs);
-//
-//	cuda_NextFrame<<<blocks, 1024>>>();
-//	cudaMemcpy(copy_array.get(), d_dens, sizeof(float) * (size + 2) * (size + 2), cudaMemcpyDeviceToHost);
-//}
-
-
-//=====================================================================================================================
-
 //void CudaSimulation::add_source(int N, float* x, float* s, float dt)
 //{
 //	int i, size = (N + 2) * (N + 2);

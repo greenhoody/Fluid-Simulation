@@ -1,4 +1,5 @@
-#include "HostCudaSimulation.h"
+#include"pch.h"
+#include "HostCudaSimulation.cuh"
 #include "DeviceCudaSimulation.cuh"
 
 #include <cuda_runtime_api.h>
@@ -46,14 +47,28 @@ HostCudaSimulation::~HostCudaSimulation()
 void HostCudaSimulation::NextFrame(std::shared_ptr<float[]> copy_array) 
 {
 
-	int blocks = ceilf((float)(size * size) / 1024);
-	dim3 gridDim = dim3(blocks,1,1);
-	dim3 blockDim = dim3(1024, 1, 1);
-	void* kernelArgs[] = {&size, dens, dens_prev,u,v,u_prev, v_prev, &visc, &diff, &dt };
+	//int blocks = ceilf((float)(size * size) / 1024);
+	//dim3 gridDim = dim3(blocks,1,1);
+	//dim3 blockDim = dim3(1024, 1, 1);
+	void* kernelArgs[] = {&size, &dens, &dens_prev, &u, &v, &u_prev, &v_prev, &visc, &diff, &dt };
+
+
+
+	int numBlocksPerSm = 0;
+	// Number of threads my_kernel will be launched with
+	int numThreads = 128;
+	cudaDeviceProp deviceProp;
+	// device zero poniewa¿ jest tylko jedna karta
+	cudaGetDeviceProperties(&deviceProp, 0);
+	cudaOccupancyMaxActiveBlocksPerMultiprocessor(&numBlocksPerSm, cuda_NextFrame, numThreads, 0);
+	dim3 blockDim(numThreads, 1, 1);
+	dim3 gridDim(deviceProp.multiProcessorCount * numBlocksPerSm, 1, 1);
 
 	cudaLaunchCooperativeKernel((void*)cuda_NextFrame, gridDim, blockDim, kernelArgs);
 
-	//cuda_NextFrame<<<gridDim,1024>>>(size, d_dens, d_dens_prev, d_u, d_v, d_u_prev, d_v_prev,visc,diff,dt);
+	//cuda_NextFrame<<< gridDim, blockDim>>>(size, dens, dens_prev, u, v, u_prev, v_prev,visc,diff,dt);
+
+	cudaDeviceSynchronize();
 	cudaMemcpy(copy_array.get(), dens, sizeof(float) * n, cudaMemcpyDeviceToHost);
 }
 
@@ -85,10 +100,13 @@ void HostCudaSimulation::AddDensity(int x1, int x2, int y1, int y2, float densit
 	dim3 gridDim = dim3(blocks, 1, 1);
 	dim3 blockDim = dim3(1024, 1, 1);
 
+
 	void* kernelArgs[] = { &size,dens, &x1, &x2, &y1, &y2, &density };
 
-	cudaLaunchCooperativeKernel((void*)addDensity, gridDim, blockDim, kernelArgs);
+	//cudaLaunchCooperativeKernel((void*)addDensity, gridDim, blockDim, kernelArgs);
 
+	addDensity<<<gridDim, blockDim>>>(size,dens,x1,x2,y1,y2,density);
+	cudaDeviceSynchronize();
 }
 
 void HostCudaSimulation::AddVelocity(int x, int y, int r, float v_velocity, float h_velocity)
@@ -109,7 +127,9 @@ void HostCudaSimulation::AddVelocity(int x, int y, int r, float v_velocity, floa
 
 	void* kernelArgs[] = { &size,u,v, &x, &y, &r, &h_velocity, &v_velocity };
 
-	cudaLaunchCooperativeKernel((void*)addVelocity, gridDim, blockDim, kernelArgs);
+	//cudaLaunchCooperativeKernel((void*)addVelocity, gridDim, blockDim, kernelArgs);
+	addVelocity<<<gridDim, blockDim>>>(size,u,v,x,y,r,h_velocity,v_velocity);
+	cudaDeviceSynchronize();
 }
 
 void HostCudaSimulation::AddConstantDensity(int x, int y, float density) {}

@@ -1,5 +1,5 @@
 #include "FactoryCudaSimulation.h"
-#include "HostCudaSimulation.h"
+#include "HostCudaSimulation.cuh"
 #include "Simulation.h"
 #include "pch.h"
 
