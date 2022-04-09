@@ -50,29 +50,32 @@ __device__ void diffuse(int N, int b, float* x, float* x0, float diff, float dt)
 {
 	float a = dt * diff * N * N;
 	
+	int n = (N + 2) * (N + 2);
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
-
-	// +1 po od 1 zaczynały się pętle, a nie od zera
-	int j = (index / N) + 1;
-	int i = (index % N) + 1;
-
+	int cores = gridDim.x * blockDim.x;
 
 	//kompiluje się czyli intellisense nie ogarnia
 	cooperative_groups::grid_group g = cooperative_groups::this_grid();
 
 	for (int k = 0; k < 20; k++) {
 		g.sync();
+		
+		// wykonanie przypadających komurek
+		index = blockIdx.x * blockDim.x + threadIdx.x;
+		while (index < n) {
+			// +1 po od 1 zaczynały się pętle, a nie od zera
+			int j = (index / N) + 1;
+			int i = (index % N) + 1;
 
-		if (j > N) {
-			return;
+			//for (int i = 1; i <= N; i++) {
+			//	for (int j = 1; j <= N; j++) {
+			x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] +
+				x[IX(i, j - 1)] + x[IX(i, j + 1)])) / (1 + (4 * a));
+			index += cores;
 		}
-
-		//for (int i = 1; i <= N; i++) {
-		//	for (int j = 1; j <= N; j++) {
-		x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] +
-			x[IX(i, j - 1)] + x[IX(i, j + 1)])) / (1 + (4 * a));
 		//	}
 		//}
+
 		set_bnd(N, b, x);
 	}
 }
@@ -174,7 +177,15 @@ __device__ void project(int N, float* u, float* v, float* p, float* div)
 
 __global__ void cuda_NextFrame(int N, float* d_dens, float* d_dens_prev, float* d_u, float* d_v, float* d_u_prev, float* d_v_prev, float visc, float diff , float dt) {
 	//vel_step(size, d_u, d_v, d_u_prev, d_v_prev, visc, dt);
-	
+	int n = (N + 2) * (N + 2);
+
+	int cores = gridDim.x * blockDim.x;
+
+	int iter = ceilf(((float)n) / ((float)cores));
+
+
+
+
 	diffuse(N, 1, d_u_prev, d_u, visc, dt);
 	diffuse(N, 2, d_v_prev, d_v, visc, dt);
 	project(N, d_u_prev, d_v_prev, d_u, d_v);
