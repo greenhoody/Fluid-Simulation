@@ -51,14 +51,13 @@ __device__ void diffuse(int N, int b, float* x, float* x0, float diff, float dt)
 	float a = dt * diff * N * N;
 	
 	int n = (N + 2) * (N + 2);
-	int index = blockIdx.x * blockDim.x + threadIdx.x;
+	int index = 0;
 	int cores = gridDim.x * blockDim.x;
 
 	//kompiluje się czyli intellisense nie ogarnia
 	cooperative_groups::grid_group g = cooperative_groups::this_grid();
 
 	for (int k = 0; k < 20; k++) {
-		g.sync();
 		
 		// wykonanie przypadających komurek
 		index = blockIdx.x * blockDim.x + threadIdx.x;
@@ -75,7 +74,7 @@ __device__ void diffuse(int N, int b, float* x, float* x0, float diff, float dt)
 		}
 		//	}
 		//}
-
+		g.sync();
 		set_bnd(N, b, x);
 	}
 }
@@ -84,46 +83,51 @@ __device__ void advect(int N, int b, float* d, float* d0, float* u, float* v, fl
 {
 	cooperative_groups::grid_group g = cooperative_groups::this_grid();
 
+	int n = (N + 2) * (N + 2);
+	int cores = gridDim.x * blockDim.x;
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
-	// +1 po od 1 zaczynały się pętle, a nie od zera
-	int j = (index / N) + 1;
-	int i = (index % N) + 1;
 
-	if (j > N) {
-		return;
+	while(index < n)
+	{
+		// +1 po od 1 zaczynały się pętle, a nie od zera
+		int j = (index / N) + 1;
+		int i = (index % N) + 1;
+
+		int i0, j0, i1, j1;
+		float x, y, s0, t0, s1, t1, dt0;
+		dt0 = dt * (float)N;
+		//for (int i = 1; i <= N; i++) {
+		//	for (int j = 1; j <= N; j++) {
+
+		x = (float)i - dt0 * u[IX(i, j)];
+		if (x < 0.5) x = 0.5f;
+		if (x > N + 0.5) x = N + 0.5f;
+		i0 = (int)x;
+		i1 = i0 + 1;
+
+		//proporcje ile gę┌stości wylądowało z których komórek
+		s1 = x - (float)i0;
+		s0 = 1.0f - s1;
+
+		y = (float)j - dt0 * v[IX(i, j)];
+		if (y < 0.5) y = 0.5f;
+		if (y > N + 0.5) y = N + 0.5f;
+		j0 = (int)y;
+		j1 = j0 + 1;
+
+		//proporcje ile gęstości wylądowało z których komórek
+		t1 = y - (float)j0;
+		t0 = 1.0f - t1;
+
+		d[IX(i, j)] = s0 * (t0 * d0[IX(i0, j0)] + t1 * d0[IX(i0, j1)]) +
+			s1 * (t0 * d0[IX(i1, j0)] + t1 * d0[IX(i1, j1)]);
+
+		//	}
+		//}
+
+		index += cores;
 	}
 
-	int i0, j0, i1, j1;
-	float x, y, s0, t0, s1, t1, dt0;
-	dt0 = dt * (float)N;
-	//for (int i = 1; i <= N; i++) {
-	//	for (int j = 1; j <= N; j++) {
-
-			x = (float)i - dt0 * u[IX(i, j)];
-			if (x < 0.5) x = 0.5f;
-			if (x > N + 0.5) x = N + 0.5f;
-			i0 = (int)x;
-			i1 = i0 + 1;
-
-			//proporcje ile gę┌stości wylądowało z których komórek
-			s1 = x - (float)i0;
-			s0 = 1.0f - s1;
-
-			y = (float)j - dt0 * v[IX(i, j)];
-			if (y < 0.5) y = 0.5f;
-			if (y > N + 0.5) y = N + 0.5f;
-			j0 = (int)y;
-			j1 = j0 + 1;
-
-			//proporcje ile gęstości wylądowało z których komórek
-			t1 = y - (float)j0;
-			t0 = 1.0f - t1;
-
-			d[IX(i, j)] = s0 * (t0 * d0[IX(i0, j0)] + t1 * d0[IX(i0, j1)]) +
-				s1 * (t0 * d0[IX(i1, j0)] + t1 * d0[IX(i1, j1)]);
-
-	//	}
-	//}
 	set_bnd(N, b, d);
 }
 
@@ -131,60 +135,70 @@ __device__ void project(int N, float* u, float* v, float* p, float* div)
 {
 
 	cooperative_groups::grid_group g = cooperative_groups::this_grid();
+	int n = (n + 2) * (N + 2);
+	int cores = blockDim.x * gridDim.x;
+
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
+	
 	// +1 po od 1 zaczynały się pętle, a nie od zera
-	int j = (index / N) + 1;
-	int i = (index % N) + 1;
-
-	if (j > N) {
-		return;
-	}
 
 
-	int k;
-	float h;
-	h = 1.0f / N;
+	float h = 1.0f / N;
 	//for (i = 1; i <= N; i++) {
 	//	for (j = 1; j <= N; j++) {
-			div[IX(i, j)] = -0.5f * h * (u[IX(i + 1, j)] - u[IX(i - 1, j)] +
-				v[IX(i, j + 1)] - v[IX(i, j - 1)]);
-			p[IX(i, j)] = 0.0f;
+	while (index < n) {
+		int j = (index / N) + 1;
+		int i = (index % N) + 1;
+
+		div[IX(i, j)] = -0.5f * h * (u[IX(i + 1, j)] - u[IX(i - 1, j)] +
+			v[IX(i, j + 1)] - v[IX(i, j - 1)]);
+		p[IX(i, j)] = 0.0f;
+
+		index += cores;
+	 }
+
+
 	//	}
 	//}
+
+	g.sync();
 	set_bnd(N, 0, div);
 	set_bnd(N, 0, p);
 
+	index = blockIdx.x * blockDim.x + threadIdx.x;
+	for (int k = 0; k < 20; k++) {
+		while (index < n)
+		{
+			int j = (index / N) + 1;
+			int i = (index % N) + 1;
 
-	for (k = 0; k < 20; k++) {
+			p[IX(i, j)] = (div[IX(i, j)] + p[IX(i - 1, j)] + p[IX(i + 1, j)] +
+				p[IX(i, j - 1)] + p[IX(i, j + 1)]) / 4;
+			index += cores;
+
+		}
 		g.sync();
-		//for (i = 1; i <= N; i++) {
-		//	for (j = 1; j <= N; j++) {
-				p[IX(i, j)] = (div[IX(i, j)] + p[IX(i - 1, j)] + p[IX(i + 1, j)] +
-					p[IX(i, j - 1)] + p[IX(i, j + 1)]) / 4;
-		//	}
-		//}
 		set_bnd(N, 0, p);
 	}
-	//for (i = 1; i <= N; i++) {
-	//	for (j = 1; j <= N; j++) {
-			u[IX(i, j)] -= 0.5f * (p[IX(i + 1, j)] - p[IX(i - 1, j)]) / h;
-			v[IX(i, j)] -= 0.5f * (p[IX(i, j + 1)] - p[IX(i, j - 1)]) / h;
-	//	}
-	//}
+
+	index = blockIdx.x * blockDim.x + threadIdx.x;
+	while (index < n)
+	{
+		int j = (index / N) + 1;
+		int i = (index % N) + 1;
+
+		u[IX(i, j)] -= 0.5f * (p[IX(i + 1, j)] - p[IX(i - 1, j)]) / h;
+		v[IX(i, j)] -= 0.5f * (p[IX(i, j + 1)] - p[IX(i, j - 1)]) / h;
+		index += cores;
+	}
+
+	g.sync();
 	set_bnd(N, 1, u);
 	set_bnd(N, 2, v);
 }
 
 __global__ void cuda_NextFrame(int N, float* d_dens, float* d_dens_prev, float* d_u, float* d_v, float* d_u_prev, float* d_v_prev, float visc, float diff , float dt) {
 	//vel_step(size, d_u, d_v, d_u_prev, d_v_prev, visc, dt);
-	int n = (N + 2) * (N + 2);
-
-	int cores = gridDim.x * blockDim.x;
-
-	int iter = ceilf(((float)n) / ((float)cores));
-
-
-
 
 	diffuse(N, 1, d_u_prev, d_u, visc, dt);
 	diffuse(N, 2, d_v_prev, d_v, visc, dt);
@@ -203,21 +217,24 @@ __global__ void cuda_NextFrame(int N, float* d_dens, float* d_dens_prev, float* 
 __global__ void addDensity(int N, float* d_dens, int x1, int x2, int y1, int y2, float dens)
 {
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
+	int cores = blockDim.x * gridDim.x;
 	int deltay = y2 - y1;
 	int deltax = x2 - x1;
-	int j = (index / deltax);
-	int i = (index % deltax);
+	int n = deltay * deltax;
 
-	if (j > deltay)
-	{
-		return;
-	}
 
-	d_dens[IX(x1 + i,y1 + j)] += dens;
-	
-	if (d_dens[IX(x1 + i, y1 + j)] > 1)
+	while (index < n) 
 	{
-		d_dens[IX(x1 + i, y1 + j)] = 1;
+		int j = (index / deltax);
+		int i = (index % deltax);
+
+		d_dens[IX(x1 + i, y1 + j)] += dens;
+
+		if (d_dens[IX(x1 + i, y1 + j)] > 1)
+		{
+			d_dens[IX(x1 + i, y1 + j)] = 1;
+		}
+		index += cores;
 	}
 }
 
