@@ -48,9 +48,10 @@ __device__ void set_bnd(int N, int b, float* x)
 
 __device__ void diffuse(int N, int b, float* x, float* x0, float diff, float dt)
 {
-	float a = dt * diff * N * N;
+	int n = N * N;
+	float a = dt * diff * n;
 	
-	int n = (N + 2) * (N + 2);
+	
 	int index = 0;
 	int cores = gridDim.x * blockDim.x;
 
@@ -83,7 +84,7 @@ __device__ void advect(int N, int b, float* d, float* d0, float* u, float* v, fl
 {
 	cooperative_groups::grid_group g = cooperative_groups::this_grid();
 
-	int n = (N + 2) * (N + 2);
+	int n = N * N;
 	int cores = gridDim.x * blockDim.x;
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
 
@@ -135,7 +136,7 @@ __device__ void project(int N, float* u, float* v, float* p, float* div)
 {
 
 	cooperative_groups::grid_group g = cooperative_groups::this_grid();
-	int n = (n + 2) * (N + 2);
+	int n = N * N;
 	int cores = blockDim.x * gridDim.x;
 
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
