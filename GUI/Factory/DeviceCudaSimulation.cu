@@ -242,15 +242,26 @@ __global__ void addDensity(int N, float* d_dens, int x1, int x2, int y1, int y2,
 __global__ void addVelocity(int N, float* d_u, float* d_v, int x, int y, int r, float u_velocity, float v_velocity)
 {
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
+	int cores = blockDim.x * gridDim.x;
 	int j = (index / (r*2));
 	int i = (index % (r*2));
 	int r_square = r * r;
+	int n = r_square * 4;
+	x -= r;
+	y -= r;
 
-	if (N > x + i && x + i > 0 && N > y + j && y + j > 0 && (i - x) * (i - x) + (j - y) * (j - y) <= r_square)
-	{
-		d_u[IX(x + i, y + j)] += u_velocity;
-		d_v[IX(x + i, y + j)] += v_velocity;
+	while (index < n) {
+
+		if (N > x + i && x + i > 0 && N > y + j && y + j > 0 && i * i + j * j <= r_square)
+		{
+			d_u[IX(x + i, y + j)] += u_velocity;
+			d_v[IX(x + i, y + j)] += v_velocity;
+		}
+
+		index += cores;
 	}
+
+
 }
 //__device__ void vel_step(int N, float* u, float* v, float* u0, float* v0, float visc, float dt)
 //{
