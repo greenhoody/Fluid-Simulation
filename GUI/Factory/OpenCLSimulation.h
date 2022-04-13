@@ -2,13 +2,13 @@
 #include "Simulation.h"
 #include "pch.h"
 
-class OpenMPSimulation : public Simulation
+class OpenCLSimulation : public Simulation
 {
 public:
 	float* u, * v, * u_prev, * v_prev, * u_const, * v_const, * dens, * dens_prev, * dens_const;
 
-	OpenMPSimulation(int size, float diffiusion, float viscosity, float dt);
-	~OpenMPSimulation();
+	OpenCLSimulation(int size, float diffiusion, float viscosity, float dt);
+	~OpenCLSimulation();
 	void NextFrame(std::shared_ptr<float[]> copy_array);
 	void AddDensity(int x, int y, float density);
 	void AddVelocity(int x, int y, float v_velocity, float h_velocity);
