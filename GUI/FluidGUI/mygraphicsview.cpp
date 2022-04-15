@@ -8,6 +8,7 @@
 #include "../Factory//FactoryEditedSimulation.h"
 #include "../Factory//FactoryMA.h"
 #include "../Factory/FactoryCudaSimulation.h"
+#include "../Factory/FactoryOpenCLSimulation.h"
 
 
 #include <QMouseEvent>
@@ -214,6 +215,13 @@ void MyGraphicsView::start() {
         break;
         //openMP
     case 2:
+        factory.reset(new FactoryOpenCLSimulation());
+        if (simulation != nullptr) 
+        {
+            simulation->~Simulation();
+            free(simulation);
+        }
+        simulation = factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000);
         break;
         //cuda
     case 3:

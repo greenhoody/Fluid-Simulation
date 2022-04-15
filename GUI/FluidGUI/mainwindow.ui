@@ -220,7 +220,7 @@
     </item>
     <item>
      <property name="text">
-      <string>openMP</string>
+      <string>openCL</string>
      </property>
     </item>
     <item>

@@ -223,7 +223,7 @@ public:
         label_4->setText(QCoreApplication::translate("MainWindow", "Frame time", nullptr));
         comboBox->setItemText(0, QCoreApplication::translate("MainWindow", "orginal", nullptr));
         comboBox->setItemText(1, QCoreApplication::translate("MainWindow", "edited", nullptr));
-        comboBox->setItemText(2, QCoreApplication::translate("MainWindow", "openMP", nullptr));
+        comboBox->setItemText(2, QCoreApplication::translate("MainWindow", "openCL", nullptr));
         comboBox->setItemText(3, QCoreApplication::translate("MainWindow", "cuda", nullptr));
         comboBox->setItemText(4, QCoreApplication::translate("MainWindow", "MA", nullptr));
 

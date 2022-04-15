@@ -3,7 +3,7 @@
 #include"NotEditedSimulation.h"
 #include"pch.h"
 
-Simulation* FactoryNotEditedSimulation::CreateSimulation(int size, float diffiusion, float viscosity, float dt) 
+Simulation* FactoryNotEditedSimulation::CreateSimulation(int size, float diffiusion, float viscosity, float dt)
 {
 	return new NotEditedSimulation(size, diffiusion, viscosity, dt);
 }

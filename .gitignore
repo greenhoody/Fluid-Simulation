@@ -45,7 +45,6 @@
 *.cbt
 *.props
 *.filters
-*.user
 *.stash
 
 GUI/Simulation/x64
