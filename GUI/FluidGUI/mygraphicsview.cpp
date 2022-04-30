@@ -6,13 +6,12 @@
 #include "../Factory/Factory.h"
 #include "../Factory/FactoryNotEditedSimulation.h"
 #include "../Factory//FactoryEditedSimulation.h"
-#include "../Factory//FactoryMA.h"
 #include "../Factory/FactoryCudaSimulation.h"
-#include "../Factory/FactoryOpenCLSimulation.h"
-
 
 #include <QMouseEvent>
 #include <QDebug>
+
+#include <string>
 
 #define IX(i,j) ((i)+(simulation->size+2)*(j))
 
@@ -29,16 +28,13 @@ MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
     //qDebug() << this->width();
 }
 
-void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit* it, QPlainTextEdit* ft, QPlainTextEdit* den, QPlainTextEdit* hs, QPlainTextEdit* vs, QComboBox* kind)
+void MyGraphicsView::giveRequiredElements(QSlider* v, QSlider* d, QPlainTextEdit* it, QPlainTextEdit* ft, QComboBox* kind)
 {
     // it's must be here because for now its best thing to get values from thes widgets in code 
     this->v = v;
     this->d = d;
     this->it = it;
     this->ft = ft;
-    this->den = den;
-    this->hs = hs;
-    this->vs = vs;
     this->kind = kind;
 
 
@@ -59,75 +55,9 @@ void MyGraphicsView::mouseReleaseEvent(QMouseEvent * e){
     int y1 = pressPosition.y();
     int y2 = mousePosition.y();
 
-    if (e->button() == Qt::LeftButton) {
-        switch (e->modifiers()) {
-        //dodanie stałej gęstości
-        case Qt::ControlModifier: {
-            float constantDenisty = den->toPlainText().toFloat();
-            for (int j = y1; j <= y2; j++) {
-                for (int i = x1; i <= x2; i++) {
-                    simulation->AddConstantDensity(i, j, constantDenisty);
-                }
-            }
-        }
-            break;
-        // dodanie stałej prędkości
-        case Qt::AltModifier: {
-                float vSpeed = vs->toPlainText().toFloat();
-                float hSpeed = hs->toPlainText().toFloat();
-                for (int j = y1; j <= y2; j++) {
-                    for (int i = x1; i <= x2; i++) {
-                        simulation->AddConstantVelocity(i, j, vSpeed, hSpeed);
-                    }
-                }
-            }
-            break;
-
-        // dodanie normalnej gęstości
-        default:
-            simulation->AddDensity(x1,x2,y1,y2,0.7f);
-        }
-    }
-    else if (e->button() == Qt::RightButton) {
-        switch (e->modifiers()) {
-        case Qt::ControlModifier: {
-            for (int j = y1; j <= y2; j++) {
-                for (int i = x1; i <= x2; i++) {
-                    simulation->DeleteConstantDensity(i, j);
-                }
-            }
-        }
-            break;
-            // dodanie stałej prędkości
-        case Qt::AltModifier:
-            for (int j = y1; j <= y2; j++) {
-                for (int i = x1; i <= x2; i++) {
-                    simulation->DeleteConstantVelocity(i, j);
-                }
-            }
-            break;
-        }
-    }
-
-    if (e->button() == Qt::MiddleButton) {
-        int x1 = pressPosition.x() < mousePosition.x() ? pressPosition.x() : mousePosition.x();
-        int x2 = pressPosition.x() > mousePosition.x() ? pressPosition.x() : mousePosition.x();
-        int y1 = pressPosition.y() < mousePosition.y() ? pressPosition.y() : mousePosition.y();
-        int y2 = pressPosition.y() > mousePosition.y() ? pressPosition.y() : mousePosition.y();
-
-        //boundary, not adding density to opposite side if coursor is far enough
-        x1 = x1 < 0 ? 0 : x1;
-        y1 = y1 < 0 ? 0 : y1;
-        x2 = x2 > simulation->size ? simulation->size : x2;
-        y2 = y2 > simulation->size ? simulation->size : y2;
-
-
-        // dodaje tylko w pierwszym rzędzie
-        for (int j = y1; j <= y2; j++) {
-            for (int i = x1; i <= x2; i++) {
-               // e_simulation->AddWall(i, j);
-            }
-        }
+    if (e->button() == Qt::LeftButton) 
+    {
+        simulation->AddDensity(x1,x2,y1,y2,0.7f);
     }
 }
 
@@ -145,12 +75,7 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
         float dx = xCurrent - xPress;
         float dy = yCurrent - yPress;
 
-        //float lenght = sqrt(dx * dx + dy * dy);
-        //float xNormalized = (float)dx * SPEED_SCALE / lenght;
-        //float yNormalized = (float)dy * SPEED_SCALE / lenght;
-
         simulation->AddVelocity(xCurrent, yCurrent, SPEED_CHANGE_RADIUS, (float)dy * SPEED_SCALE, (float)dx * SPEED_SCALE);
-
     }
     lastPosition = e->pos();
 }
@@ -161,9 +86,6 @@ void MyGraphicsView::start() {
     char* string = bytearray.data();
     this->interval = atoi(string);
 
-
-
-
     //Its must be here and not in constructor because this->width() and this->height() in constractor return wrong size
     pixels.reset((float*)malloc(sizeof(float) * (this->width() + 2) * (this->width() + 2)));
     image.reset(new QImage(this->width(), this->height(), QImage::Format_RGB888));
@@ -171,14 +93,7 @@ void MyGraphicsView::start() {
     pixmap = QPixmap(this->width(), this->height());
     scene.reset(new QGraphicsScene(this));
 
-    //if (pixMapItem != nullptr)
-    //{
-    //    free(pixMapItem);
-    //}
-
     pixMapItem = scene->addPixmap(pixmap);
-
-    //pixMapItemTEST.reset((scene->addPixmap(pixmap)));
 
     this->setScene(&*scene);
     this->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
@@ -197,7 +112,7 @@ void MyGraphicsView::start() {
         factory.reset(new FactoryNotEditedSimulation());
         simulation = factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000);
         break;
-        //w sumie to teraz bardziej przypomina orginał niż orginalny
+        //edited
     case 1:
         //dynamic cast
         factory.reset(new FactoryEditedSimulation());
@@ -206,25 +121,12 @@ void MyGraphicsView::start() {
             simulation->~Simulation();
             free(simulation);
         }
-        // tu jest błąd
         simulation = factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000);
-
-        
         e_simulation = static_cast<EditedSimulation*>(simulation);
 
         break;
-        //openMP
-    case 2:
-        factory.reset(new FactoryOpenCLSimulation());
-        if (simulation != nullptr) 
-        {
-            simulation->~Simulation();
-            free(simulation);
-        }
-        simulation = factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000);
-        break;
         //cuda
-    case 3:
+    case 2:
         factory.reset(new FactoryCudaSimulation());
 
         if (simulation != nullptr)
@@ -233,15 +135,6 @@ void MyGraphicsView::start() {
             free(simulation);
         }
 
-        simulation = factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000);
-        break;
-    case 4:
-        factory.reset(new FactoryMA());
-        if (simulation != nullptr)
-        {
-            simulation->~Simulation();
-            free(simulation);
-        }
         simulation = factory->CreateSimulation(this->width(), diff, visc, ((float)this->interval) / 1000);
         break;
     }
@@ -253,10 +146,21 @@ void MyGraphicsView::start() {
 
     timer->setInterval(this->frameTime);
     timer->start();
+    
 }
-
 void MyGraphicsView::refresh(){
+    using namespace std::chrono;
+
+    uint64_t time1 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
     simulation->NextFrame(pixels);
+
+    uint64_t time2 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    uint64_t t = time2 - time1;
+
+    qDebug() << t;
+   // printf("%llu \n", t);
+
     for (int i = 1; i < this->width() ; i++) {
         for (int j = 1; j < this->height() ; j++) {
             image->setPixelColor(i - 1, j - 1, getColor(pixels[IX(i, j)]));
@@ -276,3 +180,4 @@ QColor MyGraphicsView::getColor(float x) {
         return QColor(y, y, y, 255);
     }
 }
+

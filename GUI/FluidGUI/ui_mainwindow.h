@@ -41,14 +41,6 @@ public:
     QLabel *label_4;
     QPlainTextEdit *frameTime;
     QComboBox *comboBox;
-    QWidget *gridLayoutWidget;
-    QGridLayout *gridLayout_2;
-    QLabel *label_7;
-    QLabel *label_6;
-    QLabel *label_5;
-    QPlainTextEdit *density;
-    QPlainTextEdit *horizontalSpeed;
-    QPlainTextEdit *verticalSpeed;
     QMenuBar *menubar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -158,49 +150,8 @@ public:
         comboBox->addItem(QString());
         comboBox->addItem(QString());
         comboBox->addItem(QString());
-        comboBox->addItem(QString());
-        comboBox->addItem(QString());
         comboBox->setObjectName(QString::fromUtf8("comboBox"));
         comboBox->setGeometry(QRect(20, 80, 261, 22));
-        gridLayoutWidget = new QWidget(centralwidget);
-        gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(350, 130, 312, 95));
-        gridLayout_2 = new QGridLayout(gridLayoutWidget);
-        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
-        gridLayout_2->setContentsMargins(0, 0, 0, 0);
-        label_7 = new QLabel(gridLayoutWidget);
-        label_7->setObjectName(QString::fromUtf8("label_7"));
-
-        gridLayout_2->addWidget(label_7, 0, 2, 1, 1);
-
-        label_6 = new QLabel(gridLayoutWidget);
-        label_6->setObjectName(QString::fromUtf8("label_6"));
-
-        gridLayout_2->addWidget(label_6, 0, 1, 1, 1);
-
-        label_5 = new QLabel(gridLayoutWidget);
-        label_5->setObjectName(QString::fromUtf8("label_5"));
-
-        gridLayout_2->addWidget(label_5, 0, 0, 1, 1);
-
-        density = new QPlainTextEdit(gridLayoutWidget);
-        density->setObjectName(QString::fromUtf8("density"));
-        density->setInputMethodHints(Qt::ImhDigitsOnly);
-
-        gridLayout_2->addWidget(density, 1, 0, 1, 1);
-
-        horizontalSpeed = new QPlainTextEdit(gridLayoutWidget);
-        horizontalSpeed->setObjectName(QString::fromUtf8("horizontalSpeed"));
-        horizontalSpeed->setInputMethodHints(Qt::ImhDigitsOnly);
-
-        gridLayout_2->addWidget(horizontalSpeed, 1, 1, 1, 1);
-
-        verticalSpeed = new QPlainTextEdit(gridLayoutWidget);
-        verticalSpeed->setObjectName(QString::fromUtf8("verticalSpeed"));
-        verticalSpeed->setInputMethodHints(Qt::ImhDigitsOnly);
-
-        gridLayout_2->addWidget(verticalSpeed, 1, 2, 1, 1);
-
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -223,13 +174,8 @@ public:
         label_4->setText(QCoreApplication::translate("MainWindow", "Frame time", nullptr));
         comboBox->setItemText(0, QCoreApplication::translate("MainWindow", "orginal", nullptr));
         comboBox->setItemText(1, QCoreApplication::translate("MainWindow", "edited", nullptr));
-        comboBox->setItemText(2, QCoreApplication::translate("MainWindow", "openCL", nullptr));
-        comboBox->setItemText(3, QCoreApplication::translate("MainWindow", "cuda", nullptr));
-        comboBox->setItemText(4, QCoreApplication::translate("MainWindow", "MA", nullptr));
+        comboBox->setItemText(2, QCoreApplication::translate("MainWindow", "cuda", nullptr));
 
-        label_7->setText(QCoreApplication::translate("MainWindow", "Vertical Speed", nullptr));
-        label_6->setText(QCoreApplication::translate("MainWindow", "Horizontal Speed", nullptr));
-        label_5->setText(QCoreApplication::translate("MainWindow", "Density", nullptr));
     } // retranslateUi
 
 };

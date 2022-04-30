@@ -12,10 +12,6 @@ public :
 	void AddVelocity(int x, int y, int r, float v_velocity, float h_velocity);
 	void AddWall(int x, int y);
 	void DeleteWall(int x, int y);
-	void AddConstantDensity(int x, int y, float density);
-	void DeleteConstantDensity(int x, int y);
-	void AddConstantVelocity(int x, int y, float v_velocity, float h_velocity);
-	void DeleteConstantVelocity(int x, int y);
 private:
 	std::unique_ptr<bool[]> walls;
 

@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) , ui(new Ui::MainW
 {
     ui->setupUi(this);
     //it may be only way to pass required components from mainview to child
-    ui->graphicsView->giveRequiredElements(ui->ViscositySlider,ui->DiffusionSlider,ui->iterationTime, ui->frameTime,ui->density,ui->horizontalSpeed,ui->verticalSpeed, ui->comboBox);
+    ui->graphicsView->giveRequiredElements(ui->ViscositySlider,ui->DiffusionSlider,ui->iterationTime, ui->frameTime, ui->comboBox);
 
 }
 

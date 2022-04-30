@@ -1,2 +1,2 @@
 [WarpWatch]
-Expressions=index, i, j, n
+Expressions=index, index, x[251+252*index]

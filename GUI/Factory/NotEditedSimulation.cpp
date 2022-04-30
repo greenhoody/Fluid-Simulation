@@ -220,12 +220,12 @@ void NotEditedSimulation::vel_step(int N, float* u, float* v, float* u0, float* 
 void NotEditedSimulation::dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float dt)
 {
 	//add_source(N, x, x0, dt);
-	print(x, "poczatek:");
+//	print(x, "poczatek:");
 	diffuse(N, 0, x0, x, diff, dt);
-	print(x, "po dyfuzji:");
+	//print(x, "po dyfuzji:");
 	//adwekcja zmienia ilość2 cieczy
 	advect(N, 0, x, x0, u, v, dt);
-	print(x, "po advekcji:");
+	//print(x, "po advekcji:");
 }
 
 void NotEditedSimulation::print(float* x, std::string s) {
@@ -236,8 +236,8 @@ void NotEditedSimulation::print(float* x, std::string s) {
 	}
 	s.append(" ").append(std::to_string(combined)).append("\n\0");
 	char* c = &*(s.begin());
-	OutputDebugString(c);
 
+//	OutputDebugString(c);
 
 }
 

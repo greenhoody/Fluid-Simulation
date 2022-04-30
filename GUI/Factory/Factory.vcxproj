@@ -31,40 +31,29 @@
     <ClInclude Include="Factory.h" />
     <ClInclude Include="FactoryCudaSimulation.h" />
     <ClInclude Include="FactoryEditedSimulation.h" />
-    <ClInclude Include="FactoryMA.h" />
     <ClInclude Include="FactoryNotEditedSimulation.h" />
-    <ClInclude Include="FactoryOpenCLSimulation.h" />
     <ClInclude Include="NotEditedSimulation.h" />
-    <ClInclude Include="OpenCLSimulation.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Simulation.h" />
-    <ClInclude Include="SimulationMA.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EditedSimulation.cpp" />
     <ClCompile Include="FactoryCudaSimulation.cpp" />
     <ClCompile Include="FactoryEditedSimulation.cpp" />
-    <ClCompile Include="FactoryMA.cpp" />
     <ClCompile Include="FactoryNotEditedSimulation.cpp" />
-    <ClCompile Include="FactoryOpenCLSimulation.cpp" />
     <CudaCompile Include="HostCudaSimulation.cu">
       <FileType>Document</FileType>
       <TargetMachinePlatform Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">64</TargetMachinePlatform>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </CudaCompile>
     <ClCompile Include="NotEditedSimulation.cpp" />
-    <ClCompile Include="OpenCLSimulation.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="SimulationMA.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="DeviceCudaSimulation.cu">
       <TargetMachinePlatform Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">64</TargetMachinePlatform>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </CudaCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="OpenCLCode.cl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -195,7 +184,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -205,6 +194,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <CudaCompile>
+      <GenerateRelocatableDeviceCode>true</GenerateRelocatableDeviceCode>
+    </CudaCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,7 +2,7 @@
 #include <corecrt_malloc.h>
 #include <string.h>
 #include <algorithm>
-#include"pch.h"
+#include "pch.h"
 
 #define IX(i,j) ((i)+(size+2)*(j))
 #define IW(i,j) ((i+2)+(size+4)*(j))

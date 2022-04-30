@@ -31,16 +31,16 @@ OpenCLSimulation::OpenCLSimulation(int size, float diffiusion, float viscosity, 
 	auto err = program.build();
 
 	char buf[16];
-	cl::Buffer membuf(context, );
-	cl::Kernel kernel(program, "OpenCLCode", &err);
-	kernel.setArg(0, memBuf);
+	//cl::Buffer membuf(context, );
+	//cl::Kernel kernel(program, "OpenCLCode", &err);
+	//kernel.setArg(0, memBuf);
 
-	cl::CommandQueue queue(context, device);
+	//cl::CommandQueue queue(context, device);
 
-	size_t max_work_item[3];
-	device.getInfo(CL_DEVICE_MAX_WORK_ITEM_SIZES, &max_work_item);
+	//size_t max_work_item[3];
+	//device.getInfo(CL_DEVICE_MAX_WORK_ITEM_SIZES, &max_work_item);
 
-	queue.enqueueNDRangeKernel(kernel,max_work_item[0],);
+	//queue.enqueueNDRangeKernel(kernel,max_work_item[0],);
 }
 
 OpenCLSimulation::~OpenCLSimulation() 

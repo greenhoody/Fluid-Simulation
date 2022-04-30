@@ -43,6 +43,7 @@ __device__ void set_bnd(int N, int b, float* x)
 		x[IX(N + 1, 0)] = 0.5f * (x[IX(N, 0)] + x[IX(N + 1, 1)]);
 		x[IX(N + 1, N + 1)] = 0.5f * (x[IX(N, N + 1)] + x[IX(N + 1, N)]);
 	}
+	g.sync();
 
 }
 
@@ -55,8 +56,6 @@ __device__ void diffuse(int N, int b, float* x, float* x0, float diff, float dt)
 	int index = 0;
 	int cores = gridDim.x * blockDim.x;
 
-	//kompiluje się czyli intellisense nie ogarnia
-	cooperative_groups::grid_group g = cooperative_groups::this_grid();
 
 	for (int k = 0; k < 20; k++) {
 		
@@ -75,14 +74,12 @@ __device__ void diffuse(int N, int b, float* x, float* x0, float diff, float dt)
 		}
 		//	}
 		//}
-		g.sync();
 		set_bnd(N, b, x);
 	}
 }
 
 __device__ void advect(int N, int b, float* d, float* d0, float* u, float* v, float dt)
 {
-	cooperative_groups::grid_group g = cooperative_groups::this_grid();
 
 	int n = N * N;
 	int cores = gridDim.x * blockDim.x;
@@ -135,7 +132,6 @@ __device__ void advect(int N, int b, float* d, float* d0, float* u, float* v, fl
 __device__ void project(int N, float* u, float* v, float* p, float* div)
 {
 
-	cooperative_groups::grid_group g = cooperative_groups::this_grid();
 	int n = N * N;
 	int cores = blockDim.x * gridDim.x;
 
@@ -162,7 +158,6 @@ __device__ void project(int N, float* u, float* v, float* p, float* div)
 	//	}
 	//}
 
-	g.sync();
 	set_bnd(N, 0, div);
 	set_bnd(N, 0, p);
 
@@ -178,7 +173,6 @@ __device__ void project(int N, float* u, float* v, float* p, float* div)
 			index += cores;
 
 		}
-		g.sync();
 		set_bnd(N, 0, p);
 	}
 
@@ -193,7 +187,6 @@ __device__ void project(int N, float* u, float* v, float* p, float* div)
 		index += cores;
 	}
 
-	g.sync();
 	set_bnd(N, 1, u);
 	set_bnd(N, 2, v);
 }
@@ -263,24 +256,3 @@ __global__ void addVelocity(int N, float* d_u, float* d_v, int x, int y, int r, 
 
 
 }
-//__device__ void vel_step(int N, float* u, float* v, float* u0, float* v0, float visc, float dt)
-//{
-//	//add_source(N, u, u0, dt); add_source(N, v, v0, dt);
-//	diffuse(N, 1, u0, u, visc, dt);
-//	diffuse(N, 2, v0, v, visc, dt);
-//	project(N, u0, v0, u, v);
-//	advect(N, 1, u, u0, u0, v0, dt);
-//	advect(N, 2, v, v0, u0, v0, dt);
-//	project(N, u, v, u0, v0);
-//}
-
-//__device__ void dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float dt)
-//{
-//	//add_source(N, x, x0, dt);
-//	//print(x, "poczatek:");
-//	diffuse(N, 0, x0, x, diff, dt);
-//	//print(x, "po dyfuzji:");
-//	//adwekcja zmienia ilość2 cieczy
-//	advect(N, 0, x, x0, u, v, dt);
-//	//print(x, "po advekcji:");
-//}
