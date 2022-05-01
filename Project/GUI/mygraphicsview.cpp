@@ -74,17 +74,15 @@ void MyGraphicsView::mouseMoveEvent(QMouseEvent* e)
     lastPosition = e->pos();
 }
 
-void MyGraphicsView::refresh(){
+void MyGraphicsView::refresh(){  
     using namespace std::chrono;
-
     uint64_t time1 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
     simulation->NextFrame(pixels);
 
     uint64_t time2 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    uint64_t t = time2 - time1;
-
-    printf("%" PRIu64 "\n", t);
+      uint64_t t = time2 - time1;
+      printf("%" PRIu64 "\n", t);
 
     for (int i = 1; i < this->width() ; i++) {
         for (int j = 1; j < this->height() ; j++) {
@@ -93,8 +91,12 @@ void MyGraphicsView::refresh(){
     }
     pixMapItem->setPixmap(QPixmap::fromImage(*image));
     this->show();
-    //qDebug() << combined_density;
 }
+
+//
+
+ //
+/*  */
 
 QColor MyGraphicsView::getColor(float x) {
     if (x < 0) {

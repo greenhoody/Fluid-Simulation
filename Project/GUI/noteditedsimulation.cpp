@@ -33,11 +33,15 @@ NotEditedSimulation::~NotEditedSimulation()
 }
 
 void NotEditedSimulation::NextFrame(float* copy_array) {
-    printf("początek klatki \n");
     vel_step(size, u, v, u_prev, v_prev, visc, dt);
     dens_step(size, dens, dens_prev, u, v, diff, dt);
-    printf("koniec klatki \n");
+
+  //  struct timespec ts1, ts2;
+  //  timespec_get(&ts1,TIME_UTC);
     memcpy(copy_array, dens, sizeof(float) * (size + 2) * (size + 2));
+  //  timespec_get(&ts2,TIME_UTC);
+   // long t = ts2.tv_nsec - ts1.tv_nsec;
+    printf("Czas trfania memcpy %ld \n",t);
 }
 
 void NotEditedSimulation::AddDensity(int x1, int x2, int y1, int y2, float density)
@@ -65,7 +69,7 @@ void NotEditedSimulation::AddDensity(int x1, int x2, int y1, int y2, float densi
     {
         for (int j = y1; j <= y2; j++)
         {
-            // to dodawanie jest potrzbne ponieważ, pierwszy rząd i kolumna nie sa pokazywane, więc obraz jest przesunięty
+            // to dodawanie jest potrzebne ponieważ, pierwszy rząd i kolumna nie sa pokazywane, więc obraz jest przesunięty
             int index = IX(i + 1, j + 1);
             dens[index] += density;
             if (dens[index] > 1) {
