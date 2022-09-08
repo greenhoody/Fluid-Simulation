@@ -219,16 +219,13 @@ void NotEditedSimulation::vel_step(int N, float* u, float* v, float* u0, float* 
 
 void NotEditedSimulation::dens_step(int N, float* x, float* x0, float* u, float* v, float diff, float dt)
 {
-	//add_source(N, x, x0, dt);
-//	print(x, "poczatek:");
+
 	diffuse(N, 0, x0, x, diff, dt);
-	//print(x, "po dyfuzji:");
-	//adwekcja zmienia ilość2 cieczy
+	//adwekcja zmienia ilość cieczy bo bierze pod uwagę tylko skąd ciecz jest brana a nie gdzie ląduje.
 	advect(N, 0, x, x0, u, v, dt);
-	//print(x, "po advekcji:");
 }
 
-void NotEditedSimulation::print(float* x, std::string s) {
+void NotEditedSimulation::printAll(float* x, std::string s) {
 	int lns = (size + 2) * (size + 2);
 	float combined = 0;
 	for (int i = 0; i < lns; i++) {
@@ -240,8 +237,3 @@ void NotEditedSimulation::print(float* x, std::string s) {
 //	OutputDebugString(c);
 
 }
-
-void NotEditedSimulation::AddConstantDensity(int x, int y, float density) {}
-void NotEditedSimulation::DeleteConstantDensity(int x, int y) {}
-void NotEditedSimulation::AddConstantVelocity(int x, int y, float v_velocity, float h_velocity) {}
-void NotEditedSimulation::DeleteConstantVelocity(int x, int y) {}

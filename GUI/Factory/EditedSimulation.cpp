@@ -125,24 +125,6 @@ void EditedSimulation::DeleteWall(int x, int y) {
 	walls[IX(x + 1, y + 1)] = false;
 }
 
-void EditedSimulation::AddConstantDensity(int x, int y, float density) {
-	this->dens_const[IX(x + 1, y + 1)] = density;
-}
-
-void EditedSimulation::DeleteConstantDensity(int x, int y) {
-	this->dens_const[IX(x + 1, y + 1)] = 0;
-}
-
-void EditedSimulation::AddConstantVelocity(int x, int y, float v_velocity, float h_velocity) {
-	this->u[IX(x + 1, y + 1)] = h_velocity;
-	this->v[IX(x + 1, y + 1)] = v_velocity;
-}
-
-void EditedSimulation::DeleteConstantVelocity(int x, int y) {
-	this->u[IX(x + 1, y + 1)] = 0;
-	this->v[IX(x + 1, y + 1)] = 0;
-}
-
 //========================================================================================
 
 void EditedSimulation::set_bnd(int b, float* x) {
@@ -155,11 +137,6 @@ void EditedSimulation::set_bnd(int b, float* x) {
 			x[IX(i - 1, j - 1)] = (b == 1 && walls[IW(i, j)] && walls[IW(i + 1, j)]) ? -x[IX(i, j - 1)] : x[IX(i, j - 1)];//prawo
 		}
 	}
-
-	//x[IX(0, 0)] = 0.5f * (x[IX(1, 0)] + x[IX(0, 1)]); //lewygorny
-	//x[IX(0, size + 1)] = 0.5f * (x[IX(1, size + 1)] + x[IX(0, size)]); //lewydolny
-	//x[IX(size + 1, 0)] = 0.5f * (x[IX(size + 1, 1)] + x[IX(size, 0)]); //prawygorny
-	//x[IX(size + 1, size + 1)] = 0.5f * (x[IX(size, size + 1)] + x[IX(size + 1, size)]); //prawydolny
 }
 
 void EditedSimulation::diffuse(int b, float* x, float* x0, float diff) {

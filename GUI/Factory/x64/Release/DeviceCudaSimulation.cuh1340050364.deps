@@ -32,12 +32,6 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.32.3132
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.32.31326\include\yvals_core.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\builtin_types.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\channel_descriptor.h
-C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\cooperative_groups.h
-C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\cooperative_groups\details\driver_abi.h
-C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\cooperative_groups\details\helpers.h
-C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\cooperative_groups\details\info.h
-C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\cooperative_groups\details\partitioning.h
-C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\cooperative_groups\details\sync.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\crt\common_functions.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\crt\device_double_functions.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\crt\device_double_functions.hpp
@@ -49,7 +43,6 @@ C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\crt\math_functi
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\crt\math_functions.hpp
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\crt\sm_70_rt.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\crt\sm_80_rt.h
-C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\cuda.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\cuda_device_runtime_api.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\cuda_runtime.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\cuda_runtime_api.h
@@ -79,4 +72,3 @@ C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\texture_types.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\vector_functions.h
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\vector_functions.hpp
 C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include\vector_types.h
-C:\Users\1mk2m\source\repos\Fluid-Simulation\GUI\Factory\DeviceCudaSimulation.cuh

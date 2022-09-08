@@ -47,16 +47,10 @@ HostCudaSimulation::~HostCudaSimulation()
 void HostCudaSimulation::NextFrame(std::shared_ptr<float[]> copy_array) 
 {
 
-	//int blocks = ceilf((float)(size * size) / 1024);
-	//dim3 gridDim = dim3(blocks,1,1);
-	//dim3 blockDim = dim3(1024, 1, 1);
 	void* kernelArgs[] = {&size, &dens, &dens_prev, &u, &v, &u_prev, &v_prev, &visc, &diff, &dt };
-
-
-
 	int numBlocksPerSm = 0;
 	// Number of threads my_kernel will be launched with
-	int numThreads = 128;
+	int numThreads = 64;
 	cudaDeviceProp deviceProp;
 	// device zero poniewa¿ jest tylko jedna karta
 	cudaGetDeviceProperties(&deviceProp, 0);
@@ -128,8 +122,3 @@ void HostCudaSimulation::AddVelocity(int x, int y, int r, float v_velocity, floa
 	cudaLaunchCooperativeKernel((void*)addVelocity, gridDim, blockDim, kernelArgs);
 	cudaDeviceSynchronize();
 }
-
-void HostCudaSimulation::AddConstantDensity(int x, int y, float density) {}
-void HostCudaSimulation::DeleteConstantDensity(int x, int y){}
-void HostCudaSimulation::AddConstantVelocity(int x, int y, float v_velocity, float h_velocity){}
-void HostCudaSimulation::DeleteConstantVelocity(int x, int y){}

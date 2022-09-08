@@ -28,13 +28,6 @@ __device__ void set_bnd(int N, int b, float* x)
 		x[IX(index, 0)] = b == 2 ? -x[IX(index, 1)] : x[IX(index, 1)];
 		x[IX(index, N + 1)] = b == 2 ? -x[IX(index, N)] : x[IX(index, N)];
 	}
-	
-	//for (int i = 1; i <= N; i++) {
-	//	x[IX(0, i)] = b == 1 ? -x[IX(1, i)] : x[IX(1, i)];
-	//	x[IX(N + 1, i)] = b == 1 ? -x[IX(N, i)] : x[IX(N, i)];
-	//	x[IX(i, 0)] = b == 2 ? -x[IX(i, 1)] : x[IX(i, 1)];
-	//	x[IX(i, N + 1)] = b == 2 ? -x[IX(i, N)] : x[IX(i, N)];
-	//}
 
 	if (index == 0)
 	{
@@ -59,21 +52,17 @@ __device__ void diffuse(int N, int b, float* x, float* x0, float diff, float dt)
 
 	for (int k = 0; k < 20; k++) {
 		
-		// wykonanie przypadających komurek
+		// wykonanie przypadających komórek
 		index = blockIdx.x * blockDim.x + threadIdx.x;
 		while (index < n) {
 			// +1 po od 1 zaczynały się pętle, a nie od zera
 			int j = (index / N) + 1;
 			int i = (index % N) + 1;
 
-			//for (int i = 1; i <= N; i++) {
-			//	for (int j = 1; j <= N; j++) {
 			x[IX(i, j)] = (x0[IX(i, j)] + a * (x[IX(i - 1, j)] + x[IX(i + 1, j)] +
 				x[IX(i, j - 1)] + x[IX(i, j + 1)])) / (1 + (4 * a));
 			index += cores;
 		}
-		//	}
-		//}
 		set_bnd(N, b, x);
 	}
 }
@@ -87,7 +76,7 @@ __device__ void advect(int N, int b, float* d, float* d0, float* u, float* v, fl
 
 	while(index < n)
 	{
-		// +1 po od 1 zaczynały się pętle, a nie od zera
+		// +1 ponieważ od 1 zaczyna się pętla, a nie od zera
 		int j = (index / N) + 1;
 		int i = (index % N) + 1;
 
@@ -103,7 +92,7 @@ __device__ void advect(int N, int b, float* d, float* d0, float* u, float* v, fl
 		i0 = (int)x;
 		i1 = i0 + 1;
 
-		//proporcje ile gę┌stości wylądowało z których komórek
+		//proporcje ile gęstości wylądowało z których komórek
 		s1 = x - (float)i0;
 		s0 = 1.0f - s1;
 
@@ -139,10 +128,8 @@ __device__ void project(int N, float* u, float* v, float* p, float* div)
 	
 	// +1 po od 1 zaczynały się pętle, a nie od zera
 
-
 	float h = 1.0f / N;
-	//for (i = 1; i <= N; i++) {
-	//	for (j = 1; j <= N; j++) {
+
 	while (index < n) {
 		int j = (index / N) + 1;
 		int i = (index % N) + 1;
@@ -154,15 +141,12 @@ __device__ void project(int N, float* u, float* v, float* p, float* div)
 		index += cores;
 	 }
 
-
-	//	}
-	//}
-
 	set_bnd(N, 0, div);
 	set_bnd(N, 0, p);
 
 	index = blockIdx.x * blockDim.x + threadIdx.x;
 	for (int k = 0; k < 20; k++) {
+		//synchronizacja zbędna ponieważ jest w set_bnd, ale spróbować można. No i nic się nie zmieniło. 
 		while (index < n)
 		{
 			int j = (index / N) + 1;
@@ -191,8 +175,8 @@ __device__ void project(int N, float* u, float* v, float* p, float* div)
 	set_bnd(N, 2, v);
 }
 
-__global__ void cuda_NextFrame(int N, float* d_dens, float* d_dens_prev, float* d_u, float* d_v, float* d_u_prev, float* d_v_prev, float visc, float diff , float dt) {
-	//vel_step(size, d_u, d_v, d_u_prev, d_v_prev, visc, dt);
+__global__ void cuda_NextFrame(int N, float* d_dens, float* d_dens_prev, float* d_u, float* d_v, float* d_u_prev, float* d_v_prev, float visc, float diff , float dt) 
+{
 
 	diffuse(N, 1, d_u_prev, d_u, visc, dt);
 	diffuse(N, 2, d_v_prev, d_v, visc, dt);
@@ -200,9 +184,6 @@ __global__ void cuda_NextFrame(int N, float* d_dens, float* d_dens_prev, float* 
 	advect(N, 1, d_u, d_u_prev, d_u_prev, d_v_prev, dt);
 	advect(N, 2, d_v, d_v_prev, d_u_prev, d_v_prev, dt);
 	project(N, d_u, d_v, d_u_prev, d_v_prev);
-	
-	
-	//dens_step(size, d_dens, d_dens_prev, d_u, d_v, diff, dt);
 
 	diffuse(N, 0, d_dens_prev, d_dens, diff, dt);
 	advect(N, 0, d_dens, d_dens_prev, d_u, d_v, dt);
@@ -216,14 +197,11 @@ __global__ void addDensity(int N, float* d_dens, int x1, int x2, int y1, int y2,
 	int deltax = x2 - x1;
 	int n = deltay * deltax;
 
-
 	while (index < n) 
 	{
 		int j = (index / deltax);
 		int i = (index % deltax);
-
 		d_dens[IX(x1 + i, y1 + j)] += dens;
-
 		if (d_dens[IX(x1 + i, y1 + j)] > 1)
 		{
 			d_dens[IX(x1 + i, y1 + j)] = 1;
@@ -232,13 +210,15 @@ __global__ void addDensity(int N, float* d_dens, int x1, int x2, int y1, int y2,
 	}
 }
 
-__global__ void addVelocity(int N, float* d_u, float* d_v, int x, int y, int r, float u_velocity, float v_velocity)
+__global__ void addVelocity(int N, float* u, float* v, int x, int y, int r, float u_velocity, float v_velocity)
 {
+	//wyliczanie które pole jest obsługiwane przez dany rdzeń
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
 	int cores = blockDim.x * gridDim.x;
 	int j = (index / (r*2));
-	int i = (index % (r*2));
+	int i = (index % (r * 2));
 	int r_square = r * r;
+	//ograniczenie, aby za daleko nie leciało, a najbliższy int większy od 3,14 to 4
 	int n = r_square * 4;
 	x -= r;
 	y -= r;
@@ -247,12 +227,10 @@ __global__ void addVelocity(int N, float* d_u, float* d_v, int x, int y, int r, 
 
 		if (N > x + i && x + i > 0 && N > y + j && y + j > 0 && i * i + j * j <= r_square)
 		{
-			d_u[IX(x + i, y + j)] += u_velocity;
-			d_v[IX(x + i, y + j)] += v_velocity;
+			u[IX(x + i, y + j)] += u_velocity *10000;
+			v[IX(x + i, y + j)] += v_velocity *10000;
 		}
 
 		index += cores;
 	}
-
-
 }

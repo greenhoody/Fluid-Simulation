@@ -21,7 +21,7 @@ private:
 	void set_bnd(int N, int b, float* x);
 	void add_source(int N, float* x, float* s, float dt);
 	//testowa
-	void print(float* x, std::string prefix);
+	void printAll(float* x, std::string prefix);
 
 
 };

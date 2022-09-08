@@ -1,4 +1,4 @@
-Identity=DeviceCudaSimulation.cu
+Identity=HostCudaSimulation.cu
 AdditionalCompilerOptions=
 AdditionalCompilerOptions=
 AdditionalDependencies=
@@ -8,7 +8,7 @@ AdditionalOptions=
 AdditionalOptions=
 CodeGeneration=compute_52,sm_52
 CodeGeneration=compute_52,sm_52
-CompileOut=x64\Release\DeviceCudaSimulation.cu.obj
+CompileOut=x64\Release\HostCudaSimulation.cu.obj
 CudaRuntime=Static
 CudaToolkitCustomDir=
 DebugInformationFormat=None
