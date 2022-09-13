@@ -74,14 +74,14 @@ __device__ void advect(int N, int b, float* d, float* d0, float* u, float* v, fl
 	int cores = gridDim.x * blockDim.x;
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
 
+	int i0, j0, i1, j1, i, j;
+	float x, y, s0, t0, s1, t1, dt0;
+
 	while(index < n)
 	{
 		// +1 ponieważ od 1 zaczyna się pętla, a nie od zera
-		int j = (index / N) + 1;
-		int i = (index % N) + 1;
-
-		int i0, j0, i1, j1;
-		float x, y, s0, t0, s1, t1, dt0;
+		j = (index / N) + 1;
+		i = (index % N) + 1;
 		dt0 = dt * (float)N;
 		//for (int i = 1; i <= N; i++) {
 		//	for (int j = 1; j <= N; j++) {
@@ -125,14 +125,16 @@ __device__ void project(int N, float* u, float* v, float* p, float* div)
 	int cores = blockDim.x * gridDim.x;
 
 	int index = blockIdx.x * blockDim.x + threadIdx.x;
+
+	int i, j;
 	
 	// +1 po od 1 zaczynały się pętle, a nie od zera
 
 	float h = 1.0f / N;
 
 	while (index < n) {
-		int j = (index / N) + 1;
-		int i = (index % N) + 1;
+		j = (index / N) + 1;
+		i = (index % N) + 1;
 
 		div[IX(i, j)] = -0.5f * h * (u[IX(i + 1, j)] - u[IX(i - 1, j)] +
 			v[IX(i, j + 1)] - v[IX(i, j - 1)]);
@@ -144,17 +146,24 @@ __device__ void project(int N, float* u, float* v, float* p, float* div)
 	set_bnd(N, 0, div);
 	set_bnd(N, 0, p);
 
-	index = blockIdx.x * blockDim.x + threadIdx.x;
-	for (int k = 0; k < 20; k++) {
-		//synchronizacja zbędna ponieważ jest w set_bnd, ale spróbować można. No i nic się nie zmieniło. 
-		while (index < n)
-		{
-			int j = (index / N) + 1;
-			int i = (index % N) + 1;
 
-			p[IX(i, j)] = (div[IX(i, j)] + p[IX(i - 1, j)] + p[IX(i + 1, j)] +
-				p[IX(i, j - 1)] + p[IX(i, j + 1)]) / 4;
-			index += cores;
+	for (int k = 0; k < 10; k++) {
+
+		for (int przekotna = 0; przekotna < 2 * N; przekotna++) {
+			index = blockIdx.x * blockDim.x + threadIdx.x;
+			while (index <= n) {
+
+				j = (int)(index / N);
+				i = (index % N);
+				
+				if ((i + j) == przekotna) {
+					i++;
+					j++;
+					p[IX(i, j)] = (div[IX(i, j)] + p[IX(i - 1, j)] + p[IX(i + 1, j)] +
+						p[IX(i, j - 1)] + p[IX(i, j + 1)]) / 4;
+				}
+				index += cores;
+			}
 
 		}
 		set_bnd(N, 0, p);
@@ -163,8 +172,8 @@ __device__ void project(int N, float* u, float* v, float* p, float* div)
 	index = blockIdx.x * blockDim.x + threadIdx.x;
 	while (index < n)
 	{
-		int j = (index / N) + 1;
-		int i = (index % N) + 1;
+		j = (index / N) + 1;
+		i = (index % N) + 1;
 
 		u[IX(i, j)] -= 0.5f * (p[IX(i + 1, j)] - p[IX(i - 1, j)]) / h;
 		v[IX(i, j)] -= 0.5f * (p[IX(i, j + 1)] - p[IX(i, j - 1)]) / h;
@@ -227,8 +236,8 @@ __global__ void addVelocity(int N, float* u, float* v, int x, int y, int r, floa
 
 		if (N > x + i && x + i > 0 && N > y + j && y + j > 0 && i * i + j * j <= r_square)
 		{
-			u[IX(x + i, y + j)] += u_velocity *10000;
-			v[IX(x + i, y + j)] += v_velocity *10000;
+			u[IX(x + i, y + j)] += u_velocity;
+			v[IX(x + i, y + j)] += v_velocity;
 		}
 
 		index += cores;

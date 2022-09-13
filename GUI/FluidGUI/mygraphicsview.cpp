@@ -16,7 +16,7 @@
 #define IX(i,j) ((i)+(simulation->size+2)*(j))
 
 //working 
-constexpr auto SPEED_SCALE = 4.0f;
+constexpr auto SPEED_SCALE = 1.0f;
 constexpr auto SPEED_CHANGE_RADIUS = 10;
 
 MyGraphicsView::MyGraphicsView(QWidget *parent):QGraphicsView(parent)
@@ -158,7 +158,7 @@ void MyGraphicsView::refresh(){
     uint64_t time2 = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     uint64_t t = time2 - time1;
 
-   // qDebug() << t;
+    qDebug() << t;
    // printf("%llu \n", t);
 
     for (int i = 1; i < this->width() ; i++) {
