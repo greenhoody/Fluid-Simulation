@@ -52,7 +52,7 @@ public:
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         graphicsView = new MyGraphicsView(centralwidget);
         graphicsView->setObjectName(QString::fromUtf8("graphicsView"));
-        graphicsView->setGeometry(QRect(20, 120, 500, 500));
+        graphicsView->setGeometry(QRect(20, 120, 250, 250));
         QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);

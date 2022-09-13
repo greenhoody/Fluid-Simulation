@@ -36,7 +36,7 @@ __device__ void set_bnd(int N, int b, float* x)
 		x[IX(N + 1, 0)] = 0.5f * (x[IX(N, 0)] + x[IX(N + 1, 1)]);
 		x[IX(N + 1, N + 1)] = 0.5f * (x[IX(N, N + 1)] + x[IX(N + 1, N)]);
 	}
-	g.sync();
+//	g.sync();
 
 }
 
@@ -147,26 +147,52 @@ __device__ void project(int N, float* u, float* v, float* p, float* div)
 	set_bnd(N, 0, p);
 
 
-	for (int k = 0; k < 10; k++) {
+	for (int k = 0; k < 20; k++) {
+		int dlugosc = 1;
+		int zmiana = 1;
 
-		for (int przekotna = 0; przekotna < 2 * N; przekotna++) {
+
+		for (int przekotna = 2; przekotna <= 2 * N; przekotna++) {
 			index = blockIdx.x * blockDim.x + threadIdx.x;
-			while (index <= n) {
+			while (index <= N && (dlugosc - index) > 0) {
 
-				j = (int)(index / N);
-				i = (index % N);
-				
-				if ((i + j) == przekotna) {
-					i++;
-					j++;
-					p[IX(i, j)] = (div[IX(i, j)] + p[IX(i - 1, j)] + p[IX(i + 1, j)] +
-						p[IX(i, j - 1)] + p[IX(i, j + 1)]) / 4;
-				}
+				i = przekotna >= N ? N : (przekotna - 1);
+				i -= index;
+				j = przekotna - i;
+
+				p[IX(i, j)] = (div[IX(i, j)] + p[IX(i - 1, j)] + p[IX(i + 1, j)] +
+					p[IX(i, j - 1)] + p[IX(i, j + 1)]) / 4;
 				index += cores;
 			}
 
+			if (dlugosc == N) {
+				zmiana = -1;
+			}
+
+			dlugosc += zmiana;
 		}
+
+
+		//for (int przekotna = 0; przekotna < 2 * N; przekotna++) {
+		//	index = blockIdx.x * blockDim.x + threadIdx.x;
+		//	while (index <= n) {
+
+		//		j = (index / N);
+		//		i = (index % N);
+
+		//		if ((i + j) == przekotna) {
+		//			i++;
+		//			j++;
+		//			p[IX(i, j)] = (div[IX(i, j)] + p[IX(i - 1, j)] + p[IX(i + 1, j)] +
+		//				p[IX(i, j - 1)] + p[IX(i, j + 1)]) / 4;
+		//		}
+		//		index += cores;
+		//	}
+
+		//}
+
 		set_bnd(N, 0, p);
+	
 	}
 
 	index = blockIdx.x * blockDim.x + threadIdx.x;
