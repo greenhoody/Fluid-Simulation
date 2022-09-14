@@ -19,8 +19,8 @@
      <rect>
       <x>20</x>
       <y>120</y>
-      <width>250</width>
-      <height>250</height>
+      <width>500</width>
+      <height>500</height>
      </rect>
     </property>
     <property name="sizePolicy">

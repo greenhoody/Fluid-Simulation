@@ -148,12 +148,68 @@ __device__ void project(int N, float* u, float* v, float* p, float* div)
 
 
 	for (int k = 0; k < 20; k++) {
+		
+		//int dlugosc = 1;
+		//int zmiana = 1;
+		////przekątna zaczyna się od dwóch ponieważ pomijamy ramkę
+		//for (int przekotna = 2; przekotna <= N; przekotna++) {
+		//	index = blockIdx.x * blockDim.x + threadIdx.x;
+		//	// 4*dlugosc - index odpowiada za to, aby były wykorzystywane tylko rdzenie dla których są dane.
+		//	while ( (4 * dlugosc - index) > 0) {
+
+		//		switch (index % 4)
+		//		{
+		//		case 0:
+		//			i = przekotna >= N/2 ? N/2 : (przekotna - 1);
+		//			i -= (index/4);
+		//			j = przekotna - i;
+		//			break;
+		//		case 1:
+		//			i = przekotna >= N / 2 ? N / 2 : (przekotna - 1);
+		//			i -= ((index-1) / 4);
+		//			j = przekotna - i;
+		//			i = N - i + 1;
+		//			break;
+		//		case 2:
+		//			i = przekotna >= N / 2 ? N / 2 : (przekotna - 1);
+		//			i -= ((index-2) / 4);
+		//			j = przekotna - i;
+		//			j = N - j + 1;
+		//			break;
+		//		case 3:
+		//			i = przekotna >= N / 2 ? N / 2 : (przekotna - 1);
+		//			i -= ((index - 3) / 4);
+		//			j = przekotna - i;
+		//			i = N - i + 1;
+		//			j = N - j + 1;
+		//			break;
+		//		}
+
+		//		p[IX(i, j)] = (div[IX(i, j)] + p[IX(i - 1, j)] + p[IX(i + 1, j)] +
+		//			p[IX(i, j - 1)] + p[IX(i, j + 1)]) / 4;
+		//		index += cores;
+		//	}
+
+		//	if (dlugosc == (N/2)) {
+		//		zmiana = -1;
+		//	}
+
+		//	dlugosc += zmiana;
+		//}
+
+		//set_bnd(N, 0, p);
+
+
+
+
+
+		
 		int dlugosc = 1;
 		int zmiana = 1;
-
-
+		//przekątna zaczyna się od dwóch ponieważ pomijamy ramkę
 		for (int przekotna = 2; przekotna <= 2 * N; przekotna++) {
 			index = blockIdx.x * blockDim.x + threadIdx.x;
+			// dlugosc - index odpowiada za to, aby były wykorzystywane tylko rdzenie dla których są dane.
 			while (index <= N && (dlugosc - index) > 0) {
 
 				i = przekotna >= N ? N : (przekotna - 1);
@@ -171,25 +227,6 @@ __device__ void project(int N, float* u, float* v, float* p, float* div)
 
 			dlugosc += zmiana;
 		}
-
-
-		//for (int przekotna = 0; przekotna < 2 * N; przekotna++) {
-		//	index = blockIdx.x * blockDim.x + threadIdx.x;
-		//	while (index <= n) {
-
-		//		j = (index / N);
-		//		i = (index % N);
-
-		//		if ((i + j) == przekotna) {
-		//			i++;
-		//			j++;
-		//			p[IX(i, j)] = (div[IX(i, j)] + p[IX(i - 1, j)] + p[IX(i + 1, j)] +
-		//				p[IX(i, j - 1)] + p[IX(i, j + 1)]) / 4;
-		//		}
-		//		index += cores;
-		//	}
-
-		//}
 
 		set_bnd(N, 0, p);
 	
